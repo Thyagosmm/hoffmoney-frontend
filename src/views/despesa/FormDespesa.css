@@ -1,0 +1,106 @@
+/* Container principal */
+.despesa-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Altura mínima para preencher a tela */
+  padding: 20px;
+  background: url('../../assets/textura.jpg') repeat; /* Caminho para a imagem de textura */
+  background-size: cover; /* Faz com que a imagem cubra todo o fundo */
+}
+
+/* Formulário de despesa */
+.despesa-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza o formulário horizontalmente */
+  width: 100%;
+  max-width: 900px; /* Limita a largura do formulário */
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título do formulário */
+.despesa-form h1 {
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+/* Container para campos do formulário e calendário */
+.form-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Campos do formulário */
+.form-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Estilo dos campos de entrada e dropdown */
+.despesa-form .field input,
+.despesa-form .field .ui.dropdown {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Estilo dos rótulos dos campos */
+.despesa-form .field label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Campo de data */
+.date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Container do calendário */
+.calendar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Título do calendário */
+.calendar-container{
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin-bottom: 10px;
+}
+
+/* Container para o botão de salvar */
+.save-button-container {
+  display: flex;
+  justify-content: center; /* Centraliza o botão horizontalmente */
+  width: 100%; /* Ocupa toda a largura disponível */
+  margin-top: 40px; /* Espaço acima do botão */
+}
+
+/* Botão de salvar */
+.save-button {
+  background-color: rgb(152, 251, 152) !important;
+  color: black !important;
+  padding: 15px 30px !important;
+  font-size: 1.5rem !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: rgb(123, 208, 123);
+}
