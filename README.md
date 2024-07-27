@@ -1,6 +1,7 @@
 PORT= 3000
 https://hoffmoney.netlify.app/
 
-1.TELA REGISTER, LOGIN e HOME COMPLETAS 27/07/24
-2.INTEGRAÇÃO DO USUARIO FRONT E BACK FUNCIONANDO CADASTRO
-3.TELA DE CADASTRO DESPESA
+FRONT -> inicio, login, register, esquecer senha e redefinir senha.
+BACK -> register (cadastrar usuario)
+
+INTEGRAÇÃO -> Usuário e Register

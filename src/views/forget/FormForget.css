@@ -1,0 +1,78 @@
+.forgot-password-container {
+  display: flex;
+  height: 100vh;
+  background-color: white;
+}
+
+.forgot-password-left {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.forgot-password-logo {
+  margin-bottom: 20px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin-top: 20px;
+}
+
+.social-link {
+  text-align: center;
+}
+
+.forgot-password-right {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-container {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  margin: 0 auto;
+}
+
+.form-field {
+  width: 100%;
+  margin: 0 auto 15px auto;
+}
+
+.input-field {
+  background-color: rgb(152, 251, 152) !important;
+  color: rgb(0, 0, 0) !important;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.forgot-password-button {
+  background-color: rgb(152, 251, 152) !important;
+  color: black !important;
+  margin-top: 20px;
+  padding: 15px 30px !important;
+  font-size: 1.5rem !important;
+}
+
+.register-link {
+  color: rgb(102, 218, 113);
+  font-size: 1.2rem;
+}
+
+label {
+  text-align: left !important;
+  display: block;
+  margin-bottom: 5px;
+}
