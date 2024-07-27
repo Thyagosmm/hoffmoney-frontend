@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.banner {
+  background: url('../../assets/banner.png') no-repeat center center/cover;
+  color: white;
+  padding: 8rem 0;
+}
+
+#about, #services, #testimonials, #contact {
+  padding: 4rem 0;
+}
+
+.social-links .ui.button {
+  margin: 0 0.5rem;
+}

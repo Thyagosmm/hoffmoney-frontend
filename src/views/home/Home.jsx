@@ -1,30 +1,114 @@
-import React from "react";
-import { Container, Grid, Image } from 'semantic-ui-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Header, Image, Button, Menu, Segment, Icon } from 'semantic-ui-react';
+import './Home.css';
+import logo from "../../assets/logo.png";
+import banner from "../../assets/banner.png";
 
-export default function Home () {
+const Home = () => {
+    return (
+        <>
+            {/* Header */}
+            <Menu fixed="top" inverted>
+                <Container>
+                    <Menu.Item as={Link} to="/" header>
+                        <Image size="mini" src={logo} style={{ marginRight: '1.5em' }} />
+                        Hoffmoney
+                    </Menu.Item>
+                    <Menu.Item as={Link} to="/#services">Serviços</Menu.Item>
+                    <Menu.Item as={Link} to="/#testimonials">Depoimentos</Menu.Item>
+                    <Menu.Item as={Link} to="/#about">Sobre</Menu.Item>
+                    <Menu.Item as={Link} to="/#contact">Contato</Menu.Item>
+                    <Menu.Menu position="right">
+                        <Menu.Item>
+                            <Icon name="search" />
+                        </Menu.Item>
+                        <Menu.Item as={Link} to="/login">Login</Menu.Item>
+                        <Menu.Item as={Link} to="/register">Registrar-se</Menu.Item>
+                    </Menu.Menu>
+                </Container>
+            </Menu>
 
-   return(
-       <div>
+            <Image src={banner} fluid />
+            <Segment inverted textAlign='center' className='banner'>
+                <Container>
+                    <Header as='h1' inverted>
+                        Bem-vindo à Hoffmoney
+                    </Header>
+                    <p>Gerenciando seu futuro financeiro com confiança</p>
+                    <Button primary size='huge' as={Link} to="/#about">
+                        Saiba Mais
+                    </Button>
+                </Container>
+            </Segment>
 
-           <div style={{marginTop: '5%'}}>
-               <Container>
-                   <Grid columns={2} divided>
-                       <Grid.Row>
-                           <Grid.Column>
-                               <Image src='/logo-IFPE.png' size='large' />
-                           </Grid.Column>
-                           <Grid.Column>
-                              
-                               Bem vindo ao sistema <strong>OxeFood</strong> ! <br/>
-                               Este sistema foi desenvolvido na disciplina de Desenvolvimento para WEB III. <br/> <br/>
-                               Para acessar o código da <strong>API</strong> do sistema, acesse: <a href='https://github.com/robertoalencar/oxefood-api' target='_blank'> https://github.com/robertoalencar/oxefood-api </a> <br/> <br/>
-                               Para acessar o código do <strong>Módulo WEB</strong>, acesse: <a href='https://github.com/robertoalencar/oxefood-web' target='_blank'> https://github.com/robertoalencar/oxefood-web </a>
+            {/* Sobre Nós */}
+            <Segment id="about">
+                <Container text>
+                    <Header as='h2'>Sobre Nós</Header>
+                    <p>Nossa missão é ajudar você a gerenciar seu futuro financeiro com confiança e segurança.</p>
+                </Container>
+            </Segment>
 
-                           </Grid.Column>
-                       </Grid.Row>
-                   </Grid>
-               </Container>
-           </div>
-       </div>
-   )
-}
+            {/* Serviços */}
+            <Segment id="services">
+                <Container>
+                    <Header as='h2' textAlign='center'>Serviços</Header>
+                    <div className="ui three column stackable grid">
+                        <div className="column">
+                            <Segment>
+                                <Header as='h3'>Consultoria Financeira</Header>
+                                <p>Ajudamos você a tomar as melhores decisões financeiras.</p>
+                            </Segment>
+                        </div>
+                        <div className="column">
+                            <Segment>
+                                <Header as='h3'>Planejamento de Investimentos</Header>
+                                <p>Estratégias de investimento personalizadas para você.</p>
+                            </Segment>
+                        </div>
+                        <div className="column">
+                            <Segment>
+                                <Header as='h3'>Gestão de Riscos</Header>
+                                <p>Proteja seu patrimônio com nossas soluções de gestão de riscos.</p>
+                            </Segment>
+                        </div>
+                    </div>
+                </Container>
+            </Segment>
+
+            {/* Depoimentos */}
+            <Segment id="testimonials">
+                <Container text>
+                    <Header as='h2' textAlign='center'>Depoimentos</Header>
+                    <div className="ui two column stackable grid">
+                        <div className="column">
+                            <Segment>
+                                <p>"A Hoffmoney transformou a maneira como gerencio minhas finanças. Recomendo!" - Cliente Satisfeito</p>
+                            </Segment>
+                        </div>
+                        <div className="column">
+                            <Segment>
+                                <p>"Profissionais altamente qualificados e serviços excepcionais." - Cliente Satisfeito</p>
+                            </Segment>
+                        </div>
+                    </div>
+                </Container>
+            </Segment>
+
+            {/* Rodapé */}
+            <Segment inverted vertical id="contact">
+                <Container textAlign='center'>
+                    <p>© 2024 Hoffmoney. Todos os direitos reservados.</p>
+                    <div className="social-links">
+                        <Button circular color='instagram' icon='instagram' as='a' href="https://www.instagram.com" />
+                        <Button circular color='mail' icon='mail' as='a' href="mailto:contato@hoffmoney.com" />
+                        <Button circular color='info' icon='info' as={Link} to="/sobre" />
+                    </div>
+                </Container>
+            </Segment>
+        </>
+    );
+};
+
+export default Home;
