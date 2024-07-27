@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
-import InputMask from 'react-input-mask';
 import logo from '../../assets/logo.png';
 import './FormUsuarioRegister.css';
 
