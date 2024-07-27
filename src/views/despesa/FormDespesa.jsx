@@ -5,7 +5,7 @@ import './FormDespesa.css';
 
 const FormDespesa = () => {
     const [name, setName] = useState('');
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(''); // Valor da despesa
     const [category, setCategory] = useState('');
     const [recurrence, setRecurrence] = useState('');
     const [frequency, setFrequency] = useState('');
@@ -38,6 +38,14 @@ const FormDespesa = () => {
                                     placeholder='Digite o nome da Despesa'
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Valor</label>
+                                <input
+                                    placeholder='Digite o valor da Despesa'
+                                    value={value}
+                                    onChange={(e) => setValue(e.target.value)}
                                 />
                             </Form.Field>
                             <Form.Field>
