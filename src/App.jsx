@@ -6,6 +6,7 @@ import FormLogin from './views/login/FormLogin';
 import FormDespesa from './views/despesa/FormDespesa';
 import FormForget from './views/forget/FormForget';
 import FormReset from './views/reset/FormReset';
+import FormReceita from './views/receita/FormReceita';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/despesa" element={<FormDespesa />} />
                 <Route path="/forget" element={<FormForget />} />
                 <Route path="/reset" element={<FormReset />} />
+                <Route path="/receita" element={<FormReceita />} />
                 {/* Adicione outras rotas aqui */}
             </Routes>
         </Router>

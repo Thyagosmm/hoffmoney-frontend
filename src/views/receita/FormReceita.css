@@ -1,0 +1,95 @@
+/* Container principal */
+.receita-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Altura mínima para preencher a tela */
+    padding: 20px;
+    background: url('../../assets/textura.jpg') repeat; /* Caminho para a imagem de textura */
+    background-size: cover; /* Faz com que a imagem cubra todo o fundo */
+  }
+  
+  /* Formulário de despesa */
+  .receita-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o formulário horizontalmente */
+    width: 100%;
+    max-width: 900px; /* Limita a largura do formulário */
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título do formulário */
+  .receita-form h1 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+  }
+  
+  /* Container para campos do formulário e calendário */
+  .form-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+  }
+  
+  /* Campos do formulário */
+  .form-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Estilo dos campos de entrada e dropdown */
+  .receita-form .field input,
+  .receita-form .field .ui.dropdown {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+
+/* Container do calendário */
+.calendar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+  /* Container para o botão de salvar  */
+  .save-button-container {
+    display: flex;
+    justify-content: center; /*Centraliza o botão horizontalmente */
+    width: 100%; /* Ocupa toda a largura disponível */
+    margin-top: 40px; /* Espaço acima do botão  */
+  } 
+  
+  /* Botão de salvar */
+  .botao{
+    background-color: #98fb98; /* PaleGreen */
+    border: none;
+    color: #000;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .botao:hover{
+    background-color: #87e587; 
+    transform: scale(1.05);
+  }
+  
+
+  
