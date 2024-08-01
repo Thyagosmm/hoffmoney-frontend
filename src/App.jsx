@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './views/home/Home';
-import FormUsuarioRegister from './views/usuario/FormUsuarioRegister';
-import FormLogin from './views/login/FormLogin';
-import FormDespesa from './views/despesa/FormDespesa';
-import FormForget from './views/forget/FormForget';
-import FormReset from './views/reset/FormReset';
+import FormUsuarioRegister from './views/auth/usuario/FormUsuarioRegister';
+import FormLogin from './views/auth/login/FormLogin';
+import FormForget from './views/auth/forget/FormForget';
+import FormReset from './views/auth/reset/FormReset';
 import FormReceita from './views/receita/FormReceita';
+import FormDespesa from './views/despesa/FormDespesa';
+import Home from './views/home/Home';
 
 function App() {
     return (

@@ -1,0 +1,22 @@
+.forgot-password-left {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.forgot-password-logo {
+  margin-bottom: 20px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin-top: 20px;
+}
+
+.social-link {
+  text-align: center;
+}
