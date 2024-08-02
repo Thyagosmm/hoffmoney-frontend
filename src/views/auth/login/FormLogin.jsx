@@ -3,7 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { Button, Container, Divider, Form } from "semantic-ui-react";
 import "./FormLogin.css";
 import { login } from "../../../api/UserApi";
-import Info from "../info/Info";
+import Info from "../../components/info/Info";
 
 export default function FormLogin() {
   const [email, setEmail] = React.useState("");

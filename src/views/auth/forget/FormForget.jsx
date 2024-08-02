@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form } from "semantic-ui-react";
 import "./FormForget.css";
-import Info from "../info/Info";
+import Info from "../../components/info/Info";
 
 export default function FormEsqueciSenha() {
   const [email, setEmail] = React.useState("");

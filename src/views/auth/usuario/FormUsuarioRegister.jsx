@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Container, Divider, Form,  Message } from 'semantic-ui-react';
 import { registerUser } from '../../../api/UserApi';
 import './FormUsuarioRegister.css';
-import Info from '../info/Info';
+import Info from '../../components/info/Info';
 
 const FormUsuarioRegister = () => {
     const [name, setName] = useState('');

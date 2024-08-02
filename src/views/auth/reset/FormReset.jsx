@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Container, Divider, Form } from 'semantic-ui-react';
 import './FormReset.css';
-import Info from '../info/Info';
+import Info from '../../components/info/Info';
 
 export default function FormReset() {
     const [novaSenha, setNovaSenha] = React.useState('');
