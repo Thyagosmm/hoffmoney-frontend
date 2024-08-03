@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Dropdown, Icon, Image, Menu } from "semantic-ui-react";
+import { Image, Menu } from "semantic-ui-react";
 import logo from "../../../assets/logo.png";
 import "./AppMenu.css"; // Importar o arquivo CSS
 
@@ -24,14 +24,6 @@ const AppMenu = () => {
     setIsLogged(false);
     window.location.href = "/";
   };
-
-  const options = [
-    { key: "home", text: <Link to="/">Hoffmoney</Link> },
-    { key: "services", text: <Link to="/#services">Serviços</Link> },
-    { key: "testimonials", text: <Link to="/#testimonials">Depoimentos</Link> },
-    { key: "about", text: <Link to="/#about">Sobre</Link> },
-    { key: "contact", text: <Link to="/#contact">Contato</Link> },
-  ];
 
   return (
     <Menu inverted className="menu">

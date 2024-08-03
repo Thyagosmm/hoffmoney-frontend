@@ -10,7 +10,6 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Home = () => {
   const [isLogged, setIsLogged] = useState(false);
-  const [activeSection, setActiveSection] = useState("Bem-vindo à Hoffmoney");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
