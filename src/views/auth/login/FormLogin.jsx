@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form } from "semantic-ui-react";
 import "./FormLogin.css";
 import { login } from "../../../api/UserApi";
@@ -8,7 +8,6 @@ import Info from "../../components/info/Info";
 export default function FormLogin() {
   const [email, setEmail] = React.useState("");
   const [senha, setSenha] = React.useState("");
-  const [error, setError] = React.useState("");
 
   async function handleLogin() {
     const data = await login(email, senha);
@@ -26,7 +25,7 @@ export default function FormLogin() {
       console.log("email:", localStorage.getItem("email"));
       window.location.href = "/";
     } else {
-      setError("Dados recebidos são inválidos ou vazios:", data);
+      console.log("Dados recebidos são inválidos ou vazios:", data);
     }
   }
 

@@ -30,7 +30,6 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* AppMenu */}
       <AppMenu className="header" />
       {!isLogged ? (
         <>
@@ -42,7 +41,7 @@ const Home = () => {
                     <Header as="h1" inverted>
                       Bem-vindo à Hoffmoney
                     </Header>
-                    <img src={logo} className="logo" />
+                    <img src={logo} alt="Logo da Hoffmoney" className="logo" />
                     <p>Gerenciando seu futuro financeiro com confiança</p>
                   </Container>
                   <Segment className="about" id="about">
@@ -97,8 +96,8 @@ const Home = () => {
                 </Segment>
                 <Segment inverted textAlign="center" className="infoContent">
                   <Container className="about">
-                  <Header as="h1" inverted textAlign="center">
-                  Depoimentos
+                    <Header as="h1" inverted textAlign="center">
+                      Depoimentos
                     </Header>
                     <div className="ui two column stackable grid">
                       <div className="column">
@@ -122,8 +121,6 @@ const Home = () => {
                 </Segment>
               </div>
             </Slider>
-
-            {/* Rodapé */}
             <Segment inverted vertical id="contact">
               <Container textAlign="center">
                 <p>© 2024 Hoffmoney. Todos os direitos reservados.</p>

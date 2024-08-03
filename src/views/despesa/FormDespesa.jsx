@@ -1,22 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Certifique-se de instalar e importar o componente de calendário
+import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
-import { registrarDespesa } from "../../api/UserApi";
+import { registrarDespesa, atualizarDespesa, deletarDespesa, buscarDespesaPorId } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 
-const FormDespesa = () => {
+const FormDespesa = ({ despesaId }) => {
   const [name, setName] = useState("");
   const [value, setValue] = useState(""); // Valor da despesa
   const [category, setCategory] = useState("");
   const [recurrence, setRecurrence] = useState("");
   const [frequency, setFrequency] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    if (despesaId) {
+      const fetchDespesa = async () => {
+        try {
+          const response = await buscarDespesaPorId(despesaId);
+          const despesa = response.data;
+          setName(despesa.nome);
+          setValue(despesa.valor);
+          setCategory(despesa.categoria);
+          setRecurrence(despesa.recorrente);
+          setFrequency(despesa.periodo);
+          setDescription(despesa.descricao);
+          setDate(new Date(despesa.dataDeCobranca));
+        } catch (error) {
+          console.error("Erro ao buscar a despesa:", error);
+          setError("Erro ao buscar a despesa.");
+        }
+      };
+      fetchDespesa();
+    }
+  }, [despesaId]);
 
   const categoryOptions = [
     { key: "Alimentação", text: "Alimentação", value: "Alimentação" },
@@ -33,6 +54,7 @@ const FormDespesa = () => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+
   const handleRegistrarDespesa = async (e) => {
     e.preventDefault();
     const formattedDate = formatDate(date);
@@ -46,7 +68,6 @@ const FormDespesa = () => {
         categoria: category,
         recorrente: recurrence,
         periodo: frequency,
-        vezes: quantity,
         dataDeCobranca: formattedDate,
         paga: false,
       });
@@ -56,6 +77,44 @@ const FormDespesa = () => {
     } catch (error) {
       console.error("Erro ao registrar a despesa:", error);
       setError("Erro ao registrar a despesa.");
+    }
+  };
+
+  const handleAtualizarDespesa = async (e) => {
+    e.preventDefault();
+    const formattedDate = formatDate(date);
+
+    try {
+      const response = await atualizarDespesa(despesaId, {
+        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
+        nome: name,
+        descricao: description,
+        valor: value,
+        categoria: category,
+        recorrente: recurrence,
+        periodo: frequency,
+        dataDeCobranca: formattedDate,
+        paga: false,
+      });
+      console.log("Despesa atualizada:", response.data);
+      setSuccess("Despesa atualizada com sucesso!");
+      // Redirecionar ou limpar campos...
+    } catch (error) {
+      console.error("Erro ao atualizar a despesa:", error);
+      setError("Erro ao atualizar a despesa.");
+    }
+  };
+
+  const handleDeletarDespesa = async (e) => {
+    e.preventDefault();
+    try {
+      await deletarDespesa(despesaId);
+      console.log("Despesa deletada");
+      setSuccess("Despesa deletada com sucesso!");
+      // Redirecionar ou limpar campos...
+    } catch (error) {
+      console.error("Erro ao deletar a despesa:", error);
+      setError("Erro ao deletar a despesa.");
     }
   };
 
@@ -146,15 +205,6 @@ const FormDespesa = () => {
                           onChange={(e, { value }) => setFrequency(value)}
                         />
                       </Form.Field>
-                      <Form.Field>
-                        <label>Quantas vezes ela irá se repetir?</label>
-                        <input
-                          placeholder="Digite a quantidade de vezes que a despesa irá se repetir"
-                          value={quantity}
-                          fluid
-                          onChange={(e) => setQuantity(e.target.value)}
-                        />
-                      </Form.Field>
                     </>
                   )}
                   <Form.Field>
@@ -172,10 +222,23 @@ const FormDespesa = () => {
               </div>
             </div>
             <div className="save-button-container">
-              <Button className="save-button" onClick={handleRegistrarDespesa}>
-                Salvar
-              </Button>
+              {despesaId ? (
+                <>
+                  <Button className="save-button" onClick={handleAtualizarDespesa}>
+                    Atualizar
+                  </Button>
+                  <Button className="delete-button" onClick={handleDeletarDespesa}>
+                    Deletar
+                  </Button>
+                </>
+              ) : (
+                <Button className="save-button" onClick={handleRegistrarDespesa}>
+                  Salvar
+                </Button>
+              )}
             </div>
+            {success && <div className="success-message">{success}</div>}
+            {error && <div className="error-message">{error}</div>}
           </div>
         </div>
       </div>

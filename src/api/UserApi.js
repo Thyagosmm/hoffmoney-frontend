@@ -26,10 +26,25 @@ export async function login(email, senha) {
 export const registrarDespesa = (despesaData) => {
   return api.post("/despesas", despesaData);
 };
+
 export const listarDespesas = () => {
   const userId = localStorage.getItem("userId");
   if (!userId) {
     throw new Error("Usuário não está logado.");
   }
   return api.get(`/despesas/usuario/${userId}`);
+};
+
+// Adicionar estas funções
+
+export const buscarDespesaPorId = (despesaId) => {
+  return api.get(`/despesas/${despesaId}`);
+};
+
+export const atualizarDespesa = (despesaId, despesaData) => {
+  return api.put(`/despesas/${despesaId}`, despesaData);
+};
+
+export const deletarDespesa = (despesaId) => {
+  return api.delete(`/despesas/${despesaId}`);
 };

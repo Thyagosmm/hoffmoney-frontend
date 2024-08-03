@@ -10,11 +10,10 @@ const ListaDespesas = () => {
   useEffect(() => {
     const getDespesas = async () => {
       try {
-        const data = await listarDespesas();
-        console.log("Despesas:", data); // Verificar se os dados estão sendo retornados corretamente
+        const { data } = await listarDespesas();
+        console.log("Despesas:", data);
 
-        // Agrupar despesas por descrição e valor e contar as ocorrências
-        const despesasAgrupadas = data.data.reduce((acc, despesa) => {
+        const despesasAgrupadas = data.reduce((acc, despesa) => {
           const key = `${despesa.descricao}-${despesa.valor}`;
           if (!acc[key]) {
             acc[key] = { ...despesa, count: 1 };
@@ -24,9 +23,7 @@ const ListaDespesas = () => {
           return acc;
         }, {});
 
-        // Converter o objeto de agrupamento em uma lista
         const despesasAgrupadasList = Object.values(despesasAgrupadas);
-
         setDespesas(despesasAgrupadasList);
       } catch (error) {
         setError(error.message);
@@ -39,12 +36,12 @@ const ListaDespesas = () => {
   const handleDelete = (key) => {
     setDespesas((prevDespesas) =>
       prevDespesas.filter(
-        (despesa) => `${despesa.descricao}-${despesa.valor}` !== key,
-      ),
+        (despesa) => `${despesa.descricao}-${despesa.valor}` !== key
+      )
     );
   };
+
   const handleEdit = (key) => {
-    // Lógica para editar a despesa
     console.log("Editar despesa:", key);
   };
 
@@ -61,7 +58,7 @@ const ListaDespesas = () => {
             <div>Nenhuma despesa encontrada.</div>
           ) : (
             despesas.map((despesa) => {
-              console.log("Despesa item:", despesa); // Verificar cada item de despesa
+              console.log("Despesa item:", despesa);
               const key = `${despesa.descricao}-${despesa.valor}`;
               return (
                 <List.Item
@@ -90,14 +87,12 @@ const ListaDespesas = () => {
                       <List.Header as="a" className="list-header">
                         {despesa.descricao}
                       </List.Header>
-                      <List.Description
-                        as="a"
-                        className="list-description"
-                      >{`Valor: ${despesa.valor}`}</List.Description>
-                      <List.Description
-                        as="a"
-                        className="list-description"
-                      >{`Vezes: ${despesa.count}`}</List.Description>
+                      <List.Description as="a" className="list-description">
+                        {`Valor: ${despesa.valor}`}
+                      </List.Description>
+                      <List.Description as="a" className="list-description">
+                        {`Vezes: ${despesa.count}`}
+                      </List.Description>
                     </div>
                     <div>
                       <Button
