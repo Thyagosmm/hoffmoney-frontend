@@ -1,9 +1,11 @@
 /* Container principal */
-.despesa-container {
+
+.despesa {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Altura mínima para preencher a tela */
+  min-height: 100%; /* Altura mínima para preencher a tela */
   padding: 20px;
   background: url("../../assets/textura.jpg") repeat; /* Caminho para a imagem de textura */
   background-size: cover; /* Faz com que a imagem cubra todo o fundo */

@@ -1,18 +1,115 @@
+/* Definindo a variável */
+:root {
+  --slick-dot-size: 20px;
+}
+
+/* Estilizando os botões de navegação do slick */
+.slick-prev,
+.slick-next {
+  width: 50px; /* Aumenta a largura do botão */
+  height: 50px; /* Aumenta a altura do botão */
+  z-index: 1; /* Garante que os botões fiquem acima do conteúdo */
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 40px; /* Aumenta o tamanho do ícone */
+  color: black; /* Altera a cor do ícone, se necessário */
+}
+
+/* Aplicando a variável aos pontos do slick */
+.slick-dots li button:before {
+  font-size: var(--slick-dot-size);
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
-
-.banner {
-  background: url('../../assets/banner.png') no-repeat center center/cover;
-  color: white;
-  padding: 8rem 0;
+.home {
+  height: 100vh;
+  background: url("../../assets/banner.png") repeat; /* Caminho para a imagem de textura */
+}
+.sectionText {
+  padding: 0.5rem;
+  border: solid 2px black;
+  border-radius: 2rem;
+  background-color: rgb(43, 187, 14);
+}
+.section {
+  display: flex;
+  justify-content: center;
+}
+.infoContent {
+  padding: 0 !important;
 }
 
-#about, #services, #testimonials, #contact {
-  padding: 4rem 0;
+.information {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  width: 100vw;
+  align-items: center;
 }
 
+.logo {
+  width: 10vw;
+}
+
+.text {
+  display: flex;
+  width: max-content;
+  font-size: 1.5rem;
+}
+
+.about {
+  padding-top: 1rem;
+  display: flex !important;
+  width: 100%;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  place-items: center;
+}
+.container-text {
+  display: flex !important;
+  width: 100%;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  place-items: center;
+  padding: 0 !important;
+}
+#about,
+#services,
+#testimonials,
+#contact {
+  padding: 4rem;
+  width: 100%;
+}
+.social-links {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
 .social-links .ui.button {
   margin: 0 0.5rem;
+}
+.header {
+  margin: 1rem;
+}
+#contact {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+p {
+  display: flex;
+  align-self: center;
+  place-self: center;
+  font-size: 1.5rem;
+  width: 32vw;
 }

@@ -7,6 +7,7 @@ import FormReset from './views/auth/reset/FormReset';
 import FormReceita from './views/receita/FormReceita';
 import FormDespesa from './views/despesa/FormDespesa';
 import Home from './views/home/Home';
+import ListaDespesas from './views/components/listDespesas/ListaDespesas';
 
 function App() {
     return (
@@ -15,7 +16,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<FormUsuarioRegister />} />
                 <Route path="/login" element={<FormLogin />} />
-                <Route path="/despesa" element={<FormDespesa />} />
+                <Route path="/despesas" element={<ListaDespesas />} />
+                <Route path="/novaDespesa" element={<FormDespesa />} />
                 <Route path="/forget" element={<FormForget />} />
                 <Route path="/reset" element={<FormReset />} />
                 <Route path="/receita" element={<FormReceita />} />

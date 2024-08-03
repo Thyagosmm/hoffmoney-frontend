@@ -1,0 +1,34 @@
+.menu {
+  padding: 0.5rem;
+  color: black;
+  align-items: center;
+  gap: 1rem;
+}
+.rote {
+  border: 1px solid rgb(0, 255, 21);
+  border-radius: 4px;
+  height: max-content;
+}
+.text {
+  font-size: 1.5rem;
+}
+.custom-dropdown {
+  display: flex;
+
+  background-color: black !important; /* Cor de fundo do dropdown */
+  color: white !important; /* Cor do texto do dropdown */
+}
+.custom-dropdown .menu {
+  width: 15rem;
+  background-color: black !important; /* Cor de fundo do dropdown */
+  color: white !important; /* Cor do texto do dropdown */
+}
+.custom-dropdown .menu .item {
+  width: 15rem;
+  color: white !important; /* Cor do texto dos itens do dropdown */
+}
+
+.custom-dropdown .menu .item:hover {
+  width: 15rem;
+  background-color: #01880c !important; /* Cor de fundo ao passar o mouse */
+}
