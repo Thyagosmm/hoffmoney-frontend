@@ -42,10 +42,10 @@ const AppMenu = () => {
       {!isLogged ? (
         <Menu.Menu position="right">
           <>
-            <Menu.Item as={Link} to="/login">
+            <Menu.Item className="rote" as={Link} to="/login">
               Login
             </Menu.Item>
-            <Menu.Item as={Link} to="/register">
+            <Menu.Item className="rote" as={Link} to="/register">
               Registrar-se
             </Menu.Item>
           </>

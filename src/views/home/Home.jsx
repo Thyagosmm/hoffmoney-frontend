@@ -48,7 +48,9 @@ const Home = () => {
                   </Container>
                   <Segment className="about" id="about">
                     <Container fluid className="container-text">
-                      <Header as="h1">Sobre Nós</Header>
+                      <Header as="h1" textAlign="center">
+                        Sobre Nós
+                      </Header>
                       <p>
                         Nossa missão é ajudar você a gerenciar seu futuro
                         financeiro com confiança e segurança.
@@ -58,15 +60,15 @@ const Home = () => {
                 </Segment>
               </div>
               <div className="infoContent">
-                <Segment id="services">
-                  <Container>
-                    <Header as="h2" textAlign="center">
+                <Segment inverted textAlign="center" className="infoContent">
+                  <Container className="about">
+                    <Header as="h1" inverted textAlign="center">
                       Serviços
                     </Header>
                     <div className="ui three column stackable grid">
                       <div className="column">
-                        <Segment>
-                          <Header as="h3">Consultoria Financeira</Header>
+                        <Segment className="container-text">
+                          <Header as="h2">Consultoria Financeira</Header>
                           <p>
                             Ajudamos você a tomar as melhores decisões
                             financeiras.
@@ -74,8 +76,8 @@ const Home = () => {
                         </Segment>
                       </div>
                       <div className="column">
-                        <Segment>
-                          <Header as="h3">Planejamento de Investimentos</Header>
+                        <Segment className="container-text">
+                          <Header as="h2">Planejamento de Investimentos</Header>
                           <p>
                             Estratégias de investimento personalizadas para
                             você.
@@ -83,8 +85,8 @@ const Home = () => {
                         </Segment>
                       </div>
                       <div className="column">
-                        <Segment>
-                          <Header as="h3">Gestão de Riscos</Header>
+                        <Segment className="container-text">
+                          <Header as="h2">Gestão de Riscos</Header>
                           <p>
                             Proteja seu patrimônio com nossas soluções de gestão
                             de riscos.
@@ -94,16 +96,14 @@ const Home = () => {
                     </div>
                   </Container>
                 </Segment>
-              </div>
-              <div className="infoContent">
-                <Segment id="testimonials">
-                  <Container text>
-                    <Header as="h2" textAlign="center">
-                      Depoimentos
+                <Segment inverted textAlign="center" className="infoContent">
+                  <Container className="about">
+                  <Header as="h1" inverted textAlign="center">
+                  Depoimentos
                     </Header>
                     <div className="ui two column stackable grid">
                       <div className="column">
-                        <Segment>
+                        <Segment className="container-text">
                           <p>
                             "A Hoffmoney transformou a maneira como gerencio
                             minhas finanças. Recomendo!" - Cliente Satisfeito
@@ -111,7 +111,7 @@ const Home = () => {
                         </Segment>
                       </div>
                       <div className="column">
-                        <Segment>
+                        <Segment className="container-text">
                           <p>
                             "Profissionais altamente qualificados e serviços
                             excepcionais." - Cliente Satisfeito

@@ -1,20 +1,30 @@
 /* Definindo a variável */
 :root {
-  --slick-dot-size: 20px;
+  --slick-dot-size: 20px !important;
 }
 
 /* Estilizando os botões de navegação do slick */
+/* Estilizando os botões de navegação do slick */
+.slick-prev {
+  left:  -5rem !important; /* Posiciona o botão à esquerda */
+}
+.slick-next {
+  right:  -5rem !important; /* Posiciona o botão à esquerda */
+
+}
+
 .slick-prev,
 .slick-next {
-  width: 50px; /* Aumenta a largura do botão */
-  height: 50px; /* Aumenta a altura do botão */
+  width: 50px !important; /* Aumenta a largura do botão */
+  height: 50px !important; /* Aumenta a altura do botão */
+  font-size: 50px !important; /* Aumenta a altura do botão */
   z-index: 1; /* Garante que os botões fiquem acima do conteúdo */
 }
 
 .slick-prev:before,
 .slick-next:before {
-  font-size: 40px; /* Aumenta o tamanho do ícone */
-  color: black; /* Altera a cor do ícone, se necessário */
+  font-size: 50px !important; /* Aumenta o tamanho do ícone */
+  color: black !important; /* Altera a cor do ícone, se necessário */
 }
 
 /* Aplicando a variável aos pontos do slick */
@@ -41,14 +51,23 @@ body {
   justify-content: center;
 }
 .infoContent {
+  display: flex !important;
+  flex-direction: column;
+  height: 100% !important;
+  width: 100%;
   padding: 0 !important;
+  gap: auto;
+  align-items: center;
+}
+.services {
+  padding: 1rem;
 }
 
 .information {
   display: flex;
   justify-content: space-between;
   height: 100%;
-  width: 100vw;
+  padding: 1rem;
   align-items: center;
 }
 
@@ -63,14 +82,16 @@ body {
 }
 
 .about {
-  padding-top: 1rem;
+  padding: 1rem;
   display: flex !important;
   width: 100%;
+  height: max-content;
   text-align: center;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   place-items: center;
+  border-radius: 2rem 2rem 0 0 !important;
 }
 .container-text {
   display: flex !important;
@@ -80,7 +101,8 @@ body {
   align-items: center;
   justify-content: space-between;
   place-items: center;
-  padding: 0 !important;
+  padding: 1rem !important;
+
 }
 #about,
 #services,
@@ -111,5 +133,9 @@ p {
   align-self: center;
   place-self: center;
   font-size: 1.5rem;
-  width: 32vw;
+}
+
+#contact{
+  height: max-content;
+  padding: 2rem !important;
 }
