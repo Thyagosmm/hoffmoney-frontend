@@ -26,13 +26,6 @@
   margin: 0 auto 15px auto;
 }
 
-.input-field {
-  background-color: rgb(152, 251, 152) !important;
-  color: rgb(0, 0, 0) !important;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-}
 
 .register-button {
   background-color: rgb(152, 251, 152) !important;
@@ -40,6 +33,27 @@
   margin-top: 20px;
   padding: 15px 30px !important;
   font-size: 1.5rem !important;
+}
+.label-input {
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: space-between!important;
+}
+.inputSuccess {
+  padding: 0px!important;
+  width: max-content!important;
+  height: max-content!important;
+  color: green;
+  padding-left:  10px!important;
+  padding-right: 10px !important;
+}
+.inputError {
+  padding: 0px !important;
+  width: max-content !important;
+  height: max-content !important;
+  color: red;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 
 .login-link {

@@ -3,7 +3,12 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
-import { registrarDespesa, atualizarDespesa, deletarDespesa, buscarDespesaPorId } from "../../api/UserApi";
+import {
+  registrarDespesa,
+  atualizarDespesa,
+  deletarDespesa,
+  buscarDespesaPorId,
+} from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 
 const FormDespesa = ({ despesaId }) => {
@@ -133,6 +138,7 @@ const FormDespesa = ({ despesaId }) => {
                   <Form.Field>
                     <label>Nome</label>
                     <input
+                      className="input-field"
                       placeholder="Digite o nome da Despesa"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -141,6 +147,7 @@ const FormDespesa = ({ despesaId }) => {
                   <Form.Field>
                     <label>Valor</label>
                     <input
+                      className="input-field"
                       placeholder="Digite o valor da Despesa"
                       value={value}
                       onChange={(e) => setValue(e.target.value)}
@@ -149,6 +156,7 @@ const FormDespesa = ({ despesaId }) => {
                   <Form.Field>
                     <label>Categoria</label>
                     <Dropdown
+                      className="input-field"
                       placeholder="Selecione a Categoria"
                       fluid
                       selection
@@ -160,6 +168,7 @@ const FormDespesa = ({ despesaId }) => {
                   <Form.Field>
                     <label>Recorrente</label>
                     <Dropdown
+                      className="input-field"
                       placeholder="Selecione Recorrência"
                       fluid
                       selection
@@ -176,6 +185,7 @@ const FormDespesa = ({ despesaId }) => {
                       <Form.Field>
                         <label>Frequência</label>
                         <Dropdown
+                          className="input-field"
                           placeholder="Selecione Frequência"
                           fluid
                           selection
@@ -210,6 +220,7 @@ const FormDespesa = ({ despesaId }) => {
                   <Form.Field>
                     <label>Descrição</label>
                     <input
+                      className="input-field"
                       placeholder="Digite uma descrição para a despesa"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
@@ -224,15 +235,24 @@ const FormDespesa = ({ despesaId }) => {
             <div className="save-button-container">
               {despesaId ? (
                 <>
-                  <Button className="save-button" onClick={handleAtualizarDespesa}>
+                  <Button
+                    className="save-button"
+                    onClick={handleAtualizarDespesa}
+                  >
                     Atualizar
                   </Button>
-                  <Button className="delete-button" onClick={handleDeletarDespesa}>
+                  <Button
+                    className="delete-button"
+                    onClick={handleDeletarDespesa}
+                  >
                     Deletar
                   </Button>
                 </>
               ) : (
-                <Button className="save-button" onClick={handleRegistrarDespesa}>
+                <Button
+                  className="save-button"
+                  onClick={handleRegistrarDespesa}
+                >
                   Salvar
                 </Button>
               )}
