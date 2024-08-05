@@ -18,7 +18,7 @@ export default function FormLogin() {
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [progress, setProgress] = useState(0);
@@ -39,25 +39,45 @@ export default function FormLogin() {
     }
 
     try {
-      const response = await login({ email, senha: senha });
-      console.log("User logged in:", response.data);
-      setSuccess("Login realizado com sucesso!");
-      setError("");
-      showModal("Login realizado com sucesso!");
-      // Redirecionar ou limpar campos...
+      const data = await login(email, senha);
+      console.log("Dados recebidos da função login:", data);
+
+      if (data && Object.keys(data).length > 0) {
+        console.log("Usuário logado com sucesso:", data);
+        localStorage.setItem("userId", data.id);
+        localStorage.setItem("nome", data.nome);
+        localStorage.setItem("email", data.email);
+        setSuccess("Login realizado com sucesso!");
+        setError("");
+        showModal("Login realizado com sucesso!");
+        console.log("Dados salvos no localStorage:");
+        console.log("userId:", localStorage.getItem("userId"));
+        console.log("nome:", localStorage.getItem("nome"));
+        console.log("email:", localStorage.getItem("email"));
+        window.location.href = "/";
+      } else {
+        console.error("Error logging in user:", data);
+        if (data.response && data.status === 401) {
+          showModal("Credenciais inválidas. Por favor, tente novamente.");
+        } else {
+          showModal(
+            "Erro ao fazer login. Por favor, tente novamente mais tarde.",
+          );
+        }
+        setSuccess("");
+      }
     } catch (error) {
       console.error("Error logging in user:", error);
-      if (error.response && error.response.status === 401) {
+      if (error.response && error.response.status === 400) {
         showModal("Credenciais inválidas. Por favor, tente novamente.");
       } else {
         showModal(
-          "Usuario não encontrado, verifique seus dados ou crie uma conta",
+          "Erro ao fazer login. Por favor, tente novamente mais tarde.",
         );
       }
       setSuccess("");
     }
   };
-
   const showModal = (message) => {
     setModalMessage(message);
     setIsModalOpen(true);
@@ -75,6 +95,21 @@ export default function FormLogin() {
     }, 40); // Ajuste o tempo conforme necessário
   };
 
+  const handleEmailChange = (e) => {
+    console.log("Email:", e.target.value);
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+    // Chamar a função de validação
+    setIsEmailValid(validateEmail(emailValue));
+  };
+
+  // Definir uma função de validação
+  const validateEmail = (email) => {
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+  };
+
   return (
     <div className="login-container">
       <Info />
@@ -84,32 +119,37 @@ export default function FormLogin() {
           <div className="form-container">
             <Form>
               <Form.Field className="form-field">
-                <label>Email</label>
+                <label className="label-input">
+                  Email
+                  {!isEmailValid ? (
+                    <Message className="inputError" negative>
+                      Email inválido.
+                    </Message>
+                  ) : (
+                    <Message className="inputSuccess" positive>
+                      Email válido
+                    </Message>
+                  )}
+                </label>
                 <input
+                  ref={emailRef}
                   className="input-field"
                   type="email"
-                  placeholder="Digite seu e-mail..."
+                  placeholder="Email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
                 />
-                {!isEmailValid && (
-                  <Message className="inputError" negative>
-                    Email inválido.
-                  </Message>
-                )}
               </Form.Field>
               <Form.Field className="form-field">
                 <label>Senha</label>
                 <input
+                  ref={passwordRef}
                   className="input-field"
                   type="password"
                   placeholder="Digite sua senha..."
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                 />
-                <div className="forgot-senha">
-                  <Link to="/forget">Esqueci minha senha</Link>
-                </div>
               </Form.Field>
               <Button className="login-button" onClick={handleLogin}>
                 Entrar
