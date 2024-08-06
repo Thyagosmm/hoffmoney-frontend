@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, List } from "semantic-ui-react";
-import { listarDespesas } from "../../../api/UserApi";
+import {
+  listarDespesas,
+  incrementarSaldo,
+  decrementarSaldo,
+} from "../../../api/UserApi";
 import Header from "../appMenu/AppMenu";
 import "./ListaDespesas.css";
 import { Link } from "react-router-dom/dist";
 
 const ListaDespesas = () => {
+  const userId = localStorage.getItem("userId");
+  const [message, setMessage] = useState("");
+
+  const handleIncrementarSaldo = async (valor) => {
+    const result = await incrementarSaldo(valor);
+    alert(result.message);
+  };
+
+  const handleDecrementarSaldo = async (valor) => {
+    const result = await decrementarSaldo(valor);
+    alert(result.message);
+  };
+
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
@@ -132,6 +149,9 @@ const ListaDespesas = () => {
       <Button className="btnCadastrarDespesa" as={Link} to="/novaDespesa">
         Cadastrar Nova Despesa
       </Button>
+      <button onClick={handleIncrementarSaldo}>Incrementar 10,99</button>
+      <button onClick={handleDecrementarSaldo}>Decrementar 10,90</button>
+      {message && <p>{message}</p>}
     </>
   );
 };

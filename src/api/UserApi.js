@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8085/api",
+  baseURL: "http://192.168.0.109:8085/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -47,4 +47,24 @@ export const atualizarDespesa = (despesaId, despesaData) => {
 
 export const deletarDespesa = (despesaId) => {
   return api.delete(`/despesas/${despesaId}`);
+};
+
+export const incrementarSaldo = (valor) => {
+  const userId = localStorage.getItem("userId");
+
+  return api.put(`/usuario/incrementar`, { id: userId, valor });
+};
+
+export const decrementarSaldo = (valor) => {
+  const userId = localStorage.getItem("userId");
+
+  return api.put(`/usuario/decrementar`, { id: userId, valor });
+};
+
+export const consultarSaldo = (userId) => {
+  return api.get(`/usuario/saldo`, {
+    params: {
+      id: userId,
+    },
+  });
 };

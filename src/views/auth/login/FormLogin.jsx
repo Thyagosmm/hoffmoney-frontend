@@ -47,6 +47,7 @@ export default function FormLogin() {
         localStorage.setItem("userId", data.id);
         localStorage.setItem("nome", data.nome);
         localStorage.setItem("email", data.email);
+        localStorage.setItem("saldo", data.saldo);
         setSuccess("Login realizado com sucesso!");
         setError("");
         showModal("Login realizado com sucesso!");
@@ -54,6 +55,7 @@ export default function FormLogin() {
         console.log("userId:", localStorage.getItem("userId"));
         console.log("nome:", localStorage.getItem("nome"));
         console.log("email:", localStorage.getItem("email"));
+        console.log("saldo:", localStorage.getItem("saldo"));
         window.location.href = "/";
       } else {
         console.error("Error logging in user:", data);

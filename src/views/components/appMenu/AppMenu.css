@@ -4,7 +4,13 @@
   align-items: center;
   gap: 1rem;
 }
-.rote {
+.userInfo{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 0!important;
+  margin: 0!important;
+}.rote {
   border: 1px solid rgb(0, 255, 21);
   border-radius: 4px;
   height: max-content;
