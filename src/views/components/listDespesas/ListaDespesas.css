@@ -5,6 +5,13 @@
     height: max-content!important;
     padding: 2rem!important;
     border-radius: 2rem;
+    
+}
+.containerHeader{
+    width: 100%!important;
+    text-align: center!important;
+    margin-bottom: 1rem!important;
+
 }
 
 .listaDespesas {
@@ -39,6 +46,9 @@
     font-size: 1.5em!important;
     margin-bottom: 0.5rem!important;
     text-align: center!important;
+}
+.totalDespesas{
+    margin-left: 5rem!important;
 }
 
 .btnCadastrarDespesa {

@@ -113,58 +113,56 @@ export default function FormLogin() {
   return (
     <div className="login-container">
       <Info />
-      <div className="login-right">
-        <Container textAlign="center">
-          <h2>Faça login na sua conta</h2>
-          <div className="form-container">
-            <Form>
-              <Form.Field className="form-field">
-                <label className="label-input">
-                  Email
-                  {!isEmailValid ? (
-                    <Message className="inputError" negative>
-                      Email inválido.
-                    </Message>
-                  ) : (
-                    <Message className="inputSuccess" positive>
-                      Email válido
-                    </Message>
-                  )}
-                </label>
-                <input
-                  ref={emailRef}
-                  className="input-field"
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={handleEmailChange}
-                />
-              </Form.Field>
-              <Form.Field className="form-field">
-                <label>Senha</label>
-                <input
-                  ref={passwordRef}
-                  className="input-field"
-                  type="password"
-                  placeholder="Digite sua senha..."
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
-                />
-              </Form.Field>
-              <Button className="login-button" onClick={handleLogin}>
-                Entrar
-              </Button>
-            </Form>
-          </div>
-          <Divider />
-          <div className="footer">
-            <p>Ou não tem conta aqui? </p>
-            <Link className="footer-link" to="/register">
-              Criar conta
-            </Link>
-          </div>
-        </Container>
-      </div>
+      <Container className="login-right" textAlign="center">
+        <h2>Faça login na sua conta</h2>
+        <div className="form-container">
+          <Form>
+            <Form.Field className="form-field">
+              <label className="label-input">
+                Email
+                {!isEmailValid ? (
+                  <Message className="inputError" negative>
+                    Email inválido.
+                  </Message>
+                ) : (
+                  <Message className="inputSuccess" positive>
+                    Email válido
+                  </Message>
+                )}
+              </label>
+              <input
+                ref={emailRef}
+                className="input-field"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </Form.Field>
+            <Form.Field className="form-field">
+              <label>Senha</label>
+              <input
+                ref={passwordRef}
+                className="input-field"
+                type="password"
+                placeholder="Digite sua senha..."
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+            </Form.Field>
+            <Button className="login-button" onClick={handleLogin}>
+              Entrar
+            </Button>
+          </Form>
+        </div>
+        <Divider />
+        <div className="footer">
+          <p>Ou não tem conta aqui? </p>
+          <Link className="footer-link" to="/register">
+            Criar conta
+          </Link>
+        </div>
+      </Container>
       <Modal
         className="modal-container"
         open={isModalOpen}

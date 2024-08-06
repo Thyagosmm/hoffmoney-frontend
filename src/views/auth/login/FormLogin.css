@@ -1,3 +1,4 @@
+/* Estilos para telas maiores */
 .login-container {
   display: flex;
   flex-direction: row;
@@ -32,67 +33,6 @@
   width: 50%;
   margin: 0 auto;
 }
-
-
-.modal-container{
-  display: flex!important;
-  flex-direction: column!important;
-  align-items: center!important;
-  justify-content: center!important;
-  height: 10vh!important;
-  width: max-content!important;
-  background-color: rgba(0, 0, 0, 0.5)!important;
-}
-.modal-content{
-  display: flex!important;
-  flex-direction: column!important;
-  align-items: center!important;
-  justify-content: center!important;
-  height: max-content!important;
-  width: max-content!important;
-  max-width: 25vw;
-  background-color: white!important;
-  padding: 0px!important;
-  margin: 0px!important;
-}
-.modal-header{
-  display: flex!important;
-  flex-direction: row!important;
-  align-items: center!important;
-  justify-content: center!important;
-  height: max-content!important;
-  width: 100%!important;
-  padding: 1rem!important;
-  margin: 0px!important;
-}
-.modal-message{
-  text-align: center;
-  display: flex!important;
-  flex-direction: column!important;
-  align-items: center!important;
-  justify-content: center!important;
-  height: max-content!important;
-  width: 100%!important;
-  background-color: white!important;
-  padding: 1rem!important;
-  margin: 0px!important;
-}
-.progress{
-  width: 100%!important;
-  height:0.5rem!important;
-  display: absolute!important;
-  margin: 0!important;
-  bottom: 0!important;
-}
-.bar{
-
-  height:0.5rem!important;
-  display: absolute!important;
-  margin: 0!important;
-  bottom: 0!important;
-
-}
-
 .login-button {
   background-color: rgb(152, 251, 152) !important;
   color: black !important;
@@ -101,51 +41,52 @@
   font-size: 1.5rem !important;
 }
 
-.forgot-senha {
-  width: 100%;
-  margin-top: 10px;
-  text-align: right;
-}
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+  .form-field .input-field{
+    width: 80vw!important;
+  }
+  .login-container {
+    width: 100vw!important;
+    flex-direction: column-reverse;
+    height: auto;
+  }
 
-.forgot-senha a {
-  color: black;
-  font-size: 1rem;
-}
-.register{
-  display: flex;
-  gap: 0.5rem;
-  flex-direction: column;
-  height: max-content;
-  width: 100%;
-  align-items: center;
-}
-p{
-  width: max-content!important;
-}
-.register-link {
-  height: max-content;
-  width: max-content;
-  color: rgb(102, 218, 113);
-  font-size: 4rem !important;
-  text-shadow:
-    0.2rem 0.2rem 0.3rem #0000004f,
-    0.2rem 0.2rem 0.3rem #0000004f,
-    0.2rem 0.2rem 0.3rem #0000004f,
-    0.2rem 0.2rem 0.3rem #0000004f;
-}
+  .login-left, .login-right {
+    width: 100vw!important;
+  }
 
-.register-link:hover {
-  color: rgb(0, 0, 0);
-  font-size: 4rem !important;
-  text-shadow:
-    0.2rem 0.2rem 3rem rgb(102, 218, 113),
-    0.2rem 0.2rem 3rem  rgb(102, 218, 113),
-    0.2rem 0.2rem 3rem  rgb(102, 218, 113),
-    0.2rem 0.2rem 3rem  rgb(102, 218, 113);
-}
+  .form-container {
+    display: flex;
+    width: 90vw!important;
+    padding: 0.5rem;
+    box-shadow: none;
+    margin: 0;
+  }
 
-label {
-  text-align: left !important;
-  display: block;
-  margin-bottom: 5px;
+  .modal-content {
+    max-width: 90vw;
+  }
+
+  .modal-header, .modal-message {
+    padding: 0.5rem!important;
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
+  }
+
+  .forgot-senha {
+    text-align: center;
+  }
+
+  .register-link {
+    font-size: 2rem !important;
+  }
+
+  .register-link:hover {
+    font-size: 2rem !important;
+  }
 }

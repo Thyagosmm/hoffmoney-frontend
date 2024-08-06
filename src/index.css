@@ -32,6 +32,11 @@ code {
 }
 
 
+p{
+  font-size: 1.5rem;
+  width: 100%!important;
+  height: max-content!important;
+}
 
 .footer-link {
   height: max-content;

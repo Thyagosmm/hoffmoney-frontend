@@ -6,17 +6,37 @@
   align-items: center;
   justify-content: center;
 }
-.forgot-password-logo {
-  margin-bottom: 20px;
-}
+
+
 
 .social-links {
   display: flex;
+  gap: 2rem;
   justify-content: space-between;
-  width: 60%;
-  margin-top: 20px;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .social-link {
   text-align: center;
+}
+
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+  .forgot-password-left {
+    padding: 1rem;
+  }
+
+  .infoLogo {
+    width: 50%;
+  }
+
+
+  .social-link {
+    margin-bottom: 1rem;
+  }
+
+  .social-link a {
+    font-size: 1rem;
+  }
 }

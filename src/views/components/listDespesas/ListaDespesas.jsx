@@ -60,6 +60,7 @@ const ListaDespesas = () => {
     <>
       <Header />
       <Container className="despesas">
+        <h1 className="containerHeader">Despesas</h1>
         <List divided inverted relaxed className="listDespesas">
           {despesas.length === 0 ? (
             <div>Nenhuma despesa encontrada.</div>
@@ -76,11 +77,7 @@ const ListaDespesas = () => {
                   }}
                   className="list-item"
                 >
-                  <List.Icon
-                    name="money"
-                    className="list-icon"
-                    inverted
-                  />
+                  <List.Icon name="money" className="list-icon" inverted />
                   <List.Content
                     className="list-content"
                     inverted
@@ -94,7 +91,11 @@ const ListaDespesas = () => {
                       <List.Header as="a" inverted className="list-header">
                         {despesa.descricao}
                       </List.Header>
-                      <List.Description as="a" inverted className="list-description">
+                      <List.Description
+                        as="a"
+                        inverted
+                        className="list-description"
+                      >
                         {`Valor: R$ ${despesa.valor}`}
                       </List.Description>
                       <List.Description as="a" i className="list-description">
