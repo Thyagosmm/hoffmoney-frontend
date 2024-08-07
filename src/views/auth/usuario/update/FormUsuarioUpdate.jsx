@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
+import { Button, Container, Form, Message } from "semantic-ui-react";
 import { updateUser, getUser } from "../../../../api/UserApi"; // Supondo que você tenha essas funções na sua API
 import AppMenu from "../../../components/appMenu/AppMenu";
 

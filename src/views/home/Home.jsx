@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Segment, Header } from "semantic-ui-react";
+import { Container} from "semantic-ui-react";
 import "./Home.css";
 import soon from "../../assets/soon.png";
 import AppMenu from "../components/appMenu/AppMenu";
