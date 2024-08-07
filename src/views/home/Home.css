@@ -10,3 +10,19 @@ body {
 .header {
   margin: 1rem;
 }
+.loggedImg {
+  width: 50vh;
+  border-radius: 50%;
+  align-self: center;
+}
+.logged{
+  background-color: black;
+  display: flex!important;
+  flex-direction: column;
+  color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: max-content;
+  justify-content: center;
+  text-align: center!important;
+}

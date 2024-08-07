@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
-import { registerUser } from "../../../api/UserApi";
-import "./FormUsuarioRegister.css";
-import Info from "../../components/info/Info";
+import { updateUser, getUser } from "../../../../api/UserApi"; // Supondo que você tenha essas funções na sua API
+import AppMenu from "../../../components/appMenu/AppMenu";
 
-const FormUsuarioRegister = () => {
+import "./FormUsuarioUpdate.css";
+
+
+
+const FormUsuarioUpdate = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +17,24 @@ const FormUsuarioRegister = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [charsRemaining, setCharsRemaining] = useState(8);
+
+  useEffect(() => {
+    // Supondo que você tenha uma função para obter os dados do usuário
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const response = await getUser(userId);
+        const { nome, email } = response.data;
+        setName(nome);
+        setEmail(email);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setError("Erro ao carregar os dados do usuário.");
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Função para exibir o popup
   const showPopup = () => {
@@ -60,12 +81,12 @@ const FormUsuarioRegister = () => {
     console.log(password); // Aqui você pode substituir por uma lógica para exibir os resultados na UI
   };
 
-  const handleRegister = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
     // Validar campos
-    if (!name || !email || !password) {
-      setError("Todos os campos são obrigatórios.");
+    if (!name || !email) {
+      setError("Nome e email são obrigatórios.");
       return;
     }
 
@@ -75,29 +96,28 @@ const FormUsuarioRegister = () => {
     }
 
     try {
-      const response = await registerUser({
+      const userId = localStorage.getItem("userId");
+      const response = await updateUser(userId, {
         nome: name,
         email,
         senha: password,
       });
-      console.log("User registered:", response.data);
-      setSuccess("Usuário registrado com sucesso!");
+      console.log("User updated:", response.data);
+      setSuccess("Usuário atualizado com sucesso!");
       setError("");
       showPopup();
       // Redirecionar ou limpar campos...
     } catch (error) {
-      console.error("Error registering user:", error);
-      setError("Erro ao registrar o usuário.");
+      console.error("Error updating user:", error);
+      setError("Erro ao atualizar o usuário.");
       setSuccess("");
     }
   };
-
   return (
-    <div className="register-container">
-      <Info />
-      <div className="register-right">
-        <Container textAlign="center">
-          <h2>Criar Conta</h2>
+    <>
+    <AppMenu />
+  <Container textAlign="center">
+          <h2>Editar Perfil</h2>
           <div className="form-container">
             <Form>
               <Form.Field className="form-field">
@@ -151,25 +171,17 @@ const FormUsuarioRegister = () => {
                   onChange={handlePasswordChange}
                 />
               </Form.Field>
-              <Button className="register-button" onClick={handleRegister}>
-                Cadastrar-se
+              <Button className="register-button" onClick={handleUpdate}>
+                Atualizar
               </Button>
             </Form>
-          </div>
-          <Divider />
-          <div className="footer">
-            <p>Ou já tem uma conta?</p>
-            <Link className="footer-link" to="/login">
-              Login
-            </Link>
           </div>
           {error && <Message negative>{error}</Message>}
           {success && <Message positive>{success}</Message>}
           {isPopupVisible && <Message positive>Redirecionando...</Message>}
         </Container>
-      </div>
-    </div>
+  </>
   );
 };
 
-export default FormUsuarioRegister;
+export default FormUsuarioUpdate;

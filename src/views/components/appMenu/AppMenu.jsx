@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Image, Menu } from "semantic-ui-react";
+import { Image, Menu, MenuItem } from "semantic-ui-react";
 import logo from "../../../assets/logo.png";
 import "./AppMenu.css"; // Importar o arquivo CSS
 import { consultarSaldo } from "../../../api/UserApi";
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [firstName, setFirstName] = useState("");
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    const nome = localStorage.getItem("nome");
+    const nameParts = localStorage.getItem("nome");
     const email = localStorage.getItem("email");
-
-    if (userId && nome && email) {
+    
+    if (userId && nameParts && email) {
+      setFirstName(nameParts.split(" ")[0]); // Dividir o nome completo e pegar o primeiro nome
       setIsLogged(true);
 
       consultarSaldo(userId)
@@ -62,18 +65,25 @@ const AppMenu = () => {
           <Menu.Item className="rote" as={Link} to="/receitas">
             Receitas
           </Menu.Item>
-          <Menu.Menu position="right">
-            <div className="userInfo">
-              <Menu.Item className="userInfo">
-                olá {localStorage.getItem("nome")}
+          <Menu.Menu position="right" className="menu-container">
+            <Menu.Item className="userInfo">
+              <MenuItem className="basicInfo">
+              <span>Bem-vindo, {firstName}!</span>
+              <span className="span">
+              Seu saldo é R$ {localStorage.getItem("saldo")}
+              </span>
+              </MenuItem>
+              <Menu.Item as={Link} to="/update" className="additional-info">
+              Editar Perfil
               </Menu.Item>
-              <Menu.Item className="userInfo">
-                Seu saldo é R$ {localStorage.getItem("saldo")}
+              <Menu.Item as={Link} to="/saldo" className="additional-info">
+              Editar Saldo
               </Menu.Item>
-            </div>
-            <>
-              <Menu.Item onClick={logout}>Sair</Menu.Item>
-            </>
+              <Menu.Item as={Link} to="/register" className="additional-info" onClick={logout}>
+              Sair
+              </Menu.Item>
+            </Menu.Item>
+            
           </Menu.Menu>
         </>
       )}

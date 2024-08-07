@@ -1,209 +1,269 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, List, Dropdown } from "semantic-ui-react";
+import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
 import {
-    listarDespesas,
   registrarDespesa,
   atualizarDespesa,
   deletarDespesa,
   buscarDespesaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
-import { Link } from "react-router-dom/dist";
 
-const ListaDespesas = () => {
-  const [despesas, setDespesas] = useState([]);
-  const [filteredDespesas, setFilteredDespesas] = useState([]);
-  const [error, setError] = useState(null);
-  const [total, setTotal] = useState(0);
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-
-  useEffect(() => {
-    const getDespesas = async () => {
-      try {
-        const { data } = await listarDespesas();
-        console.log("Despesas:", data);
-
-        const despesasAgrupadas = data.reduce((acc, despesa) => {
-          const key = `${despesa.descricao}-${despesa.valor}`;
-          if (!acc[key]) {
-            acc[key] = { ...despesa, count: 1 };
-          } else {
-            acc[key].count += 1;
-          }
-          return acc;
-        }, {});
-
-        const despesasAgrupadasList = Object.values(despesasAgrupadas);
-        setDespesas(despesasAgrupadasList);
-        setFilteredDespesas(despesasAgrupadasList);
-        const totalDespesas = despesasAgrupadasList.reduce((sum, despesa) => {
-          return sum + despesa.valor * despesa.count;
-        }, 0);
-        setTotal(totalDespesas);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
-    getDespesas();
-  }, []);
+const FormDespesa = ({ despesaId }) => {
+  const [name, setName] = useState("");
+  const [value, setValue] = useState(""); // Valor da despesa
+  const [category, setCategory] = useState("");
+  const [recurrence, setRecurrence] = useState("");
+  const [frequency, setFrequency] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    filterDespesas();
-  }, [selectedMonth, selectedYear]);
+    if (despesaId) {
+      const fetchDespesa = async () => {
+        try {
+          const response = await buscarDespesaPorId(despesaId);
+          const despesa = response.data;
+          setName(despesa.nome);
+          setValue(despesa.valor);
+          setCategory(despesa.categoria);
+          setRecurrence(despesa.recorrente);
+          setFrequency(despesa.periodo);
+          setDescription(despesa.descricao);
+          setDate(new Date(despesa.dataDeCobranca));
+        } catch (error) {
+          console.error("Erro ao buscar a despesa:", error);
+          setError("Erro ao buscar a despesa.");
+        }
+      };
+      fetchDespesa();
+    }
+  }, [despesaId]);
 
-  const months = [
-    { key: "01", text: "Janeiro", value: "01" },
-    { key: "02", text: "Fevereiro", value: "02" },
-    { key: "03", text: "Março", value: "03" },
-    { key: "04", text: "Abril", value: "04" },
-    { key: "05", text: "Maio", value: "05" },
-    { key: "06", text: "Junho", value: "06" },
-    { key: "07", text: "Julho", value: "07" },
-    { key: "08", text: "Agosto", value: "08" },
-    { key: "09", text: "Setembro", value: "09" },
-    { key: "10", text: "Outubro", value: "10" },
-    { key: "11", text: "Novembro", value: "11" },
-    { key: "12", text: "Dezembro", value: "12" },
+  const categoryOptions = [
+    { key: "Alimentação", text: "Alimentação", value: "Alimentação" },
+    { key: "Transporte", text: "Transporte", value: "Transporte" },
+    { key: "Aluguel", text: "Aluguel", value: "Aluguel" },
+    { key: "Utilidades", text: "Utilidades", value: "Utilidades" },
+    { key: "Entretenimento", text: "Entretenimento", value: "Entretenimento" },
+    { key: "Outros", text: "Outros", value: "Outros" },
   ];
 
-  const years = [
-    { key: "2022", text: "2022", value: "2022" },
-    { key: "2023", text: "2023", value: "2023" },
-    { key: "2024", text: "2024", value: "2024" },
-  ];
-
-  const filterDespesas = () => {
-    const filtered = despesas.filter((despesa) => {
-      const despesaDate = new Date(despesa.data);
-      const despesaMonth = despesaDate.getMonth() + 1;
-      const despesaYear = despesaDate.getFullYear();
-
-      return (
-        (selectedMonth ? despesaMonth === parseInt(selectedMonth) : true) &&
-        (selectedYear ? despesaYear === parseInt(selectedYear) : true)
-      );
-    });
-
-    setFilteredDespesas(filtered);
-    const totalFilteredDespesas = filtered.reduce((sum, despesa) => {
-      return sum + despesa.valor * despesa.count;
-    }, 0);
-    setTotal(totalFilteredDespesas);
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  const handleDelete = (key) => {
-    setDespesas((prevDespesas) =>
-      prevDespesas.filter(
-        (despesa) => `${despesa.descricao}-${despesa.valor}` !== key,
-      ),
-    );
+  const handleRegistrarDespesa = async (e) => {
+    e.preventDefault();
+    const formattedDate = formatDate(date);
+
+    try {
+      const response = await registrarDespesa({
+        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
+        nome: name,
+        descricao: description,
+        valor: value,
+        categoria: category,
+        recorrente: recurrence,
+        periodo: frequency,
+        dataDeCobranca: formattedDate,
+        paga: false,
+      });
+      console.log("Despesa registrada:", response.data);
+      setSuccess("Despesa registrada com sucesso!");
+      // Redirecionar ou limpar campos...
+    } catch (error) {
+      console.error("Erro ao registrar a despesa:", error);
+      setError("Erro ao registrar a despesa.");
+    }
   };
 
-  const handleEdit = (key) => {
-    console.log("Editar despesa:", key);
+  const handleAtualizarDespesa = async (e) => {
+    e.preventDefault();
+    const formattedDate = formatDate(date);
+
+    try {
+      const response = await atualizarDespesa(despesaId, {
+        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
+        nome: name,
+        descricao: description,
+        valor: value,
+        categoria: category,
+        recorrente: recurrence,
+        periodo: frequency,
+        dataDeCobranca: formattedDate,
+        paga: false,
+      });
+      console.log("Despesa atualizada:", response.data);
+      setSuccess("Despesa atualizada com sucesso!");
+      // Redirecionar ou limpar campos...
+    } catch (error) {
+      console.error("Erro ao atualizar a despesa:", error);
+      setError("Erro ao atualizar a despesa.");
+    }
   };
 
-  if (error) {
-    return <div>Erro: {error}</div>;
-  }
+  const handleDeletarDespesa = async (e) => {
+    e.preventDefault();
+    try {
+      await deletarDespesa(despesaId);
+      console.log("Despesa deletada");
+      setSuccess("Despesa deletada com sucesso!");
+      // Redirecionar ou limpar campos...
+    } catch (error) {
+      console.error("Erro ao deletar a despesa:", error);
+      setError("Erro ao deletar a despesa.");
+    }
+  };
 
   return (
     <>
-      <Header />
-      <Container className="despesas">
-        <h1 className="containerHeader">Despesas</h1>
-        <div className="filter-container">
-          <Dropdown
-            placeholder="Selecione o Mês"
-            selection
-            options={months}
-            onChange={(e, data) => setSelectedMonth(data.value)}
-          />
-          <Dropdown
-            placeholder="Selecione o Ano"
-            selection
-            options={years}
-            onChange={(e, data) => setSelectedYear(data.value)}
-          />
+      <div className="container">
+        <div>
+          <Header />
         </div>
-        <List divided inverted relaxed className="listDespesas">
-          {filteredDespesas.length === 0 ? (
-            <div>Nenhuma despesa encontrada.</div>
-          ) : (
-            filteredDespesas.map((despesa) => {
-              const key = `${despesa.descricao}-${despesa.valor}`;
-              return (
-                <List.Item
-                  key={key}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                  className="list-item"
-                >
-                  <List.Icon name="money" className="list-icon" inverted />
-                  <List.Content
-                    className="list-content"
-                    inverted
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
+        <div className="despesa">
+          <div className="despesa-form">
+            <h1>Cadastro de Despesa</h1>
+            <div className="form-content">
+              <div className="form-fields">
+                <Form>
+                  <Form.Field>
+                    <label>Nome</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite o nome da Despesa"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Valor</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite o valor da Despesa"
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Categoria</label>
+                    <Dropdown
+                      className="input-field"
+                      placeholder="Selecione a Categoria"
+                      fluid
+                      selection
+                      options={categoryOptions}
+                      value={category}
+                      onChange={(e, { value }) => setCategory(value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Recorrente</label>
+                    <Dropdown
+                      className="input-field"
+                      placeholder="Selecione Recorrência"
+                      fluid
+                      selection
+                      options={[
+                        { key: true, text: "Sim", value: true },
+                        { key: false, text: "Não", value: false },
+                      ]}
+                      value={recurrence}
+                      onChange={(e, { value }) => setRecurrence(value)}
+                    />
+                  </Form.Field>
+                  {recurrence === true && (
+                    <>
+                      <Form.Field>
+                        <label>Frequência</label>
+                        <Dropdown
+                          className="input-field"
+                          placeholder="Selecione Frequência"
+                          fluid
+                          selection
+                          options={[
+                            {
+                              key: "diario",
+                              text: "Diariamente",
+                              value: "diario",
+                            },
+                            {
+                              key: "semanal",
+                              text: "Semanalmente",
+                              value: "semanal",
+                            },
+                            {
+                              key: "mensal",
+                              text: "Mensalmente",
+                              value: "mensal",
+                            },
+                            {
+                              key: "anual",
+                              text: "Anualmente",
+                              value: "anual",
+                            },
+                          ]}
+                          value={frequency}
+                          onChange={(e, { value }) => setFrequency(value)}
+                        />
+                      </Form.Field>
+                    </>
+                  )}
+                  <Form.Field>
+                    <label>Descrição</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite uma descrição para a despesa"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </Form.Field>
+                </Form>
+              </div>
+              <div className="calendar-container">
+                <Calendar onChange={setDate} value={date} />
+              </div>
+            </div>
+            <div className="save-button-container">
+              {despesaId ? (
+                <>
+                  <Button
+                    className="save-button"
+                    onClick={handleAtualizarDespesa}
                   >
-                    <div>
-                      <List.Header as="a" inverted className="list-header">
-                        {despesa.descricao}
-                      </List.Header>
-                      <List.Description
-                        as="a"
-                        inverted
-                        className="list-description"
-                      >
-                        {`Valor: R$ ${despesa.valor}`}
-                      </List.Description>
-                      <List.Description as="a" i className="list-description">
-                        {`Vezes: ${despesa.count}`}
-                      </List.Description>
-                    </div>
-                    <div>
-                      <Button
-                        color="green"
-                        onClick={() => handleEdit(key)}
-                        className="edit-button"
-                        style={{ marginRight: "10px" }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        color="red"
-                        onClick={() => handleDelete(key)}
-                        className="delete-button"
-                      >
-                        Excluir
-                      </Button>
-                    </div>
-                  </List.Content>
-                </List.Item>
-              );
-            })
-          )}
-          <div className="totalDespesas">
-            <p>Total:R$ {total}</p>
+                    Atualizar
+                  </Button>
+                  <Button
+                    className="delete-button"
+                    onClick={handleDeletarDespesa}
+                  >
+                    Deletar
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  className="save-button"
+                  onClick={handleRegistrarDespesa}
+                >
+                  Salvar
+                </Button>
+              )}
+            </div>
+            {success && <div className="success-message">{success}</div>}
+            {error && <div className="error-message">{error}</div>}
           </div>
-        </List>
-      </Container>
-      <Button className="btnCadastrarDespesa" as={Link} to="/novaDespesa">
-        Cadastrar Nova Despesa
-      </Button>
+        </div>
+      </div>
     </>
   );
 };
 
-export default ListaDespesas;
+export default FormDespesa;

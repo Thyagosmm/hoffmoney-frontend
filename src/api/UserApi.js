@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.0.109:8085/api",
+  baseURL: "http://localhost:8085/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -67,4 +67,12 @@ export const consultarSaldo = (userId) => {
       id: userId,
     },
   });
+};
+
+export const updateUser = (userId, userData) => {
+  return api.put(`/usuario/${userId}`, userData);
+};
+
+export const getUser = (userId) => {
+  return api.get(`/usuario/${userId}`);
 };
