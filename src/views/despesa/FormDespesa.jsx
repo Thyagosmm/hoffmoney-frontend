@@ -21,8 +21,13 @@ const FormDespesa = ({ despesaId }) => {
   const [date, setDate] = useState(new Date());
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+const [userId, setUSerId] = useState("");
 
   useEffect(() => {
+   setUserId(localStorage.getItem("userId"));
+  if (!userId) {
+    throw new Error("Usuário não está logado.");
+  }
     if (despesaId) {
       const fetchDespesa = async () => {
         try {
@@ -66,7 +71,7 @@ const FormDespesa = ({ despesaId }) => {
 
     try {
       const response = await registrarDespesa({
-        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
+        usuario: { id: userId },
         nome: name,
         descricao: description,
         valor: value,
