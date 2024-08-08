@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Dropdown } from "semantic-ui-react";
+import {
+  Form,
+  Button,
+  Dropdown,
+  Radio,
+  Dimmer,
+  Input,
+} from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
+import { NumericFormat } from "react-number-format";
 import {
   registrarDespesa,
   atualizarDespesa,
-  deletarDespesa,
   buscarDespesaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
@@ -14,15 +21,48 @@ import Header from "../components/appMenu/AppMenu";
 const FormDespesa = ({ despesaId }) => {
   const [name, setName] = useState("");
   const [value, setValue] = useState(""); // Valor da despesa
-  const [category, setCategory] = useState("");
   const [recurrence, setRecurrence] = useState("");
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [userId, setUSerId] = useState("");
+  const [category, setCategory] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [errors, setErrors] = useState("");
 
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const [active, setActive] = useState(false);
+
+  const handleOpen = () => setActive(true);
+  const handleClose = () => setActive(false);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!name.trim()) {
+      newErrors.name = "Por favor, insira o nome da despesa.";
+    }
+    if (!value.trim()) {
+      newErrors.value = "Por favor, insira o valor da despesa.";
+    } else if (isNaN(value) || parseFloat(value) <= 0) {
+      newErrors.value = "Por favor, insira um valor válido.";
+    }
+    if (!category) {
+      newErrors.category = "Por favor, selecione uma categoria.";
+    }
+    if (category === "outros" && !newCategory.trim()) {
+      newErrors.newCategory = "Por favor, insira o nome da nova categoria.";
+    }
+    if (recurrence && !frequency) {
+      newErrors.frequency = "Por favor, selecione a frequência.";
+    }
+    if (!description.trim()) {
+      newErrors.description = "Por favor, insira uma descrição.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   useEffect(() => {
     setUSerId(localStorage.getItem("userId"));
     if (despesaId) {
@@ -38,8 +78,9 @@ const FormDespesa = ({ despesaId }) => {
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
         } catch (error) {
+          handleOpen();
+          setError("Erro ao buscar a despesa.", error);
           console.error("Erro ao buscar a despesa:", error);
-          setError("Erro ao buscar a despesa.");
         }
       };
       fetchDespesa();
@@ -63,65 +104,74 @@ const FormDespesa = ({ despesaId }) => {
   };
 
   const handleRegistrarDespesa = async (e) => {
-    e.preventDefault();
-    const formattedDate = formatDate(date);
+    if (validate()) {
+      if (category === "Outros") {
+        setCategory(newCategory);
+      }
+      e.preventDefault();
+      const formattedDate = formatDate(date);
 
-    try {
-      const response = await registrarDespesa({
-        usuario: { id: userId },
-        nome: name,
-        descricao: description,
-        valor: value,
-        categoria: category,
-        recorrente: recurrence,
-        periodo: frequency,
-        dataDeCobranca: formattedDate,
-        paga: false,
-      });
-      console.log("Despesa registrada:", response.data);
-      setSuccess("Despesa registrada com sucesso!");
-      // Redirecionar ou limpar campos...
-    } catch (error) {
-      console.error("Erro ao registrar a despesa:", error);
-      setError("Erro ao registrar a despesa.");
+      try {
+        const response = await registrarDespesa({
+          usuario: { id: userId },
+          nome: name,
+          descricao: description,
+          valor: value,
+          categoria: category,
+          recorrente: recurrence,
+          periodo: frequency,
+          dataDeCobranca: formattedDate,
+          paga: false,
+        });
+        console.log("Despesa registrada:", response.data);
+        setSuccess("Despesa registrada com sucesso!");
+        // Redirecionar ou limpar campos...
+      } catch (error) {
+        handleOpen();
+        setError("Erro ao buscar a despesa.", error);
+        console.error("Erro ao registrar a despesa:", error);
+      }
+    } else {
+      setSuccess("");
+      handleOpen();
+      setError("Por favor, corrija os campos vermelhos no formulário.");
     }
+  };
+
+  const handleDeletarDespesa = () => {
+    // Lógica para deletar a despesa
+    setSuccess("Despesa deletada com sucesso!");
+    setError("");
   };
 
   const handleAtualizarDespesa = async (e) => {
-    e.preventDefault();
-    const formattedDate = formatDate(date);
-
-    try {
-      const response = await atualizarDespesa(despesaId, {
-        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
-        nome: name,
-        descricao: description,
-        valor: value,
-        categoria: category,
-        recorrente: recurrence,
-        periodo: frequency,
-        dataDeCobranca: formattedDate,
-        paga: false,
-      });
-      console.log("Despesa atualizada:", response.data);
-      setSuccess("Despesa atualizada com sucesso!");
-      // Redirecionar ou limpar campos...
-    } catch (error) {
-      console.error("Erro ao atualizar a despesa:", error);
-      setError("Erro ao atualizar a despesa.");
-    }
-  };
-
-  const handleDeletarDespesa = async (e) => {
-    e.preventDefault();
-    try {
-      await deletarDespesa(despesaId);
-      console.log("Despesa deletada");
-      setSuccess("Despesa deletada com sucesso!");
-      // Redirecionar ou limpar campos...
-    } catch (error) {
-      console.error("Erro ao deletar a despesa:", error);
-      setError("Erro ao deletar a despesa.");
+    if (validate()) {
+      e.preventDefault();
+      const formattedDate = formatDate(date);
+      if (category === "Outros") {
+        setCategory(newCategory);
+      }
+      try {
+        const response = await atualizarDespesa(despesaId, {
+          usuario: { id: userId }, // Substituir pelo ID do usuário logado
+          nome: name,
+          descricao: description,
+          valor: value,
+          categoria: category,
+          recorrente: recurrence,
+          periodo: frequency,
+          dataDeCobranca: formattedDate,
+          paga: false,
+        });
+        console.log("Despesa atualizada:", response.data);
+        setSuccess("Despesa atualizada com sucesso!");
+        // Redirecionar ou limpar campos...
+      } catch (error) {
+        console.error("Erro ao atualizar a despesa:", error);
+      }
+    } else {
+      setSuccess("");
+      setError("Por favor, corrija os campos vermelhos no formulário.");
     }
   };
 
@@ -137,7 +187,7 @@ const FormDespesa = ({ despesaId }) => {
             <div className="form-content">
               <div className="form-fields">
                 <Form>
-                  <Form.Field>
+                  <Form.Field error={!!errors.name}>
                     <label>Nome</label>
                     <input
                       className="input-field"
@@ -145,81 +195,107 @@ const FormDespesa = ({ despesaId }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
+                    {errors.name && <Dimmer error content={errors.name} />}
                   </Form.Field>
-                  <Form.Field>
+                  <Form.Field error={!!errors.value}>
                     <label>Valor</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite o valor da Despesa"
+                    <NumericFormat
+                      customInput={Input}
+                      placeholder="Valor"
                       value={value}
-                      onChange={(e) => setValue(e.target.value)}
+                      onValueChange={(values) => setValue(values.value)}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      prefix="R$ "
+                      decimalScale={2}
+                      fixedDecimalScale={true}
                     />
+                    {errors.value && <Dimmer error content={errors.value} />}
                   </Form.Field>
-                  <Form.Field>
+                  <Form.Field error={!!errors.category}>
                     <label>Categoria</label>
                     <Dropdown
                       className="input-field"
-                      placeholder="Selecione a Categoria"
+                      placeholder="Selecione Categoria"
                       fluid
                       selection
                       options={categoryOptions}
                       value={category}
                       onChange={(e, { value }) => setCategory(value)}
                     />
+                    {errors.category && (
+                      <Dimmer error content={errors.category} />
+                    )}
                   </Form.Field>
-                  <Form.Field>
-                    <label>Recorrente</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Recorrência"
-                      fluid
-                      selection
-                      options={[
-                        { key: true, text: "Sim", value: true },
-                        { key: false, text: "Não", value: false },
-                      ]}
-                      value={recurrence}
-                      onChange={(e, { value }) => setRecurrence(value)}
-                    />
-                  </Form.Field>
-                  {recurrence === true && (
-                    <>
-                      <Form.Field>
-                        <label>Frequência</label>
-                        <Dropdown
-                          className="input-field"
-                          placeholder="Selecione Frequência"
-                          fluid
-                          selection
-                          options={[
-                            {
-                              key: "diario",
-                              text: "Diariamente",
-                              value: "diario",
-                            },
-                            {
-                              key: "semanal",
-                              text: "Semanalmente",
-                              value: "semanal",
-                            },
-                            {
-                              key: "mensal",
-                              text: "Mensalmente",
-                              value: "mensal",
-                            },
-                            {
-                              key: "anual",
-                              text: "Anualmente",
-                              value: "anual",
-                            },
-                          ]}
-                          value={frequency}
-                          onChange={(e, { value }) => setFrequency(value)}
-                        />
-                      </Form.Field>
-                    </>
+                  {category === "Outros" && (
+                    <Form.Field error={!!errors.newCategory}>
+                      <label>Nova Categoria</label>
+                      <input
+                        className="input-field"
+                        placeholder="Digite o nome da nova categoria"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                      />
+                      {errors.newCategory && (
+                        <Dimmer error content={errors.newCategory} />
+                      )}
+                    </Form.Field>
                   )}
-                  <Form.Field>
+                  <Form.Group className="grupoRecorrente">
+                    <Form.Field className="custom-radio">
+                      <label>Recorrente</label>
+                      <Radio
+                        toggle
+                        label={recurrence ? "Sim" : "Não"}
+                        checked={recurrence}
+                        onChange={() => setRecurrence(!recurrence)}
+                      />
+                    </Form.Field>
+                    {recurrence === true && (
+                      <>
+                        <Form.Field
+                          fluid
+                          className="dropdownFrequencia"
+                          error={!!errors.frequency}
+                        >
+                          <Dropdown
+                            className="input-field dropdownFrequencia"
+                            placeholder="Selecione Frequência"
+                            fluid
+                            selection
+                            options={[
+                              {
+                                key: "diario",
+                                text: "Diariamente",
+                                value: "diario",
+                              },
+                              {
+                                key: "semanal",
+                                text: "Semanalmente",
+                                value: "semanal",
+                              },
+                              {
+                                key: "mensal",
+                                text: "Mensalmente",
+                                value: "mensal",
+                              },
+                              {
+                                key: "anual",
+                                text: "Anualmente",
+                                value: "anual",
+                              },
+                            ]}
+                            value={frequency}
+                            onChange={(e, { value }) => setFrequency(value)}
+                          />
+                          {errors.frequency && (
+                            <Dimmer error content={errors.frequency} />
+                          )}
+                        </Form.Field>
+                      </>
+                    )}
+                  </Form.Group>
+                  <Form.Field error={!!errors.description}>
                     <label>Descrição</label>
                     <input
                       className="input-field"
@@ -227,6 +303,9 @@ const FormDespesa = ({ despesaId }) => {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                     />
+                    {errors.description && (
+                      <Dimmer error content={errors.description} />
+                    )}
                   </Form.Field>
                 </Form>
               </div>
@@ -259,8 +338,16 @@ const FormDespesa = ({ despesaId }) => {
                 </Button>
               )}
             </div>
-            {success && <div className="success-message">{success}</div>}
-            {error && <div className="error-message">{error}</div>}
+            {success && (
+              <Dimmer active={active} onClickOutside={handleClose} page>
+                {success}
+              </Dimmer>
+            )}
+            {error && (
+              <Dimmer active={active} onClickOutside={handleClose} page>
+                {error}
+              </Dimmer>
+            )}
           </div>
         </div>
       </div>

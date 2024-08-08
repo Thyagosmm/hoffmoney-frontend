@@ -13,6 +13,7 @@
 /* Formulário de despesa */
 .despesa-form {
   display: flex;
+  width: max-content;
   flex-direction: column;
   align-items: center; /* Centraliza o formulário horizontalmente */
   width: 100%;
@@ -22,6 +23,7 @@
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 /* Título do formulário */
 .despesa-form h1 {
@@ -301,4 +303,26 @@ height: max-content;
     font-size: 1.2rem !important;
     padding: 10px 20px !important;
   }
+}
+.grupoRecorrente{
+  display: flex!important;
+  flex-direction: row!important;
+  width: 100%!important;
+  align-items: center;
+}
+.dropdownFrequencia{
+  display: flex!important;
+  height: max-content!important;
+  width: 100%!important;
+
+}
+
+.custom-radio .ui.toggle.checkbox .box:before,
+.custom-radio .ui.toggle.checkbox label:before {
+  background-color: rgb(230, 173, 173) !important;
+}
+
+.custom-radio .ui.toggle.checkbox input:checked ~ .box:before,
+.custom-radio .ui.toggle.checkbox input:checked ~ label:before {
+  background-color: rgba(152, 251, 152, 0.733) !important;
 }
