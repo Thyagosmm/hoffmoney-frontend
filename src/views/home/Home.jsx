@@ -4,6 +4,7 @@ import "./Home.css";
 import soon from "../../assets/soon.png";
 import AppMenu from "../components/appMenu/AppMenu";
 import SliderInfo from "../components/sliderInfo/SliderInfo";
+import { notifyError } from "../utils/Utils";
 
 const Home = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -17,7 +18,10 @@ const Home = () => {
       setIsLogged(true);
     }
   }, []);
+  const toast = () => {
 
+  notifyError("Por favor, corrija os campos vermelhos no formulário.");
+  }
   return (
     <div className="home">
       <AppMenu className="header" />
@@ -26,13 +30,18 @@ const Home = () => {
           <SliderInfo />
         </Container>
       ) : (
-        <Container className="logged
-        ">
-          <img src={soon} className="loggedImg"alt="Em breve mais funcionalidades " />
-          <p>
-            Em breve mais funçoes
-            </p>
-            </Container>
+        <Container
+          className="logged
+        "
+        >
+          <Button onClick={toast}> abrir toast</Button>
+          <img
+            src={soon}
+            className="loggedImg"
+            alt="Em breve mais funcionalidades "
+          />
+          <p>Em breve mais funçoes</p>
+        </Container>
       )}
     </div>
   );

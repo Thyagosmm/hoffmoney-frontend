@@ -7,6 +7,7 @@ import {
   Dimmer,
   Input,
 } from "semantic-ui-react";
+import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
@@ -41,24 +42,31 @@ const FormDespesa = ({ despesaId }) => {
   const validate = () => {
     const newErrors = {};
     if (!name.trim()) {
-      newErrors.name = "Por favor, insira o nome da despesa.";
+      newErrors.name = "Por favor, insira o nome.";
+      notifyError("Por favor, insira o nome.");
     }
     if (!value.trim()) {
-      newErrors.value = "Por favor, insira o valor da despesa.";
-    } else if (isNaN(value) || parseFloat(value) <= 0) {
-      newErrors.value = "Por favor, insira um valor válido.";
+      newErrors.value = "Por favor, insira o valor.";
+      notifyError("Por favor, insira o valor.");
     }
-    if (!category) {
-      newErrors.category = "Por favor, selecione uma categoria.";
+    if (!recurrence.trim()) {
+      newErrors.recurrence = "Por favor, insira a recorrência.";
+      notifyError("Por favor, insira a recorrência.");
     }
-    if (category === "outros" && !newCategory.trim()) {
-      newErrors.newCategory = "Por favor, insira o nome da nova categoria.";
-    }
-    if (recurrence && !frequency) {
-      newErrors.frequency = "Por favor, selecione a frequência.";
+    if (!frequency.trim()) {
+      newErrors.frequency = "Por favor, insira a frequência.";
+      notifyError("Por favor, insira a frequência.");
     }
     if (!description.trim()) {
-      newErrors.description = "Por favor, insira uma descrição.";
+      newErrors.description = "Por favor, insira a descrição.";
+      notifyError("Por favor, insira a descrição.");
+    }
+    if (date == null) {
+      notifyError("A data não pode ser nula ou indefinida.");
+    }
+    if (!category.trim()) {
+      newErrors.category = "Por favor, insira a categoria.";
+      notifyError("Por favor, insira a categoria.");
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -124,17 +132,12 @@ const FormDespesa = ({ despesaId }) => {
           paga: false,
         });
         console.log("Despesa registrada:", response.data);
-        setSuccess("Despesa registrada com sucesso!");
-        // Redirecionar ou limpar campos...
+        notifySuccess("Despesa registrada com sucesso!");
       } catch (error) {
-        handleOpen();
-        setError("Erro ao buscar a despesa.", error);
-        console.error("Erro ao registrar a despesa:", error);
+        notifyError(mensagemErro);
       }
     } else {
-      setSuccess("");
-      handleOpen();
-      setError("Por favor, corrija os campos vermelhos no formulário.");
+      notifyError("Por favor, corrija os campos vermelhos no formulário.");
     }
   };
 
@@ -163,15 +166,13 @@ const FormDespesa = ({ despesaId }) => {
           dataDeCobranca: formattedDate,
           paga: false,
         });
-        console.log("Despesa atualizada:", response.data);
-        setSuccess("Despesa atualizada com sucesso!");
-        // Redirecionar ou limpar campos...
+        notifySuccess("Despesa atualizada com sucesso!");
       } catch (error) {
-        console.error("Erro ao atualizar a despesa:", error);
+        notifyError(mensagemErro);
       }
     } else {
       setSuccess("");
-      setError("Por favor, corrija os campos vermelhos no formulário.");
+      notifyError("Por favor, corrija os campos vermelhos no formulário.");
     }
   };
 
