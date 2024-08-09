@@ -49,17 +49,12 @@ const FormDespesa = ({ despesaId }) => {
       newErrors.value = "Por favor, insira o valor.";
       notifyError("Por favor, insira o valor.");
     }
-    if (!recurrence.trim()) {
-      newErrors.recurrence = "Por favor, insira a recorrência.";
-      notifyError("Por favor, insira a recorrência.");
-    }
-    if (!frequency.trim()) {
-      newErrors.frequency = "Por favor, insira a frequência.";
-      notifyError("Por favor, insira a frequência.");
-    }
-    if (!description.trim()) {
-      newErrors.description = "Por favor, insira a descrição.";
-      notifyError("Por favor, insira a descrição.");
+    if (recurrence){
+ 
+      if (!frequency.trim()) {
+        newErrors.frequency = "Por favor, insira a frequência.";
+        notifyError("Por favor, insira a frequência.");
+      }
     }
     if (date == null) {
       notifyError("A data não pode ser nula ou indefinida.");
