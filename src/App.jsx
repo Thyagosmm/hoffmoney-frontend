@@ -12,6 +12,7 @@ import ListaDespesas from "./views/despesa/ListaDespesas";
 import FormUsuarioUpdate from "./views/auth/usuario/update/FormUsuarioUpdate";
 import EditarSaldo from "./views/components/saldo/EditarSaldo";
 import EditarReceita from "./views/receita/EditarReceita";
+import EditarDespesa from "./views/despesa/EditarDespesa";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/despesas" element={<ListaDespesas />} />
         <Route path="/novaDespesa" element={<FormDespesa />} />
         <Route path="/editarReceita/:id" element={<EditarReceita />} />
+        <Route path="/editarDespesa/:id" element={<EditarDespesa />} />
         <Route path="/forget" element={<FormForget />} />
         <Route path="/reset" element={<FormReset />} />
         <Route path="/receitas" element={<ListaReceitas />} />
