@@ -87,14 +87,14 @@ export const listarReceitas = () => {
   return api.get(`/receitas/usuario/${userId}`);
 };
 
-export const buscarReceitaPorId = (receitaId) => {
-  return api.get(`/receitas/${receitaId}`);
+export const buscarReceitaPorId = (usuarioId, receitaId) => {
+  return api.get(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };
 
-export const atualizarReceita = (receitaId, receitaData) => {
-  return api.put(`/receitas/${receitaId}`, receitaData);
+export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
+  return api.put(`/receitas/usuario/${usuarioId}/${receitaId}`, receitaData);
 };
 
-export const deletarReceita = (receitaId) => {
-  return api.delete(`/receitas/${receitaId}`);
+export const deletarReceita = (usuarioId, receitaId) => {
+  return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };

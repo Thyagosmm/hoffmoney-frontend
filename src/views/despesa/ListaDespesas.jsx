@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container,List } from "semantic-ui-react";
-import {  listarDespesas} from "../../../api/UserApi";
-import Header from "../appMenu/AppMenu";
+import { Button, Container, List } from "semantic-ui-react";
+import { listarDespesas } from "../../api/UserApi";
+import Header from "../components/appMenu/AppMenu";
 import "./ListaDespesas.css";
 import { Link } from "react-router-dom/dist";
 
@@ -9,7 +9,6 @@ const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
-  
 
   useEffect(() => {
     const getDespesas = async () => {
@@ -44,8 +43,8 @@ const ListaDespesas = () => {
   const handleDelete = (key) => {
     setDespesas((prevDespesas) =>
       prevDespesas.filter(
-        (despesa) => `${despesa.descricao}-${despesa.valor}` !== key,
-      ),
+        (despesa) => `${despesa.descricao}-${despesa.valor}` !== key
+      )
     );
   };
 
