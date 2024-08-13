@@ -154,6 +154,10 @@ const ListaReceitas = () => {
     navigate(`/editarReceita/${id}`);
   };
 
+  const handleCreateNew = () => {
+    navigate("/novaReceita");
+  };
+
   if (error) {
     return <div>Erro: {error}</div>;
   }
@@ -171,6 +175,16 @@ const ListaReceitas = () => {
           >
             <Icon name="filter" />
             Filtrar
+          </Menu.Item>
+          <Menu.Item position="right">
+            <Button
+              icon
+              color="green"
+              onClick={handleCreateNew}
+            >
+              <Icon name="plus" />
+              Nova Receita
+            </Button>
           </Menu.Item>
         </Menu>
         {menuFiltro && (
