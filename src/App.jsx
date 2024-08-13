@@ -25,7 +25,7 @@ function App() {
 
             <Route path="/login" element={<FormLogin />} />
             <Route path="/despesas" element={<ListaDespesas />} />
-            <Route path="/novaDespesa" element={<FormDespesa />} />
+            <Route path="/formDespesa" element={<FormDespesa />} />
             <Route path="/forget" element={<FormForget />} />
             <Route path="/reset" element={<FormReset />} />
             <Route path="/receita" element={<FormReceita />} />

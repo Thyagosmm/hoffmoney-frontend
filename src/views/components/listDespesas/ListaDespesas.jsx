@@ -130,7 +130,7 @@ const ListaDespesas = () => {
           </div>
         </List>
       </Container>
-      <Button className="btnCadastrarDespesa" as={Link} to="/novaDespesa">
+      <Button className="btnCadastrarDespesa" as={Link} to="/formDespesa">
         Cadastrar Nova Despesa
       </Button>
     </>
