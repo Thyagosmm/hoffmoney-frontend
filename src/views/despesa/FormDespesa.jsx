@@ -3,6 +3,7 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
+import { useNavigate } from 'react-router-dom';
 import {
   registrarDespesa,
   atualizarDespesa,
@@ -22,6 +23,7 @@ const FormDespesa = ({ despesaId }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUSerId] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUSerId(localStorage.getItem("userId"));
@@ -80,7 +82,7 @@ const FormDespesa = ({ despesaId }) => {
       });
       console.log("Despesa registrada:", response.data);
       setSuccess("Despesa registrada com sucesso!");
-      // Redirecionar ou limpar campos...
+      navigate('/despesas');
     } catch (error) {
       console.error("Erro ao registrar a despesa:", error);
       setError("Erro ao registrar a despesa.");
@@ -105,7 +107,7 @@ const FormDespesa = ({ despesaId }) => {
       });
       console.log("Despesa atualizada:", response.data);
       setSuccess("Despesa atualizada com sucesso!");
-      // Redirecionar ou limpar campos...
+      navigate('/despesas');
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
       setError("Erro ao atualizar a despesa.");
