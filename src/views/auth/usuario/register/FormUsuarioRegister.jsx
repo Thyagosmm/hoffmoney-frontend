@@ -4,6 +4,7 @@ import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
 import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
+import { notifyError, notifySuccess, mensagemErro } from "../../../util/Util";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
@@ -16,11 +17,11 @@ const FormUsuarioRegister = () => {
   const [charsRemaining, setCharsRemaining] = useState(8);
 
   // Função para exibir o popup
-  const showPopup = () => {
-    setIsPopupVisible(true);
-    // Esconder o popup após X segundos
-    setTimeout(() => (window.location.href = "/"), 5000);
-  };
+  // const showPopup = () => {
+  //   setIsPopupVisible(true);
+  //   // Esconder o popup após X segundos
+  //   setTimeout(() => (window.location.href = "/"), 5000);
+  // };
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
@@ -80,15 +81,19 @@ const FormUsuarioRegister = () => {
         email,
         senha: password,
       });
-      console.log("User registered:", response.data);
-      setSuccess("Usuário registrado com sucesso!");
-      setError("");
-      showPopup();
+      notifySuccess('Usuario cadastrado com sucesso.')
       // Redirecionar ou limpar campos...
+      setTimeout(() => (window.location.href = "/login"), 3000);
     } catch (error) {
-      console.error("Error registering user:", error);
-      setError("Erro ao registrar o usuário.");
-      setSuccess("");
+      if (error.response.data.errors != undefined) {
+        for (let i = 0; i < error.response.data.errors.length; i++) {
+          
+          notifyError(error.response.data.errors[i].defaultMessage)
+        }
+      } else {
+        notifyError(error.response.data.message)
+      }
+
     }
   };
 

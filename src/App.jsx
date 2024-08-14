@@ -1,4 +1,6 @@
 import React from "react";
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import FormUsuarioRegister from "./views/auth/usuario/register/FormUsuarioRegister";
 import FormLogin from "./views/auth/login/FormLogin";
@@ -16,6 +18,8 @@ import EditarDespesa from "./views/despesa/EditarDespesa";
 
 function App() {
   return (
+    <>
+    <ToastContainer /> {/* Para mostrar mensagens ao usuario */}
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -33,6 +37,7 @@ function App() {
         <Route path="/novaReceita" element={<FormReceita />} />
       </Routes>
     </Router>
+    </>
   );
 }
 

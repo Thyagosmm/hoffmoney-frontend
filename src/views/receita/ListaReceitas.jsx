@@ -106,18 +106,14 @@ const ListaReceitas = () => {
                   }}
                 >
                   <div>
-                    <List.Header as="a" inverted className="list-header">
-                      {receita.descricao}
+                    <List.Header as="a">
+                      Nome: {receita.nome}
                     </List.Header>
-                    <List.Description
-                      as="a"
-                      inverted
-                      className="list-description"
-                    >
+                    <List.Description as="a" inverted className="list-description">
                       Valor: R$ {receita.valor}
                     </List.Description>
                     <List.Description as="a" className="list-description">
-                      Vezes: {receita.count}
+                      Descrição: {receita.descricao}
                     </List.Description>
                   </div>
                   <div>
