@@ -19,7 +19,6 @@ import EditarDespesa from "./views/despesa/EditarDespesa";
 function App() {
   return (
     <>
-    <ToastContainer /> {/* Para mostrar mensagens ao usuario */}
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />

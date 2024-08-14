@@ -132,11 +132,7 @@ const FormUsuarioUpdate = () => {
 
       const response = await updateUser(userId, userData);
       console.log("User updated:", response.data);
-      localStorage.setItem("nome", name);
       notifySuccess("Usuário atualizado com sucesso!");
-      setTimeout(() => {
-        window.location.reload(); // Corrigido para recarregar a página
-      }, 5000);
     } catch (error) {
       console.error("Error updating user:", error);
       notifyError("Erro ao atualizar o usuário.");

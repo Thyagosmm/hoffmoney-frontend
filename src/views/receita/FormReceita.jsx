@@ -3,7 +3,6 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormReceita.css";
-import { useNavigate } from 'react-router-dom';
 import {
   registrarReceita,
   atualizarReceita,
@@ -11,7 +10,7 @@ import {
   buscarReceitaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
-import { notifyError, notifySuccess } from "../util/Util";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const FormReceita = ({ receitaId }) => {
   const [name, setName] = useState("");
@@ -24,7 +23,6 @@ const FormReceita = ({ receitaId }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUSerId] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     setUSerId(localStorage.getItem("userId"));
@@ -84,8 +82,7 @@ const FormReceita = ({ receitaId }) => {
       console.log("Receita cadastrada:", response.data)
       notifySuccess('Receita cadastrada com sucesso.')
       // Redirecionar
-      setTimeout(() => (window.location.href = "/receitas"), 3000);
-      navigate('/receitas');
+      setTimeout(() => (window.location.href = "/receitas"), 5000);
     } catch (error) {
       console.error("Erro ao registrar a receita:", error);
       notifyError("Erro ao registrar a receita.");

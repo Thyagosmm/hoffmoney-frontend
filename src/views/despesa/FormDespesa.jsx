@@ -117,7 +117,7 @@ const FormDespesa = ({ despesaId }) => {
         notifySuccess("Despesa registrada com sucesso!");
         setTimeout(() => {
           navigate("/despesas");
-        }, 5000);
+        }, 3000);
       } catch (error) {
         notifyError(mensagemErro);
       }

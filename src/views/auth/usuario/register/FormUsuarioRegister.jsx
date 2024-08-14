@@ -4,7 +4,7 @@ import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
 import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
-import { notifyError, notifySuccess} from "../../../util/Util";
+import { notifyError, notifySuccess } from "../../../utils/Utils";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
@@ -12,6 +12,7 @@ const FormUsuarioRegister = () => {
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [charsRemaining, setCharsRemaining] = useState(8);
+
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
@@ -22,7 +23,7 @@ const FormUsuarioRegister = () => {
   // Definir uma função de validação
   const validateEmail = (email) => {
     const re =
-      /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
     return re.test(String(email).toLowerCase());
   };
 
@@ -75,20 +76,14 @@ const FormUsuarioRegister = () => {
         email,
         senha: password,
       });
-
-      notifySuccess('Usuario cadastrado com sucesso.')
       console.log("User registered:", response.data);
+      notifySuccess("Usuário registrado com sucesso!");
+      setTimeout(() => (window.location.href = "/login"), 5000);
       // Redirecionar ou limpar campos...
-      
-      setTimeout(() => (window.location.href = "/login"), 3000);
     } catch (error) {
-      if (error.response.data.errors !== undefined) {
-        for (let i = 0; i < error.response.data.errors.length; i++) {
-          
-          notifyError(error.response.data.errors[i].defaultMessage)
-        }
-      } else {
-        notifyError(error.response.data.message)
+      if (error.response && error.response.status === 409) {
+        console.error("Error registering user:", error);
+        notifyError(error.response.data);
       }
     }
   };
