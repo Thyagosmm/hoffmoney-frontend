@@ -1,8 +1,25 @@
+.register-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100vh;
+  background-color: white;
+}
 
-.reset-password-right {
+.register-left {
   flex: 1;
   padding: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-right {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  align-items: center!important;
   flex-direction: column;
   justify-content: center;
 }
@@ -15,14 +32,7 @@
   width: 50%;
   margin: 0 auto;
 }
-
-.form-field {
-  width: 100%;
-  margin: 0 auto 15px auto;
-}
-
-
-.reset-password-button {
+.register-button {
   background-color: rgb(152, 251, 152) !important;
   color: black !important;
   margin-top: 20px;
@@ -30,18 +40,52 @@
   font-size: 1.5rem !important;
 }
 
-.register-link {
-  color: rgb(102, 218, 113);
-  font-size: 1.2rem;
-}
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+  .form-field .input-field{
+    width: 80vw!important;
+  }
+  .register-container {
+    width: 100vw!important;
+    flex-direction: column-reverse;
+    height: auto;
+  }
 
-label {
-  text-align: left !important;
-  display: block;
-  margin-bottom: 5px;
-}
+  .register-left, .register-right {
+    width: 100vw!important;
+  }
 
-.reset-password-title {
-  font-size: 2rem; /* Tamanho da fonte maior */
-  margin-bottom: 30px; /* Maior espaçamento abaixo do título */
+  .form-container {
+    display: flex;
+    width: 90vw!important;
+    padding: 0.5rem;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  .modal-content {
+    max-width: 90vw;
+  }
+
+  .modal-header, .modal-message {
+    padding: 0.5rem!important;
+  }
+
+  .register-button {
+    width: 100%;
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
+  }
+
+  .forgot-senha {
+    text-align: center;
+  }
+
+  .register-link {
+    font-size: 2rem !important;
+  }
+
+  .register-link:hover {
+    font-size: 2rem !important;
+  }
 }

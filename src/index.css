@@ -1,3 +1,9 @@
+
+/* styles.css */
+.toast-font-large {
+  font-size: 1.5em; 
+  text-align: center;/* Ajuste o tamanho da fonte conforme necessário */
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,9 +17,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+input{
+  width: 100%;
+  border-color: rgba(127, 253, 127, 0.733) !important;
+  color: rgb(0, 0, 0) !important;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .input-field {
   width: 100%;
-  background-color: rgba(152, 251, 152, 0.733) !important;
+  border-color: rgba(127, 253, 127, 0.733) !important;
   color: rgb(0, 0, 0) !important;
   border: none;
   padding: 10px;

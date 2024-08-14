@@ -1,38 +1,26 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Container,
-  Divider,
-  Form,
-  Message,
-  Modal,
-  Progress,
-} from "semantic-ui-react";
+import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { login } from "../../../api/UserApi";
 import "./FormLogin.css";
 import Info from "../../components/info/Info";
-
+import { notifyError, notifySuccess, notifyWarn } from "../../utils/Utils";
 export default function FormLogin() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [progress, setProgress] = useState(0);
-
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email || !senha) {
-      showModal("Todos os campos são obrigatórios.");
+      notifyWarn("Todos os campos são obrigatórios.");
       return;
     }
 
     if (!isEmailValid) {
-      showModal("Email inválido.");
+      notifyWarn("Email inválido.");
       return;
     }
 
@@ -46,19 +34,20 @@ export default function FormLogin() {
         localStorage.setItem("nome", data.nome);
         localStorage.setItem("email", data.email);
         localStorage.setItem("saldo", data.saldo);
-        showModal("Login realizado com sucesso!");
+
         console.log("Dados salvos no localStorage:");
         console.log("userId:", localStorage.getItem("userId"));
         console.log("nome:", localStorage.getItem("nome"));
         console.log("email:", localStorage.getItem("email"));
         console.log("saldo:", localStorage.getItem("saldo"));
+        notifySuccess("Login realizado com sucesso!");
         window.location.href = "/";
       } else {
         console.error("Error logging in user:", data);
         if (data.response && data.status === 401) {
-          showModal("Credenciais inválidas. Por favor, tente novamente.");
+          notifyWarn("Credenciais inválidas. Por favor, tente novamente.");
         } else {
-          showModal(
+          notifyError(
             "Erro ao fazer login. Por favor, tente novamente mais tarde.",
           );
         }
@@ -66,29 +55,13 @@ export default function FormLogin() {
     } catch (error) {
       console.error("Error logging in user:", error);
       if (error.response && error.response.status === 400) {
-        showModal("Credenciais inválidas. Por favor, tente novamente.");
+        notifyError("Credenciais inválidas. Por favor, tente novamente.");
       } else {
-        showModal(
+        notifyError(
           "Erro ao fazer login. Por favor, tente novamente mais tarde.",
         );
       }
     }
-  };
-  const showModal = (message) => {
-    setModalMessage(message);
-    setIsModalOpen(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
-          setIsModalOpen(false);
-          return 100;
-        }
-        return prevProgress + 1;
-      });
-    }, 40); // Ajuste o tempo conforme necessário
   };
 
   const handleEmailChange = (e) => {
@@ -99,13 +72,12 @@ export default function FormLogin() {
     setIsEmailValid(validateEmail(emailValue));
   };
 
-// Definir uma função de validação
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
-  return re.test(String(email).toLowerCase());
-};
-
+  // Definir uma função de validação
+  const validateEmail = (email) => {
+    const re =
+      /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+  };
 
   return (
     <div className="login-container">
@@ -160,17 +132,6 @@ const validateEmail = (email) => {
           </Link>
         </div>
       </Container>
-      <Modal
-        className="modal-container"
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      >
-        <Modal.Header className="modal-header ">Aviso</Modal.Header>
-        <Modal.Content className="modal-content">
-          <p className="modal-message">{modalMessage}</p>
-          <Progress className="progress" percent={progress} indicating />
-        </Modal.Content>
-      </Modal>
     </div>
   );
 }

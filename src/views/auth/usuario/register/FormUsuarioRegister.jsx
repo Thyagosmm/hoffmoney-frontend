@@ -4,23 +4,14 @@ import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
 import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
+import { notifyError, notifySuccess } from "../../../utils/Utils";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [charsRemaining, setCharsRemaining] = useState(8);
-
-  // Função para exibir o popup
-  const showPopup = () => {
-    setIsPopupVisible(true);
-    // Esconder o popup após X segundos
-    setTimeout(() => (window.location.href = "/"), 5000);
-  };
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
@@ -65,12 +56,17 @@ const FormUsuarioRegister = () => {
 
     // Validar campos
     if (!name || !email || !password) {
-      setError("Todos os campos são obrigatórios.");
+      notifyError("Todos os campos são obrigatórios.");
       return;
     }
 
     if (!isEmailValid) {
-      setError("Email inválido.");
+      notifyError("Email inválido.");
+      return;
+    }
+
+    if (charsRemaining > 0) {
+      notifyError("Senha deve ter pelo menos 8 caracteres.");
       return;
     }
 
@@ -81,14 +77,14 @@ const FormUsuarioRegister = () => {
         senha: password,
       });
       console.log("User registered:", response.data);
-      setSuccess("Usuário registrado com sucesso!");
-      setError("");
-      showPopup();
+      notifySuccess("Usuário registrado com sucesso!");
+      setTimeout(() => (window.location.href = "/login"), 5000);
       // Redirecionar ou limpar campos...
     } catch (error) {
-      console.error("Error registering user:", error);
-      setError("Erro ao registrar o usuário.");
-      setSuccess("");
+      if (error.response && error.response.status === 409) {
+        console.error("Error registering user:", error);
+        notifyError(error.response.data);
+      }
     }
   };
 
@@ -163,9 +159,6 @@ const FormUsuarioRegister = () => {
               Login
             </Link>
           </div>
-          {error && <Message negative>{error}</Message>}
-          {success && <Message positive>{success}</Message>}
-          {isPopupVisible && <Message positive>Redirecionando...</Message>}
         </Container>
       </div>
     </div>
