@@ -15,6 +15,7 @@ import FormUsuarioUpdate from "./views/auth/usuario/update/FormUsuarioUpdate";
 import EditarSaldo from "./views/components/saldo/EditarSaldo";
 import EditarReceita from "./views/receita/EditarReceita";
 import EditarDespesa from "./views/despesa/EditarDespesa";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -37,6 +38,19 @@ function App() {
         <Route path="/novaReceita" element={<FormReceita />} />
       </Routes>
     </Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        font-size="1.5rem"
+      />
     </>
   );
 }

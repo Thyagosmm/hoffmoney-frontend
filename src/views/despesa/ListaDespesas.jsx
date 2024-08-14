@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
+  Form,
+  Menu,
+  Segment,
+  Icon,
   Button,
   Container,
   List,
@@ -7,9 +11,10 @@ import {
   Header as SemanticHeader,
 } from "semantic-ui-react";
 import { listarDespesas, deletarDespesa } from "../../api/UserApi";
-import Header from "../components/appMenu/AppMenu";
+import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { format, parse } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const ListaDespesas = () => {
@@ -19,6 +24,76 @@ const ListaDespesas = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [despesaToDelete, setDespesaToDelete] = useState(null);
   const navigate = useNavigate();
+  const [menuFiltro, setMenuFiltro] = useState(false);
+  const [nome, setNome] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [valor, setValor] = useState("");
+  const [dataDeCobranca, setDataDeCobranca] = useState("");
+
+  function handleMenuFiltro() {
+    setMenuFiltro(!menuFiltro);
+  }
+
+  function handleChangeNome(value) {
+    filtrarDespesas(value, categoria, valor, dataDeCobranca);
+  }
+
+  function handleChangeCategoria(value) {
+    filtrarDespesas(nome, value, valor, dataDeCobranca);
+  }
+
+  function handleChangeValor(value) {
+    filtrarDespesas(nome, categoria, value, dataDeCobranca);
+  }
+
+  function handleChangeDataDeCobranca(value) {
+    if (value) {
+      try {
+        const parsedDate = parse(value, "dd/MM/yyyy", new Date());
+        const formattedDate = format(parsedDate, "dd/MM/yyyy");
+        filtrarDespesas(nome, categoria, valor, formattedDate);
+      } catch (error) {
+        console.error("Erro ao converter a data:", error);
+      }
+    } else {
+      filtrarDespesas(nome, categoria, valor, "");
+    }
+  }
+
+  async function filtrarDespesas(
+    nomeParam,
+    categoriaParam,
+    valorParam,
+    dataDeCobrancaParam
+  ) {
+    let formData = new FormData();
+
+    if (nomeParam !== undefined) {
+      setNome(nomeParam);
+      formData.append("nome", nomeParam);
+    }
+    if (categoriaParam !== undefined) {
+      setCategoria(categoriaParam);
+      formData.append("categoria", categoriaParam);
+    }
+    if (valorParam !== undefined) {
+      setValor(valorParam);
+      formData.append("valor", valorParam);
+    }
+    if (dataDeCobrancaParam !== undefined) {
+      setDataDeCobranca(dataDeCobrancaParam);
+      formData.append("dataDeCobranca", dataDeCobrancaParam);
+    }
+
+    await axios
+      .post("http://localhost:8085/api/despesas/filtrar", formData)
+      .then((response) => {
+        setDespesas(response.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
 
   useEffect(() => {
     const getDespesas = async () => {
@@ -78,6 +153,10 @@ const ListaDespesas = () => {
     navigate(`/editarDespesa/${id}`);
   };
 
+  const handleCreateNew = () => {
+    navigate("/novaDespesa");
+  };
+
   if (error) {
     return <div>Erro: {error}</div>;
   }
@@ -87,87 +166,128 @@ const ListaDespesas = () => {
       <Header />
       <Container className="despesas">
         <h1 className="containerHeader">Despesas</h1>
-        <List divided inverted relaxed className="listDespesas">
-          {despesas.length === 0 ? (
-            <div>Nenhuma despesa encontrada.</div>
-          ) : (
-            despesas.map((despesa) => (
-              <List.Item
-                key={despesa.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-                className="list-item"
-              >
-                <List.Icon name="money" className="list-icon" inverted />
-                <List.Content
-                  className="list-content"
-                  inverted
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <List.Header as="a" inverted className="list-header">
-                      {despesa.descricao}
-                    </List.Header>
-                    <List.Description
-                      as="a"
-                      inverted
-                      className="list-description"
-                    >
-                      {`Valor: R$ ${despesa.valor}`}
-                    </List.Description>
-                    <List.Description as="a" className="list-description">
-                      {`Vezes: ${despesa.count}`}
-                    </List.Description>
-                  </div>
-                  <div>
+        <Menu compact>
+          <Menu.Item
+            name="menuFiltro"
+            active={menuFiltro === true}
+            onClick={handleMenuFiltro}
+          >
+            <Icon name="filter" />
+            Filtrar
+          </Menu.Item>
+          <Menu.Item position="right">
+            <Button icon color="green" onClick={handleCreateNew}>
+              <Icon name="plus" />
+              Nova Despesa
+            </Button>
+          </Menu.Item>
+        </Menu>
+        {menuFiltro && (
+          <Segment>
+            <Form className="form-filtros">
+              <Form.Group>
+                <Form.Input
+                  width={8}
+                  fluid
+                  icon="search"
+                  value={nome}
+                  onChange={(e) => handleChangeNome(e.target.value)}
+                  label="Nome"
+                  placeholder="Filtrar por Nome da Despesa"
+                  labelPosition="left"
+                />
+                <Form.Input
+                  width={4}
+                  fluid
+                  icon="search"
+                  value={categoria}
+                  onChange={(e) => handleChangeCategoria(e.target.value)}
+                  label="Categoria"
+                  placeholder="Filtrar por categoria"
+                  labelPosition="left"
+                />
+                <Form.Input
+                  width={4}
+                  fluid
+                  type="number"
+                  value={valor}
+                  onChange={(e) => handleChangeValor(e.target.value)}
+                  label="Valor"
+                  placeholder="0"
+                  labelPosition="left"
+                />
+                <Form.Input
+                  width={4}
+                  fluid
+                  type="text"
+                  icon="calendar"
+                  onChange={(e) => handleChangeDataDeCobranca(e.target.value)}
+                  label="Data"
+                  placeholder="dd/MM/yyyy"
+                  labelPosition="left"
+                />
+              </Form.Group>
+            </Form>
+          </Segment>
+        )}
+        <Segment className="segment-despesas">
+          <List divided verticalAlign="middle">
+            {despesas.length > 0 ? (
+              despesas.map((despesa) => (
+                <List.Item key={despesa.id}>
+                  <List.Content floated="right">
                     <Button
-                      color="green"
+                      icon
+                      color="blue"
                       onClick={() => handleEdit(despesa.id)}
-                      className="edit-button"
-                      style={{ marginRight: "10px" }}
                     >
-                      Editar
+                      <Icon name="edit" />
                     </Button>
                     <Button
+                      icon
                       color="red"
                       onClick={() => handleOpenModal(despesa.id)}
-                      className="delete-button"
                     >
-                      Excluir
+                      <Icon name="trash" />
                     </Button>
-                  </div>
-                </List.Content>
-              </List.Item>
-            ))
-          )}
-          <div className="totalDespesas">
-            <p>Total: R$ {total}</p>
-          </div>
-        </List>
+                  </List.Content>
+                  <Icon name="money" size="large" color="red" />
+                  <List.Content>
+                    <List.Header>{despesa.nome}</List.Header>
+                    <List.Description>
+                      Categoria: {despesa.categoria} | Valor: {despesa.valor} |
+                      Data de Cobrança: {despesa.dataDeCobranca}
+                    </List.Description>
+                  </List.Content>
+                </List.Item>
+              ))
+            ) : (
+              <p>Nenhuma despesa encontrada.</p>
+            )}
+          </List>
+        </Segment>
+        <div className="total-container">
+          <strong>Total Despesas: </strong>
+          <span>{total}</span>
+        </div>
       </Container>
-      <Button className="btnCadastrarDespesa" as={Link} to="/novaDespesa">
-        Cadastrar Nova Despesa
-      </Button>
-
-      {/* Modal de Confirmação */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="mini">
-        <SemanticHeader icon="archive" content="Excluir Despesa" />
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        size="small"
+        dimmer="blurring"
+        closeIcon
+      >
+        <SemanticHeader icon="trash" content="Excluir Despesa" />
         <Modal.Content>
           <p>Você tem certeza que deseja excluir esta despesa?</p>
         </Modal.Content>
         <Modal.Actions>
           <Button color="red" onClick={() => setModalOpen(false)}>
-            Não
+            <Icon name="remove" /> Não
           </Button>
           <Button color="green" onClick={handleDelete}>
-            Sim
+            <Icon name="checkmark" /> Sim
           </Button>
         </Modal.Actions>
       </Modal>

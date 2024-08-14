@@ -3,6 +3,7 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormReceita.css";
+import { useNavigate } from 'react-router-dom';
 import {
   registrarReceita,
   atualizarReceita,
@@ -23,6 +24,7 @@ const FormReceita = ({ receitaId }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUSerId] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUSerId(localStorage.getItem("userId"));
@@ -83,6 +85,7 @@ const FormReceita = ({ receitaId }) => {
       // Redirecionar ou limpar campos...
       setTimeout(() => (window.location.href = "/receitas"), 3000);
       // Redirecionar ou limpar campos...
+      navigate('/receitas');
     } catch (error) {
       console.error("Erro ao registrar a receita:", error);
       setError("Erro ao registrar a receita.");

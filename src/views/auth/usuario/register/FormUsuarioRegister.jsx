@@ -10,19 +10,8 @@ const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [charsRemaining, setCharsRemaining] = useState(8);
-
-  // Função para exibir o popup
-  // const showPopup = () => {
-  //   setIsPopupVisible(true);
-  //   // Esconder o popup após X segundos
-  //   setTimeout(() => (window.location.href = "/"), 5000);
-  // };
-
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
@@ -66,12 +55,17 @@ const FormUsuarioRegister = () => {
 
     // Validar campos
     if (!name || !email || !password) {
-      setError("Todos os campos são obrigatórios.");
+      notifyError("Todos os campos são obrigatórios.");
       return;
     }
 
     if (!isEmailValid) {
-      setError("Email inválido.");
+      notifyError("Email inválido.");
+      return;
+    }
+
+    if (charsRemaining > 0) {
+      notifyError("Senha deve ter pelo menos 8 caracteres.");
       return;
     }
 
@@ -81,8 +75,11 @@ const FormUsuarioRegister = () => {
         email,
         senha: password,
       });
+
       notifySuccess('Usuario cadastrado com sucesso.')
+      console.log("User registered:", response.data);
       // Redirecionar ou limpar campos...
+      
       setTimeout(() => (window.location.href = "/login"), 3000);
     } catch (error) {
       if (error.response.data.errors != undefined) {
@@ -93,7 +90,6 @@ const FormUsuarioRegister = () => {
       } else {
         notifyError(error.response.data.message)
       }
-
     }
   };
 
@@ -168,9 +164,6 @@ const FormUsuarioRegister = () => {
               Login
             </Link>
           </div>
-          {error && <Message negative>{error}</Message>}
-          {success && <Message positive>{success}</Message>}
-          {isPopupVisible && <Message positive>Redirecionando...</Message>}
         </Container>
       </div>
     </div>
