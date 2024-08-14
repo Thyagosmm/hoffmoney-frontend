@@ -15,7 +15,6 @@ import FormUsuarioUpdate from "./views/auth/usuario/update/FormUsuarioUpdate";
 import EditarSaldo from "./views/components/saldo/EditarSaldo";
 import EditarReceita from "./views/receita/EditarReceita";
 import EditarDespesa from "./views/despesa/EditarDespesa";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   return (

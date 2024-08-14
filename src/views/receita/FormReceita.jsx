@@ -11,7 +11,7 @@ import {
   buscarReceitaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
-import { notifyError, notifySuccess, mensagemErro } from "../util/Util";
+import { notifyError, notifySuccess } from "../util/Util";
 
 const FormReceita = ({ receitaId }) => {
   const [name, setName] = useState("");
@@ -81,14 +81,14 @@ const FormReceita = ({ receitaId }) => {
         dataDeCobranca: formattedDate,
         paga: false,
       });
+      console.log("Receita cadastrada:", response.data)
       notifySuccess('Receita cadastrada com sucesso.')
-      // Redirecionar ou limpar campos...
+      // Redirecionar
       setTimeout(() => (window.location.href = "/receitas"), 3000);
-      // Redirecionar ou limpar campos...
       navigate('/receitas');
     } catch (error) {
       console.error("Erro ao registrar a receita:", error);
-      setError("Erro ao registrar a receita.");
+      notifyError("Erro ao registrar a receita.");
     }
   };
 

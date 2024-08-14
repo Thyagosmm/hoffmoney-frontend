@@ -4,7 +4,7 @@ import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
 import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
-import { notifyError, notifySuccess, mensagemErro } from "../../../util/Util";
+import { notifyError, notifySuccess} from "../../../util/Util";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
@@ -82,7 +82,7 @@ const FormUsuarioRegister = () => {
       
       setTimeout(() => (window.location.href = "/login"), 3000);
     } catch (error) {
-      if (error.response.data.errors != undefined) {
+      if (error.response.data.errors !== undefined) {
         for (let i = 0; i < error.response.data.errors.length; i++) {
           
           notifyError(error.response.data.errors[i].defaultMessage)
