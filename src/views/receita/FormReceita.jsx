@@ -11,6 +11,7 @@ import {
   buscarReceitaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
+import { notifyError, notifySuccess, mensagemErro } from "../util/Util";
 
 const FormReceita = ({ receitaId }) => {
   const [name, setName] = useState("");
@@ -49,11 +50,11 @@ const FormReceita = ({ receitaId }) => {
   }, [receitaId]);
 
   const categoryOptions = [
-    { key: "Alimentação", text: "Alimentação", value: "Alimentação" },
-    { key: "Transporte", text: "Transporte", value: "Transporte" },
-    { key: "Aluguel", text: "Aluguel", value: "Aluguel" },
-    { key: "Utilidades", text: "Utilidades", value: "Utilidades" },
-    { key: "Entretenimento", text: "Entretenimento", value: "Entretenimento" },
+    { key: "Salario", text: "Salário", value: "Salario" },
+    { key: "Honorarios", text: "Honorários", value: "Honorarios" },
+    { key: "Comissoes", text: "Comissões", value: "Comissoes" },
+    { key: "Juros", text: "Juros", value: "Juros" },
+    { key: "Dividendos", text: "Dividendos", value: "Dividendos" },
     { key: "Outros", text: "Outros", value: "Outros" },
   ];
 
@@ -80,8 +81,9 @@ const FormReceita = ({ receitaId }) => {
         dataDeCobranca: formattedDate,
         paga: false,
       });
-      console.log("Receita registrada:", response.data);
-      setSuccess("Receita registrada com sucesso!");
+      notifySuccess('Receita cadastrada com sucesso.')
+      // Redirecionar ou limpar campos...
+      setTimeout(() => (window.location.href = "/receitas"), 3000);
       // Redirecionar ou limpar campos...
       navigate('/receitas');
     } catch (error) {
