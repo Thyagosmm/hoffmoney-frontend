@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Message, Radio } from "semantic-ui-react";
-import { updateUser, getUser } from "../../../../api/UserApi"; // Supondo que você tenha essas funções na sua API
+import { getUser, updateUser } from "../../../../api/UserApi"; // Supondo que você tenha essas funções na sua API
 import AppMenu from "../../../components/appMenu/AppMenu";
 
-import "./FormUsuarioUpdate.css";
 import { notifyError, notifySuccess } from "../../../utils/Utils"; // Importe as funções de notificação
+import "./FormUsuarioUpdate.css";
 
 const FormUsuarioUpdate = () => {
   const [name, setName] = useState("");
@@ -121,13 +121,15 @@ const FormUsuarioUpdate = () => {
         }
         if (password !== confirmPassword) {
           notifyError(
-            "A nova senha e a confirmação da nova senha não coincidem.",
+            "A nova senha e a confirmação da nova senha não coincidem."
           );
           return;
         }
       }
       if (changePassword) {
         userData.senha = password;
+      } else {
+        userData.senha = verifyCurrentPassword;
       }
 
       const response = await updateUser(userId, userData);
