@@ -112,7 +112,7 @@ const FormDespesa = ({ despesaId }) => {
         console.log("Despesa registrada:", response.data);
         notifySuccess("Despesa registrada com sucesso!");
         setTimeout(() => {
-          navigate("/despesas");
+          window.location.href = "/despesas";
         }, 5000);
       } catch (error) {
         notifyError(mensagemErro);
