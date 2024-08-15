@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 
-export const notify = (mensagem) => toast(mensagem, { className: "toast-font-large" });
+export const notify = (mensagem) =>
+  toast(mensagem, { className: "toast-font-large" });
 
 export const notifyInfo = (mensagem) =>
   toast.info(mensagem, {

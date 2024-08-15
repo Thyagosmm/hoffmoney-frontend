@@ -35,18 +35,16 @@ export const listarDespesas = () => {
   return api.get(`/despesas/usuario/${userId}`);
 };
 
-// Adicionar estas funções
-
-export const buscarDespesaPorId = (despesaId) => {
-  return api.get(`/despesas/${despesaId}`);
+export const buscarDespesaPorId = (usuarioId, despesaId) => {
+  return api.get(`/despesas/usuario/${usuarioId}/${despesaId}`);
 };
 
-export const atualizarDespesa = (despesaId, despesaData) => {
-  return api.put(`/despesas/${despesaId}`, despesaData);
+export const atualizarDespesa = (usuarioId, despesaId, despesaData) => {
+  return api.put(`/despesas/usuario/${usuarioId}/${despesaId}`, despesaData);
 };
 
-export const deletarDespesa = (despesaId) => {
-  return api.delete(`/despesas/${despesaId}`);
+export const deletarDespesa = (usuarioId, despesaId) => {
+  return api.delete(`/despesas/usuario/${usuarioId}/${despesaId}`);
 };
 
 export const incrementarSaldo = (valor) => {
@@ -75,4 +73,28 @@ export const updateUser = (userId, userData) => {
 
 export const getUser = (userId) => {
   return api.get(`/usuario/${userId}`);
+};
+
+export const registrarReceita = (receitaData) => {
+  return api.post("/receitas", receitaData);
+};
+
+export const listarReceitas = () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("Usuário não está logado.");
+  }
+  return api.get(`/receitas/usuario/${userId}`);
+};
+
+export const buscarReceitaPorId = (usuarioId, receitaId) => {
+  return api.get(`/receitas/usuario/${usuarioId}/${receitaId}`);
+};
+
+export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
+  return api.put(`/receitas/usuario/${usuarioId}/${receitaId}`, receitaData);
+};
+
+export const deletarReceita = (usuarioId, receitaId) => {
+  return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };

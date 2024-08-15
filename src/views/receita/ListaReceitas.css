@@ -1,0 +1,73 @@
+.receitas {
+  border: 1px solid #000!important;
+  margin: 2rem!important;
+  width: 80vw!important;
+  height: max-content!important;
+  padding: 2rem!important;
+  border-radius: 2rem;
+}
+
+.containerHeader{
+  width: 100%!important;
+  text-align: center!important;
+  margin-bottom: 1rem!important;
+}
+
+.listaReceitas {
+  display: flex!important;
+  width: 100%!important;
+  height: 100%!important;
+  flex-wrap: wrap!important;
+  justify-content: center!important;
+  align-items: center!important;
+}
+
+.list-icon{
+  height: 1rem!important;
+  width: max-content!important;
+  place-self: center!important;
+  color: white!important;
+  font-size: 2.5rem!important;
+}
+
+.list-item{
+  justify-items: center!important;
+  align-items: center!important;
+  border-radius: 1rem!important;
+  background: black!important;
+  padding: 1rem!important;
+  border-bottom: 0.1rem solid white!important;
+}
+
+.list-description{
+  color: white!important;
+}
+
+.list-header{
+  background: black!important;
+  color: white!important;
+  font-size: 1.5em!important;
+  margin-bottom: 0.5rem!important;
+  text-align: center!important;
+}
+
+.totalReceitas{
+  margin-left: 5rem!important;
+}
+
+.btnCadastrarReceita {
+  width: max-content!important;
+  display: block!important;
+  margin: 1rem auto!important;
+  padding: 0.5rem 1rem!important;
+  background-color: rgb(43, 187, 14)!important;
+  color: white!important;
+  border: none!important;
+  border-radius: 4px!important;
+  cursor: pointer!important;
+  font-size: 1.5em!important;
+}
+
+.btnCadastrarReceita:hover {
+  background-color: black!important;
+}
