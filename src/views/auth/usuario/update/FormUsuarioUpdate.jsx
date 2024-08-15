@@ -57,7 +57,7 @@ const FormUsuarioUpdate = () => {
   // Definir uma função de validação
   const validateEmail = (email) => {
     const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+      /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
     return re.test(String(email).toLowerCase());
   };
 
@@ -132,7 +132,11 @@ const FormUsuarioUpdate = () => {
 
       const response = await updateUser(userId, userData);
       console.log("User updated:", response.data);
+      localStorage.setItem("nome", name);
       notifySuccess("Usuário atualizado com sucesso!");
+      setTimeout(() => {
+        window.location.reload(); // Corrigido para recarregar a página
+      }, 5000);
     } catch (error) {
       console.error("Error updating user:", error);
       notifyError("Erro ao atualizar o usuário.");

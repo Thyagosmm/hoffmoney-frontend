@@ -42,8 +42,8 @@ const AppMenu = () => {
 
   return (
     <Menu inverted className="menu">
-      <Menu.Item as={Link} to="/" header>
-        <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
+      <Menu.Item as={Link} to="/" className="homeLink" header>
+        <Image size="mini" src={logo} />
         Hoffmoney
       </Menu.Item>
       {!isLogged ? (
@@ -68,22 +68,26 @@ const AppMenu = () => {
           <Menu.Menu position="right" className="menu-container">
             <Menu.Item className="userInfo">
               <MenuItem className="basicInfo">
-              <span>Bem-vindo, {firstName}!</span>
-              <span className="span">
-              Seu saldo é R$ {localStorage.getItem("saldo")}
-              </span>
+                <span>Bem-vindo, {firstName}!</span>
+                <span className="span">
+                  Seu saldo é R$ {localStorage.getItem("saldo")}
+                </span>
               </MenuItem>
               <Menu.Item as={Link} to="/update" className="additional-info">
-              Editar Perfil
+                Editar Perfil
               </Menu.Item>
               <Menu.Item as={Link} to="/saldo" className="additional-info">
-              Editar Saldo
+                Editar Saldo
               </Menu.Item>
-              <Menu.Item as={Link} to="/register" className="additional-info" onClick={logout}>
-              Sair
+              <Menu.Item
+                as={Link}
+                to="/register"
+                className="additional-info"
+                onClick={logout}
+              >
+                Sair
               </Menu.Item>
             </Menu.Item>
-            
           </Menu.Menu>
         </>
       )}

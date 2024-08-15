@@ -32,7 +32,19 @@ function App() {
             {/* Adicione outras rotas aqui */}
           </Routes>
         </Router>
-        <ToastContainer className="toastContent" />
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          font-size="1.5rem"
+        />
       </>
     );
 }
