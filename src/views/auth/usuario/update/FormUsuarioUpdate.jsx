@@ -128,6 +128,8 @@ const FormUsuarioUpdate = () => {
       }
       if (changePassword) {
         userData.senha = password;
+      } else {
+        userData.senha = currentPassword;
       }
 
       const response = await updateUser(userId, userData);
