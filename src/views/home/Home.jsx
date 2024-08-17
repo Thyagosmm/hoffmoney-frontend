@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container} from "semantic-ui-react";
-import "./Home.css";
+import { Container } from "semantic-ui-react";
 import soon from "../../assets/soon.png";
 import AppMenu from "../components/appMenu/AppMenu";
 import SliderInfo from "../components/sliderInfo/SliderInfo";
+import "./Home.css";
 
 const Home = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -17,7 +17,6 @@ const Home = () => {
       setIsLogged(true);
     }
   }, []);
-
   return (
     <div className="home">
       <AppMenu className="header" />
@@ -26,13 +25,17 @@ const Home = () => {
           <SliderInfo />
         </Container>
       ) : (
-        <Container className="logged
-        ">
-          <img src={soon} className="loggedImg"alt="Em breve mais funcionalidades " />
-          <p>
-            Em breve mais funçoes
-            </p>
-            </Container>
+        <Container
+          className="logged
+        "
+        >
+          <img
+            src={soon}
+            className="loggedImg"
+            alt="Em breve mais funcionalidades "
+          />
+          <p>Em breve mais funçoes</p>
+        </Container>
       )}
     </div>
   );

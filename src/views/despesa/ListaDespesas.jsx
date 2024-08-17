@@ -1,28 +1,33 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Menu,
-  Segment,
-  Icon,
-  Button,
-  Container,
-  List,
-  Modal,
-  Header as SemanticHeader,
-} from "semantic-ui-react";
-import { listarDespesas, deletarDespesa } from "../../api/UserApi";
-import Header from "../../views/components/appMenu/AppMenu";
-import "./ListaDespesas.css";
 import axios from "axios";
 import { format, parse } from "date-fns";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Form,
+  Icon,
+  List,
+  Menu,
+  Modal,
+  Segment,
+  Header as SemanticHeader,
+} from "semantic-ui-react";
+import {
+  atualizarPaga,
+  deletarDespesa,
+  listarDespesas,
+} from "../../api/UserApi";
+import Header from "../../views/components/appMenu/AppMenu";
+import "./ListaDespesas.css";
 
 const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [despesaToDelete, setDespesaToDelete] = useState(null);
+  const [despesaToEdit, setDespesaToEdit] = useState(null);
+  const [actionType, setActionType] = useState(""); // Novo estado para controlar o tipo de ação
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
@@ -133,9 +138,9 @@ const ListaDespesas = () => {
     }
 
     try {
-      await deletarDespesa(usuarioId, despesaToDelete);
+      await deletarDespesa(usuarioId, despesaToEdit);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaToDelete)
+        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit)
       );
       setModalOpen(false);
     } catch (error) {
@@ -144,9 +149,26 @@ const ListaDespesas = () => {
     }
   };
 
-  const handleOpenModal = (id) => {
-    setDespesaToDelete(id);
+  const handleOpenModal = (id, action) => {
+    setDespesaToEdit(id);
+    setActionType(action);
     setModalOpen(true);
+  };
+  const handleAtualizarPaga = async () => {
+    try {
+      const usuarioId = localStorage.getItem("userId");
+      const response = await atualizarPaga(usuarioId, despesaToEdit, true);
+      // Atualize o estado da despesa localmente
+      setDespesas((prevDespesas) =>
+        prevDespesas.map((despesa) =>
+          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa
+        )
+      );
+      console.log("Despesa atualizada com sucesso:", response.data);
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Erro ao atualizar a despesa:", error);
+    }
   };
 
   const handleEdit = (id) => {
@@ -238,6 +260,13 @@ const ListaDespesas = () => {
                   <List.Content floated="right">
                     <Button
                       icon
+                      color="green"
+                      onClick={() => handleOpenModal(despesa.id)}
+                    >
+                      <Icon name="check" />
+                    </Button>
+                    <Button
+                      icon
                       color="blue"
                       onClick={() => handleEdit(despesa.id)}
                     >
@@ -278,15 +307,29 @@ const ListaDespesas = () => {
         dimmer="blurring"
         closeIcon
       >
-        <SemanticHeader icon="trash" content="Excluir Despesa" />
+        <SemanticHeader
+          icon={actionType === "delete" ? "trash" : "check"}
+          content={
+            actionType === "delete" ? "Excluir Despesa" : "Confirmar Pagamento"
+          }
+        />
         <Modal.Content>
-          <p>Você tem certeza que deseja excluir esta despesa?</p>
+          <p>
+            {actionType === "delete"
+              ? "Você tem certeza que deseja excluir esta despesa?"
+              : "Você realmente pagou esta despesa?"}
+          </p>
         </Modal.Content>
         <Modal.Actions>
           <Button color="red" onClick={() => setModalOpen(false)}>
             <Icon name="remove" /> Não
           </Button>
-          <Button color="green" onClick={handleDelete}>
+          <Button
+            color="green"
+            onClick={
+              actionType === "delete" ? handleDelete : handleAtualizarPaga
+            }
+          >
             <Icon name="checkmark" /> Sim
           </Button>
         </Modal.Actions>

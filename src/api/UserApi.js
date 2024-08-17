@@ -98,3 +98,6 @@ export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
 export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };
+export const atualizarPaga = (usuarioId, despesaId, novaPaga) => {
+  return api.put(`/despesas/usuario/${usuarioId}/${despesaId}/paga`, { paga: novaPaga });
+};
