@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Menu, MenuItem } from "semantic-ui-react";
-import logo from "../../../assets/logo.png";
-import "./AppMenu.css"; // Importar o arquivo CSS
+import images from "../../../assets/images.js";
+import "./AppMenu.css";
 import { consultarSaldo } from "../../../api/UserApi";
 
 const AppMenu = () => {
@@ -15,7 +15,7 @@ const AppMenu = () => {
     const email = localStorage.getItem("email");
     
     if (userId && nameParts && email) {
-      setFirstName(nameParts.split(" ")[0]); // Dividir o nome completo e pegar o primeiro nome
+      setFirstName(nameParts.split(" ")[0]);
       setIsLogged(true);
 
       consultarSaldo(userId)
@@ -43,7 +43,7 @@ const AppMenu = () => {
   return (
     <Menu inverted className="menu">
       <Menu.Item as={Link} to="/" header>
-        <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
+        <Image size="mini" src={images.logo} style={{ marginRight: "1.5em" }} />
         Hoffmoney
       </Menu.Item>
       {!isLogged ? (

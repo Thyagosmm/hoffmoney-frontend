@@ -16,11 +16,13 @@ import EditarSaldo from "./views/components/saldo/EditarSaldo";
 import EditarReceita from "./views/receita/EditarReceita";
 import EditarDespesa from "./views/despesa/EditarDespesa";
 
+
 function App() {
   return (
     <>
     <Router>
       <Routes>
+        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<FormUsuarioRegister />} />
         <Route path="/update" element={<FormUsuarioUpdate />} />
