@@ -1844,7 +1844,10 @@ fieldset:disabled a.btn {
     background-color: #00e676;
     border-color: #00e676; }
   .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+  
   .show > .btn-primary.dropdown-toggle {
+    display: flex;
+    width: 100%;
     color: #ffffff;
     background-color: #00b35c;
     border-color: #00a655; }
@@ -2173,7 +2176,11 @@ fieldset:disabled a.btn {
     .btn-outline-light:not(:disabled):not(.disabled):active:focus, .btn-outline-light:not(:disabled):not(.disabled).active:focus,
     .show > .btn-outline-light.dropdown-toggle:focus {
       box-shadow: 0 0 0 0.2rem rgba(236, 239, 241, 0.5); }
-
+.dropdown-toggle{
+  display: flex!important;
+  flex-direction: column!important;
+  width: 100%!important;
+}
 .btn-outline-dark {
   color: #11171a;
   background-color: transparent;
@@ -2190,6 +2197,8 @@ fieldset:disabled a.btn {
     background-color: transparent; }
   .btn-outline-dark:not(:disabled):not(.disabled):active, .btn-outline-dark:not(:disabled):not(.disabled).active,
   .show > .btn-outline-dark.dropdown-toggle {
+    display: flex;
+    flex-direction: column!important;
     color: #ffffff;
     background-color: #11171a;
     border-color: #11171a; }
@@ -2257,14 +2266,23 @@ input[type="button"].btn-block {
     .collapsing {
       transition: none; } }
 
+      .dropdown{
+        display: flex!important;
+        flex-direction: column!important;;
+        width: 100%!important;
+        align-items: center!important;
+        justify-content: center!important;
+      }
 .dropup,
 .dropright,
 .dropdown,
 .dropleft {
+  display: flex;
+  width: 100%;
   position: relative; }
 
 .dropdown-toggle::after {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-left: 0.255em;
@@ -2279,23 +2297,24 @@ input[type="button"].btn-block {
   margin-left: 0; }
 
 .dropdown-menu {
+  margin-top: 0.1rem!important;
+  flex-direction: column!important;
   position: absolute;
   top: 100%;
+  gap: 0.5rem!important;
   left: 0;
   z-index: 1000;
-  display: none;
-  float: left;
-  min-width: 10rem;
+  display: flex!important;
+  align-items: center!important;
+  min-width: 100%!important;
   padding: 0.75rem 0;
-  margin: 0.125rem 0 0;
   font-size: 1rem;
-  color: #CFD8DC;
+  color: #cfd8dc00;
   text-align: left;
-  list-style: none;
-  background-color: #ffffff;
+  background-color: #000000;
   background-clip: padding-box;
-  border: 2px solid #ECEFF1;
-  border-radius: 0.3rem; }
+  border: 0.1rem solid #00e676;
+  border-radius: 1rem; }
 
 .dropdown-menu-right {
   right: 0;
@@ -2398,15 +2417,16 @@ input[type="button"].btn-block {
   padding: 0.25rem 1.5rem;
   clear: both;
   font-weight: 400;
-  color: #546E7A;
+  background-color: black;
+  color: #ffffff;
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
   border: 0; }
   .dropdown-item:hover, .dropdown-item:focus {
-    color: #263238;
+    color: #ffffff;
     text-decoration: none;
-    background-color: #ECEFF1; }
+    background-color: #5aff7650; }
   .dropdown-item.active, .dropdown-item:active {
     color: #ffffff;
     text-decoration: none;
@@ -2938,6 +2958,8 @@ input[type="button"].btn-block {
 .nav-tabs {
   border-bottom: 2px solid #ECEFF1; }
   .nav-tabs .nav-item {
+    background-color: black!important;
+    border: 0.1rem solid green;
     margin-bottom: -2px; }
   .nav-tabs .nav-link {
     border: 2px solid transparent;
@@ -2953,7 +2975,7 @@ input[type="button"].btn-block {
   .nav-tabs .nav-item.show .nav-link {
     color: #ffffff;
     background-color: #11171a;
-    border-color: #CFD8DC #CFD8DC #11171a; }
+    border-color: 0.1rem solid #CFD8DC #CFD8DC #11171a; }
   .nav-tabs .dropdown-menu {
     margin-top: -2px;
     border-top-left-radius: 0;
@@ -3021,6 +3043,7 @@ input[type="button"].btn-block {
 .navbar-nav {
   display: -ms-flexbox;
   display: flex;
+  align-items: center;
   -ms-flex-direction: column;
       flex-direction: column;
   padding-left: 0;
@@ -7473,6 +7496,11 @@ body {
   text-transform: uppercase; }
 
 .navbar .navbar-nav .nav-item {
+  display: flex;
+  height: max-content;
+  width: max-content; 
+  border: 1px solid #00e676;
+  border-radius: 1rem;
   margin: 0 .7rem; }
   .navbar .navbar-nav .nav-item .nav-link {
     font-weight: 600; }
@@ -7516,7 +7544,8 @@ body {
 
 /*smart scrolling*/
 .smart-scroll {
-  position: fixed;
+
+  position: relative;
   top: 0;
   z-index: 1020;
   width: 100%;

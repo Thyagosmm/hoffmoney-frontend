@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./Home.css";
 import images from "../../assets/images.js";
 import { Edit, Monitor, BarChart, Globe, ArrowRight, Instagram } from "react-feather";
+import AppMenu from "../components/appMenu/AppMenu.jsx";
 
 const Home1 = () => {
   const settings = {
@@ -17,65 +18,7 @@ const Home1 = () => {
   };
   return (
     <>
-      {/* Navigation */}
-      <section className="smart-scroll">
-        <div className="container-fluid">
-          <nav className="navbar navbar-expand-md navbar-dark">
-            <Link className="navbar-brand heading-black" to="/">
-              HoffMoney
-            </Link>
-            <button
-              className="navbar-toggler navbar-toggler-right border-0"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-              aria-controls="navbarCollapse"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span data-feather="grid"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarCollapse">
-              <ul className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#features">
-                    Recursos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#pricing">
-                    Planos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#faq">
-                    FAQ
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#blog">
-                    Blog
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className="nav-link page-scroll d-flex flex-row align-items-center text-primary"
-                    to="/login"
-                  >
-                    <em
-                      data-feather="layout"
-                      width="18"
-                      height="18"
-                      className="mr-2"
-                    ></em>
-                    Entrar
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </section>
+      <AppMenu />
 
       {/* Hero Header */}
       <section className="py-7 py-md-0 bg-hero" id="home">
@@ -579,13 +522,17 @@ const Home1 = () => {
               <h5>Jurídico</h5>
               <ul className="list-unstyled">
                 <li>
-                  <a href="https://www.instagram.com/hoffmoney_/">Privacidade</a>
+                  <a href="https://www.instagram.com/hoffmoney_/">
+                    Privacidade
+                  </a>
                 </li>
                 <li>
                   <a href="https://www.instagram.com/hoffmoney_/">Termos</a>
                 </li>
                 <li>
-                  <a href="https://www.instagram.com/hoffmoney_/">Política de Reembolso</a>
+                  <a href="https://www.instagram.com/hoffmoney_/">
+                    Política de Reembolso
+                  </a>
                 </li>
               </ul>
             </div>
@@ -593,7 +540,9 @@ const Home1 = () => {
               <h5>Parcerias</h5>
               <ul className="list-unstyled">
                 <li>
-                  <a href="https://www.instagram.com/hoffmoney_/">Indique um amigo</a>
+                  <a href="https://www.instagram.com/hoffmoney_/">
+                    Indique um amigo
+                  </a>
                 </li>
                 <li>
                   <a href="https://www.instagram.com/hoffmoney_/">Afiliados</a>

@@ -6,12 +6,12 @@
   justify-content: center;
   min-height: 100%; /* Altura mínima para preencher a tela */
   padding: 20px;
-  background: url("../../assets/textura.jpg") repeat; /* Caminho para a imagem de textura */
   background-size: cover; /* Faz com que a imagem cubra todo o fundo */
 }
 
 /* Formulário de despesa */
 .despesa-form {
+  border: 0.1rem solid #82d690;
   display: flex;
   width: max-content;
   flex-direction: column;
