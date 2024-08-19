@@ -1,11 +1,11 @@
 import { Icon } from "semantic-ui-react";
-import logo from "../../../assets/logo.png";
+import images from "../../../assets/images.js";
 import { Link } from "react-router-dom";
 import "./Info.css";
 export default function FormLogin() {
   return (
     <div className="forgot-password-left">
-      <img src={logo} alt="Marca" className="infoLogo" />
+      <img src={images.logo} alt="Marca" className="infoLogo" />
       <h2>"Gerenciando seu futuro financeiro!"</h2>
       <div className="social-links">
         <div className="social-link">

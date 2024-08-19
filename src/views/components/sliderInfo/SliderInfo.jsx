@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { Button, Container, Header, Segment } from "semantic-ui-react";
-import logo from "../../../assets/logo.png";
+import images from "../../../assets/images.js";
 import "./SliderInfo.css";
 
 const SliderInfo = () => {
@@ -47,7 +45,7 @@ const SliderInfo = () => {
               <Header as="h1" inverted>
                 Bem-vindo à Hoffmoney
               </Header>
-              <img src={logo} alt="Logo da Hoffmoney" className="logo" />
+              <img src={images.logo} alt="Logo da Hoffmoney" className="logo" />
               <p>Gerenciando seu futuro financeiro com confiança</p>
             </Container>
             <Segment className="about" id="about">

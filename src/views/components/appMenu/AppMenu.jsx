@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Menu, MenuItem } from "semantic-ui-react";
-import logo from "../../../assets/logo.png";
-import "./AppMenu.css"; // Importar o arquivo CSS
+import images from "../../../assets/images.js";
+import "./AppMenu.css";
 import { consultarSaldo } from "../../../api/UserApi";
 
 const AppMenu = () => {
@@ -15,7 +15,7 @@ const AppMenu = () => {
     const email = localStorage.getItem("email");
     
     if (userId && nameParts && email) {
-      setFirstName(nameParts.split(" ")[0]); // Dividir o nome completo e pegar o primeiro nome
+      setFirstName(nameParts.split(" ")[0]);
       setIsLogged(true);
 
       consultarSaldo(userId)
@@ -42,8 +42,8 @@ const AppMenu = () => {
 
   return (
     <Menu inverted className="menu">
-      <Menu.Item as={Link} to="/" className="homeLink" header>
-        <Image size="mini" src={logo} />
+      <Menu.Item as={Link} to="/" header>
+        <Image size="mini" src={images.logo} style={{ marginRight: "1.5em" }} />
         Hoffmoney
       </Menu.Item>
       {!isLogged ? (
@@ -68,26 +68,22 @@ const AppMenu = () => {
           <Menu.Menu position="right" className="menu-container">
             <Menu.Item className="userInfo">
               <MenuItem className="basicInfo">
-                <span>Bem-vindo, {firstName}!</span>
-                <span className="span">
-                  Seu saldo é R$ {localStorage.getItem("saldo")}
-                </span>
+              <span>Bem-vindo, {firstName}!</span>
+              <span className="span">
+              Seu saldo é R$ {localStorage.getItem("saldo")}
+              </span>
               </MenuItem>
               <Menu.Item as={Link} to="/update" className="additional-info">
-                Editar Perfil
+              Editar Perfil
               </Menu.Item>
               <Menu.Item as={Link} to="/saldo" className="additional-info">
-                Editar Saldo
+              Editar Saldo
               </Menu.Item>
-              <Menu.Item
-                as={Link}
-                to="/register"
-                className="additional-info"
-                onClick={logout}
-              >
-                Sair
+              <Menu.Item as={Link} to="/register" className="additional-info" onClick={logout}>
+              Sair
               </Menu.Item>
             </Menu.Item>
+            
           </Menu.Menu>
         </>
       )}
