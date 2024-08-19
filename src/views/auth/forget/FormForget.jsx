@@ -24,7 +24,7 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase());
 };
   return (
-    <div className="forgot-password-container">
+    <div className="page-container">
       <Info />
       <div className="forgot-password-right">
         <Container textAlign="center">

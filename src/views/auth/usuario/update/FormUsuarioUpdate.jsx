@@ -146,122 +146,120 @@ const FormUsuarioUpdate = () => {
       <AppMenu />
       <Container textAlign="center">
         <h2>Editar Perfil</h2>
-        <div className="form-container">
-          <Form>
-            <Form.Field className="form-field">
-              <label>Nome</label>
-              <input
-                className="input-field"
-                placeholder="Nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Field>
-            <Form.Field className="form-field">
-              <label className="label-input">
-                Email
-                {!isEmailValid ? (
-                  <Message className="inputError" negative>
-                    Email inválido.
-                  </Message>
-                ) : (
-                  <Message className="inputSuccess" positive>
-                    Email válido
-                  </Message>
-                )}
-              </label>
-              <input
-                className="input-field"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </Form.Field>
-            <Form.Field className="custom-radio">
-              <label>Alterar senha?</label>
-              <Radio
-                toggle
-                label={changePassword ? "Sim" : "Não"}
-                checked={changePassword}
-                onChange={() => setChangePassword(!changePassword)}
-              />
-            </Form.Field>
-            {changePassword && (
-              <>
-                <Form.Field className="form-field">
-                  <label className="label-input">
-                    Senha Atual
-                    {currentPasswordValidation.charsRemaining > 0 ? (
-                      <Message className="inputError" negative>
-                        Faltam {currentPasswordValidation.charsRemaining}{" "}
-                        caracteres
-                      </Message>
-                    ) : (
-                      <Message className="inputSuccess" positive>
-                        Senha válida
-                      </Message>
-                    )}
-                  </label>
+        <Form className="form-container">
+          <Form.Field className="form-field">
+            <label>Nome</label>
+            <input
+              className="input-field"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Form.Field>
+          <Form.Field className="form-field">
+            <label className="label-input">
+              Email
+              {!isEmailValid ? (
+                <Message className="inputError" negative>
+                  Email inválido.
+                </Message>
+              ) : (
+                <Message className="inputSuccess" positive>
+                  Email válido
+                </Message>
+              )}
+            </label>
+            <input
+              className="input-field"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </Form.Field>
+          <Form.Field className="custom-radio">
+            <label>Alterar senha?</label>
+            <Radio
+              toggle
+              label={changePassword ? "Sim" : "Não"}
+              checked={changePassword}
+              onChange={() => setChangePassword(!changePassword)}
+            />
+          </Form.Field>
+          {changePassword && (
+            <>
+              <Form.Field className="form-field">
+                <label className="label-input">
+                  Senha Atual
+                  {currentPasswordValidation.charsRemaining > 0 ? (
+                    <Message className="inputError" negative>
+                      Faltam {currentPasswordValidation.charsRemaining}{" "}
+                      caracteres
+                    </Message>
+                  ) : (
+                    <Message className="inputSuccess" positive>
+                      Senha válida
+                    </Message>
+                  )}
+                </label>
 
-                  <input
-                    className="input-field"
-                    type="password"
-                    placeholder="Senha Atual"
-                    value={currentPassword}
-                    onChange={handleCurrentPasswordChange}
-                  />
-                </Form.Field>
-                <Form.Field className="form-field">
-                  <label className="label-input">
-                    Nova Senha
-                    {newPasswordValidation.charsRemaining > 0 ? (
-                      <Message className="inputError" negative>
-                        Faltam {newPasswordValidation.charsRemaining} caracteres
-                      </Message>
-                    ) : (
-                      <Message className="inputSuccess" positive>
-                        Senha válida
-                      </Message>
-                    )}
-                  </label>
-                  <input
-                    className="input-field"
-                    type="password"
-                    placeholder="Nova Senha"
-                    value={password}
-                    onChange={handleNewPasswordChange}
-                  />
-                </Form.Field>
-                <Form.Field className="form-field">
-                  <label className="label-input">
-                    Confirmar Nova Senha
-                    {confirmPasswordValidation.charsRemaining > 0 ? (
-                      <Message className="inputError" negative>
-                        Faltam {confirmPasswordValidation.charsRemaining}{" "}
-                        caracteres
-                      </Message>
-                    ) : (
-                      <Message className="inputSuccess" positive>
-                        Senha válida
-                      </Message>
-                    )}
-                  </label>
-                  <input
-                    className="input-field"
-                    type="password"
-                    placeholder="Confirmar Nova Senha"
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                  />
-                </Form.Field>
-              </>
-            )}
-            <Button className="register-button" onClick={handleUpdate}>
-              Atualizar
-            </Button>
-          </Form>
-        </div>
+                <input
+                  className="input-field"
+                  type="password"
+                  placeholder="Senha Atual"
+                  value={currentPassword}
+                  onChange={handleCurrentPasswordChange}
+                />
+              </Form.Field>
+              <Form.Field className="form-field">
+                <label className="label-input">
+                  Nova Senha
+                  {newPasswordValidation.charsRemaining > 0 ? (
+                    <Message className="inputError" negative>
+                      Faltam {newPasswordValidation.charsRemaining} caracteres
+                    </Message>
+                  ) : (
+                    <Message className="inputSuccess" positive>
+                      Senha válida
+                    </Message>
+                  )}
+                </label>
+                <input
+                  className="input-field"
+                  type="password"
+                  placeholder="Nova Senha"
+                  value={password}
+                  onChange={handleNewPasswordChange}
+                />
+              </Form.Field>
+              <Form.Field className="form-field">
+                <label className="label-input">
+                  Confirmar Nova Senha
+                  {confirmPasswordValidation.charsRemaining > 0 ? (
+                    <Message className="inputError" negative>
+                      Faltam {confirmPasswordValidation.charsRemaining}{" "}
+                      caracteres
+                    </Message>
+                  ) : (
+                    <Message className="inputSuccess" positive>
+                      Senha válida
+                    </Message>
+                  )}
+                </label>
+                <input
+                  className="input-field"
+                  type="password"
+                  placeholder="Confirmar Nova Senha"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                />
+              </Form.Field>
+            </>
+          )}
+          <Button className="form-button" onClick={handleUpdate}>
+            Atualizar
+          </Button>
+        </Form>
       </Container>
     </>
   );

@@ -1,10 +1,4 @@
-.register-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 100vh;
-  background-color: white;
-}
+
 
 .register-left {
   flex: 1;
@@ -24,14 +18,7 @@
   justify-content: center;
 }
 
-.form-container {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  margin: 0 auto;
-}
+
 .register-button {
   background-color: rgb(152, 251, 152) !important;
   color: black !important;
@@ -53,14 +40,6 @@
 
   .register-left, .register-right {
     width: 100vw!important;
-  }
-
-  .form-container {
-    display: flex;
-    width: 90vw!important;
-    padding: 0.5rem;
-    box-shadow: none;
-    margin: 0;
   }
 
   .modal-content {
