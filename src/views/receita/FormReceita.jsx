@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Dropdown } from "semantic-ui-react";
+import { Form, Button, Dropdown, Radio} from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormReceita.css";
@@ -10,7 +10,8 @@ import {
   buscarReceitaPorId,
 } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
-import { notifyError, notifySuccess } from "../utils/Utils";
+import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
+import { useNavigate } from "react-router-dom";
 
 const FormReceita = ({ receitaId }) => {
   const [name, setName] = useState("");
@@ -20,9 +21,11 @@ const FormReceita = ({ receitaId }) => {
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
+  const [errors, setErrors] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUSerId] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUSerId(localStorage.getItem("userId"));
@@ -38,14 +41,41 @@ const FormReceita = ({ receitaId }) => {
           setFrequency(receita.periodo);
           setDescription(receita.descricao);
           setDate(new Date(receita.dataDeCobranca));
-        } catch (error) {
-          console.error("Erro ao buscar a receita:", error);
-          setError("Erro ao buscar a receita.");
+        } catch (errors) {
+          console.error("Erro ao buscar a receita:", errors);
+          setErrors("Erro ao buscar a receita.");
         }
       };
       fetchReceita();
     }
   }, [receitaId]);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!name.trim()) {
+      newErrors.name = "Informe o nome da receita.";
+      notifyError("Informe o nome da receita.");
+    }
+    if (!value.trim()) {
+      newErrors.value = "Informe o valor da receita.";
+      notifyError("Informe o valor da receita.");
+    }
+    if (recurrence) {
+      if (!frequency.trim()) {
+        newErrors.frequency = "Informe a freqência da receita.";
+        notifyError("Informe a freqência da receita.");
+      }
+    }
+    if (date == null) {
+      notifyError("A data não pode ser nula ou indefinida.");
+    }
+    if (!category.trim()) {
+      newErrors.category = "Informe a categoria da receita.";
+      notifyError("Informe a categoria da receita.");
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const categoryOptions = [
     { key: "Salario", text: "Salário", value: "Salario" },
@@ -56,6 +86,13 @@ const FormReceita = ({ receitaId }) => {
     { key: "Outros", text: "Outros", value: "Outros" },
   ];
 
+  const freqOptions = [
+    { key: 'diario', text: 'Diariamente', value: 'diario' },
+    { key: 'semanal', text: 'Semanalmente', value: 'semanal' },
+    { key: 'mensal', text: 'Mensalmente', value: 'mensal' },
+    { key: 'anual', text: 'Anualmente', value: 'anual' }
+  ];
+
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -64,28 +101,32 @@ const FormReceita = ({ receitaId }) => {
   };
 
   const handleRegistrarReceita = async (e) => {
-    e.preventDefault();
-    const formattedDate = formatDate(date);
+    if (validate()) {
+      e.preventDefault();
+      const formattedDate = formatDate(date);
 
-    try {
-      const response = await registrarReceita({
-        usuario: { id: userId },
-        nome: name,
-        descricao: description,
-        valor: value,
-        categoria: category,
-        recorrente: recurrence,
-        periodo: frequency,
-        dataDeCobranca: formattedDate,
-        paga: false,
-      });
-      console.log("Receita cadastrada:", response.data)
-      notifySuccess('Receita cadastrada com sucesso.')
-      // Redirecionar
-      setTimeout(() => (window.location.href = "/receitas"), 5000);
-    } catch (error) {
-      console.error("Erro ao registrar a receita:", error);
-      notifyError("Erro ao registrar a receita.");
+      try {
+        const response = await registrarReceita({
+          usuario: { id: userId },
+          nome: name,
+          descricao: description,
+          valor: value,
+          categoria: category,
+          recorrente: recurrence,
+          periodo: frequency,
+          dataDeCobranca: formattedDate,
+          paga: false,
+        });
+        console.log("Receita registrada:", response.data);
+        notifySuccess("Receita registrada com sucesso!");
+        setTimeout(() => {
+          navigate("/receitas");
+        }, 3000);
+      } catch (error) {
+        notifyError(mensagemErro);
+      }
+    } else {
+      notifyError("Preencha os campos necessários no formulário.");
     }
   };
 
@@ -167,58 +208,37 @@ const FormReceita = ({ receitaId }) => {
                       onChange={(e, { value }) => setCategory(value)}
                     />
                   </Form.Field>
-                  <Form.Field>
-                    <label>Recorrente</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Recorrência"
-                      fluid
-                      selection
-                      options={[
-                        { key: true, text: "Sim", value: true },
-                        { key: false, text: "Não", value: false },
-                      ]}
-                      value={recurrence}
-                      onChange={(e, { value }) => setRecurrence(value)}
-                    />
-                  </Form.Field>
-                  {recurrence === true && (
-                    <>
-                      <Form.Field>
-                        <label>Frequência</label>
-                        <Dropdown
-                          className="input-field"
-                          placeholder="Selecione Frequência"
+                  <Form.Group className="grupoRecorrente">
+                    <Form.Field className="custom-radio">
+                      <label>Recorrente</label>
+                      <Radio
+                        toggle
+                        label={recurrence ? "Sim" : "Não"}
+                        checked={recurrence}
+                        onChange={() => setRecurrence(!recurrence)}
+                      />
+                    </Form.Field>
+                    {recurrence === true && (
+                      <>
+                        <Form.Field
                           fluid
-                          selection
-                          options={[
-                            {
-                              key: "diario",
-                              text: "Diariamente",
-                              value: "diario",
-                            },
-                            {
-                              key: "semanal",
-                              text: "Semanalmente",
-                              value: "semanal",
-                            },
-                            {
-                              key: "mensal",
-                              text: "Mensalmente",
-                              value: "mensal",
-                            },
-                            {
-                              key: "anual",
-                              text: "Anualmente",
-                              value: "anual",
-                            },
-                          ]}
-                          value={frequency}
-                          onChange={(e, { value }) => setFrequency(value)}
-                        />
-                      </Form.Field>
-                    </>
-                  )}
+                          className="dropdownFrequencia"
+                          error={!!errors.frequency}
+                        >
+                          <Dropdown
+                            className="input-field dropdownFrequencia"
+                            placeholder="Selecione Frequência"
+                            fluid
+                            selection
+                            options={freqOptions}
+                            value={frequency}
+                            onChange={(e, { value }) => setFrequency(value)}
+                          />
+                        </Form.Field>
+                      </>
+                    )}
+                  </Form.Group>
+
                   <Form.Field>
                     <label>Descrição</label>
                     <input
