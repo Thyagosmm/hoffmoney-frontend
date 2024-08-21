@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Dropdown } from 'semantic-ui-react';
+import { Form, Button, Dropdown, Radio } from 'semantic-ui-react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './FormReceita.css';
@@ -16,6 +16,7 @@ const EditarReceita = () => {
   const [recorrencia, setRecorrencia] = useState('');
   const [frequencia, setFrequencia] = useState('');
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState('');
   const [success, setSuccess] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,10 +48,6 @@ const EditarReceita = () => {
     carregarReceita();
   }, [id, usuarioId]);
 
-  const recOptions = [
-    { key: 'sim', text: 'Sim', value: true },
-    { key: 'nao', text: 'Não', value: false }
-  ];
 
   const freqOptions = [
     { key: 'diario', text: 'Diariamente', value: 'diario' },
@@ -60,12 +57,12 @@ const EditarReceita = () => {
   ];
 
   const categoryOptions = [
-    { key: 'Alimentação', text: 'Alimentação', value: 'Alimentação' },
-    { key: 'Transporte', text: 'Transporte', value: 'Transporte' },
-    { key: 'Aluguel', text: 'Aluguel', value: 'Aluguel' },
-    { key: 'Utilidades', text: 'Utilidades', value: 'Utilidades' },
-    { key: 'Entretenimento', text: 'Entretenimento', value: 'Entretenimento' },
-    { key: 'Outros', text: 'Outros', value: 'Outros' },
+    { key: "Salario", text: "Salário", value: "Salario" },
+    { key: "Honorarios", text: "Honorários", value: "Honorarios" },
+    { key: "Comissoes", text: "Comissões", value: "Comissoes" },
+    { key: "Juros", text: "Juros", value: "Juros" },
+    { key: "Dividendos", text: "Dividendos", value: "Dividendos" },
+    { key: "Outros", text: "Outros", value: "Outros" },
   ];
 
   const formatDate = (date) => {
@@ -139,32 +136,37 @@ const EditarReceita = () => {
                       onChange={(e, { value }) => setCategoria(value)}
                     />
                   </Form.Field>
-                  <Form.Field>
-                    <label>Recorrência</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Recorrência"
-                      fluid
-                      selection
-                      options={recOptions}
-                      value={recorrencia}
-                      onChange={(e, { value }) => setRecorrencia(value)}
-                    />
-                  </Form.Field>
-                  {recorrencia && (
-                    <Form.Field>
-                      <label>Frequência</label>
-                      <Dropdown
-                        className="input-field"
-                        placeholder="Selecione Frequência"
-                        fluid
-                        selection
-                        options={freqOptions}
-                        value={frequencia}
-                        onChange={(e, { value }) => setFrequencia(value)}
+                  <Form.Group className="grupoRecorrente">
+                    <Form.Field className="custom-radio">
+                      <label>Recorrente</label>
+                      <Radio
+                        toggle
+                        label={recorrencia ? "Sim" : "Não"}
+                        checked={recorrencia}
+                        onChange={() => setRecorrencia(!recorrencia)}
                       />
                     </Form.Field>
-                  )}
+                    {recorrencia === true && (
+                      <>
+                        <Form.Field
+                          fluid
+                          className="dropdownFrequencia"
+                          error={!!errors.frequencia}
+                        >
+                          <Dropdown
+                            className="input-field dropdownFrequencia"
+                            placeholder="Selecione Frequência"
+                            fluid
+                            selection
+                            options={freqOptions}
+                            value={frequencia}
+                            onChange={(e, { value }) => setFrequencia(value)}
+                          />
+                        </Form.Field>
+                      </>
+                    )}
+                  </Form.Group>
+
                   <Form.Field>
                     <label>Descrição</label>
                     <input
