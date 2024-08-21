@@ -1,0 +1,117 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+/* Definindo a variável */
+:root {
+  --slick-dot-size: 20px !important;
+}
+
+/* Estilizando os botões de navegação do slick */
+/* Estilizando os botões de navegação do slick */
+.slick-prev {
+  left:  -5rem !important; /* Posiciona o botão à esquerda */
+}
+.slick-next {
+  right:  -5rem !important; /* Posiciona o botão à esquerda */
+
+}
+
+.slick-prev,
+.slick-next {
+  width: 50px !important; /* Aumenta a largura do botão */
+  height: 50px !important; /* Aumenta a altura do botão */
+  font-size: 50px !important; /* Aumenta a altura do botão */
+  z-index: 1; /* Garante que os botões fiquem acima do conteúdo */
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 50px !important; /* Aumenta o tamanho do ícone */
+  color: black !important; /* Altera a cor do ícone, se necessário */
+}
+
+/* Aplicando a variável aos pontos do slick */
+.slick-dots li button:before {
+  font-size: var(--slick-dot-size);
+}
+
+.sliderContent{
+  display: block!important;
+  flex-direction: column;
+  justify-content: space-between!important;
+  align-items: center;
+  
+}
+
+.information {
+  display: flex;
+  width: 100vw!important;
+  justify-content: space-between;
+  padding: 1rem;
+  align-items: center;
+}
+
+.infoContent {
+  display: flex !important;
+justify-content: space-between!important;
+flex-direction: column!important;
+  width: 100%!important;
+  height: max-content!important;
+  padding: 0 !important;
+  align-items: center!important;
+}
+
+.about {
+  padding: 1rem;
+  display: flex !important;
+  width: 100%;
+  height: max-content;
+  text-align: center!important;
+  flex-direction: column!important;;
+  align-items: center!important;;
+  justify-content: space-between!important;;
+  place-items: center!important;;
+  border-radius: 2rem 2rem 0 0 !important;
+}
+
+.container-text {
+  display: flex !important;
+  width: 100%;
+  height: max-content!important;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  place-items: center;
+  padding: 1rem !important;
+}
+
+#contact {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: max-content;
+  padding: 1rem !important;
+}
+#contact p {
+  font-size: 1rem;
+}
+.social-links {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.social-links .ui.button {
+  margin: 0 0.5rem;
+}
+
+.logo {
+  width: 10vw;
+}
+.segmentText{
+  font-size: large;
+}
+h2{
+  font-size: large!important;
+}

@@ -27,13 +27,6 @@
   margin: 0 auto 15px auto;
 }
 
-.input-field {
-  background-color: rgb(152, 251, 152) !important;
-  color: rgb(0, 0, 0) !important;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-}
 
 .forgot-password-button {
   background-color: rgb(152, 251, 152) !important;

@@ -4,6 +4,7 @@
   align-items: center;
   gap: 1rem;
 }
+
 .rote {
   border: 1px solid rgb(0, 255, 21);
   border-radius: 4px;
@@ -12,23 +13,81 @@
 .text {
   font-size: 1.5rem;
 }
-.custom-dropdown {
+.menu-container :hover {
+  display: absolute;
+  height: auto;
+  background-color: black !important;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+.span{
+  padding: 0!important;
+}
+.basicInfo {
+  
+  margin: 0!important;
+  transition: margin 0.5s ease-in-out;
+
+  
+}
+.basicInfo:focus{
+  margin-bottom: 2rem!important;
+  transition: margin 0.5s ease-in-out;
+
+}
+.menu-container {
+  position: absolute;
+  flex-direction: column;
+  height: auto;
+  background-color: black;
+  top: 1rem;
+  right: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(0, 255, 21);
+}
+
+.userInfo {
   display: flex;
-
-  background-color: black !important; /* Cor de fundo do dropdown */
-  color: white !important; /* Cor do texto do dropdown */
-}
-.custom-dropdown .menu {
-  width: 15rem;
-  background-color: black !important; /* Cor de fundo do dropdown */
-  color: white !important; /* Cor do texto do dropdown */
-}
-.custom-dropdown .menu .item {
-  width: 15rem;
-  color: white !important; /* Cor do texto dos itens do dropdown */
+  flex-direction: column;
+  height: max-content;
+  color: white;
+  align-items: center;
+  padding: 0!important;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
 }
 
-.custom-dropdown .menu .item:hover {
-  width: 15rem;
-  background-color: #01880c !important; /* Cor de fundo ao passar o mouse */
+.additional-info {
+  display: none;
+  padding: 0!important;
+  background-color: #f9f9f9;
+  color: black;
+  height: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.userInfo:hover .additional-info,
+.userInfo:focus-within .additional-info {
+  display: flex!important;
+  height: auto!important;
+  margin: 0.5rem!important;
+  background-color: rgb(49, 49, 49)!important;;
+  transition: opacity 0.5s ease-in-out!important;;
+  border: 1px solid rgb(0, 255, 21)!important;;
+  padding: 0.5rem!important;;
+  opacity: 1!important;
+
+}
+.basicInfo {
+  display: flex;
+  flex-direction: column !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }

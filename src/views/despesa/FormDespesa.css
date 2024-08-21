@@ -1,5 +1,4 @@
 /* Container principal */
-
 .despesa {
   display: flex;
   flex-direction: column;
@@ -14,6 +13,7 @@
 /* Formulário de despesa */
 .despesa-form {
   display: flex;
+  width: max-content;
   flex-direction: column;
   align-items: center; /* Centraliza o formulário horizontalmente */
   width: 100%;
@@ -23,6 +23,7 @@
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 /* Título do formulário */
 .despesa-form h1 {
@@ -36,6 +37,7 @@
   justify-content: space-between;
   width: 100%;
   gap: 20px;
+  flex-wrap: wrap; /* Permite que os elementos quebrem linha em telas menores */
 }
 
 /* Campos do formulário */
@@ -113,11 +115,11 @@
   background-color: rgb(123, 208, 123);
 }
 
+/* Calendário */
 .react-calendar {
   width: 350px;
   max-width: 100%;
   background: #ececec;
-
   border: none;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.125em;
@@ -151,6 +153,7 @@
   border-radius: 100%;
   border: 0.1px solid #82d690;
   outline: none;
+  padding: 10px;
 }
 
 .react-calendar button:enabled:hover {
@@ -275,4 +278,51 @@
 
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #00ff2a8f;
+}
+.filter-container{
+    width: 100vw    ;
+height: max-content;
+}
+/* Media Queries para dispositivos móveis */
+@media (max-width: 768px) {
+  .despesa-form {
+    padding: 15px;
+  }
+
+  .form-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .calendar-container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .save-button {
+    font-size: 1.2rem !important;
+    padding: 10px 20px !important;
+  }
+}
+.grupoRecorrente{
+  display: flex!important;
+  flex-direction: row!important;
+  width: 100%!important;
+  align-items: center;
+}
+.dropdownFrequencia{
+  display: flex!important;
+  height: max-content!important;
+  width: 100%!important;
+
+}
+
+.custom-radio .ui.toggle.checkbox .box:before,
+.custom-radio .ui.toggle.checkbox label:before {
+  background-color: rgb(230, 173, 173) !important;
+}
+
+.custom-radio .ui.toggle.checkbox input:checked ~ .box:before,
+.custom-radio .ui.toggle.checkbox input:checked ~ label:before {
+  background-color: rgba(152, 251, 152, 0.733) !important;
 }

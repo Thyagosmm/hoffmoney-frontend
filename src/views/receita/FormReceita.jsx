@@ -1,147 +1,291 @@
-import React, { useState } from 'react';
-import { Form, Dropdown } from 'semantic-ui-react';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import './FormReceita.css';
+import React, { useState, useEffect } from "react";
+import { Form, Button, Dropdown, Radio} from "semantic-ui-react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./FormReceita.css";
+import {
+  registrarReceita,
+  atualizarReceita,
+  deletarReceita,
+  buscarReceitaPorId,
+} from "../../api/UserApi";
+import Header from "../components/appMenu/AppMenu";
+import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
+import { useNavigate } from "react-router-dom";
 
-const FormReceita = () => {
-    const [nome, setNome] = useState('');
-    const [valor, setValor] = useState(''); // Valor da despesa
-    const [categoria, setCategoria] = useState('');
-    const [recorrencia, setRecorrencia] = useState('');
-    const [frequencia, setFrequencia] = useState('');
-    const [descricao, setDescricao] = useState('');
-    // const [data, setData] = useState(new Date());
+const FormReceita = ({ receitaId }) => {
+  const [name, setName] = useState("");
+  const [value, setValue] = useState("");
+  const [category, setCategory] = useState("");
+  const [recurrence, setRecurrence] = useState("");
+  const [frequency, setFrequency] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [errors, setErrors] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [userId, setUSerId] = useState("");
+  const navigate = useNavigate();
 
-    const opcoesCategoria = [
-        { key: 'salario', text: 'Salário', value: 'salario' },
-        { key: 'freelance', text: 'Freelance', value: 'freelance' },
-        { key: 'dividendos', text: 'Dividendos', value: 'dividendos' },
-        { key: 'juros', text: 'Juros', value: 'juros' },
-        { key: 'aluguel', text: 'Aluguel de imóvel', value: 'aluguel' },
-        { key: 'outra', text: 'Outra', value: 'outra' },
-    ];
-
-    const opcoesFrequencia = [
-        { key: 'daily', text: 'Diariamente', value: 'daily' },
-        { key: 'weekly', text: 'Semanalmente', value: 'weekly' },
-        { key: 'monthly', text: 'Mensalmente', value: 'monthly' },
-        { key: 'yearly', text: 'Anualmente', value: 'yearly' },
-    ]
-
-    // Função para lidar com a mudança no campo de recorrência
-    const observandoRecorrencia = (e, { value }) => {
-        setRecorrencia(value);
-        // Se o valor selecionado for 'no', desmarque a frequência
-        if (value === 'no') {
-            setFrequencia('');
+  useEffect(() => {
+    setUSerId(localStorage.getItem("userId"));
+    if (receitaId) {
+      const fetchReceita = async () => {
+        try {
+          const response = await buscarReceitaPorId(receitaId);
+          const receita = response.data;
+          setName(receita.nome);
+          setValue(receita.valor);
+          setCategory(receita.categoria);
+          setRecurrence(receita.recorrente);
+          setFrequency(receita.periodo);
+          setDescription(receita.descricao);
+          setDate(new Date(receita.dataDeCobranca));
+        } catch (errors) {
+          console.error("Erro ao buscar a receita:", errors);
+          setErrors("Erro ao buscar a receita.");
         }
-    };
+      };
+      fetchReceita();
+    }
+  }, [receitaId]);
 
-    // Função para lidar com a mudança no campo de frequência
-    const mudandoFrequencia = (e, { value }) => {
-        setFrequencia(value);
-    };
+  const validate = () => {
+    const newErrors = {};
+    if (!name.trim()) {
+      newErrors.name = "Informe o nome da receita.";
+      notifyError("Informe o nome da receita.");
+    }
+    if (!value.trim()) {
+      newErrors.value = "Informe o valor da receita.";
+      notifyError("Informe o valor da receita.");
+    }
+    if (recurrence) {
+      if (!frequency.trim()) {
+        newErrors.frequency = "Informe a freqência da receita.";
+        notifyError("Informe a freqência da receita.");
+      }
+    }
+    if (date == null) {
+      notifyError("A data não pode ser nula ou indefinida.");
+    }
+    if (!category.trim()) {
+      newErrors.category = "Informe a categoria da receita.";
+      notifyError("Informe a categoria da receita.");
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    // Determina se o campo de frequência deve ser habilitado
-    const frequenciaHabilitada = recorrencia === 'yes';
+  const categoryOptions = [
+    { key: "Salario", text: "Salário", value: "Salario" },
+    { key: "Honorarios", text: "Honorários", value: "Honorarios" },
+    { key: "Comissoes", text: "Comissões", value: "Comissoes" },
+    { key: "Juros", text: "Juros", value: "Juros" },
+    { key: "Dividendos", text: "Dividendos", value: "Dividendos" },
+    { key: "Outros", text: "Outros", value: "Outros" },
+  ];
 
-    const handleSave = () => {
-        // Lógica para salvar a recetia
-    };
+  const freqOptions = [
+    { key: 'diario', text: 'Diariamente', value: 'diario' },
+    { key: 'semanal', text: 'Semanalmente', value: 'semanal' },
+    { key: 'mensal', text: 'Mensalmente', value: 'mensal' },
+    { key: 'anual', text: 'Anualmente', value: 'anual' }
+  ];
 
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
-    return (
-        <div className="receita-container">
-            <div className="receita-form">
-                <h1>Cadastro de Receita</h1>
-                <div className="form-content">
-                    <div className="form-fields">
-                        <Form>
-                            <Form.Field>
-                                <label>Nome</label>
-                                <input
-                                    placeholder='Digite o nome da Receita'
-                                    value={nome}
-                                    onChange={(e) => setNome(e.target.value)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label>Valor</label>
-                                <input
-                                    placeholder='Digite o valor da Receita'
-                                    value={valor}
-                                    onChange={(e) => setValor(e.target.value)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label>Categoria</label>
-                                <Dropdown
-                                    placeholder='Selecione a Categoria'
-                                    fluid
-                                    selection
-                                    options={opcoesCategoria}
-                                    value={categoria}
-                                    onChange={(e, { value }) => setCategoria(value)}
-                                />
-                            </Form.Field>
+  const handleRegistrarReceita = async (e) => {
+    if (validate()) {
+      e.preventDefault();
+      const formattedDate = formatDate(date);
 
-                            <Form.Group>
-                                <Form.Field width={8}>
-                                    <label>Recorrente</label>
-                                    <Dropdown
-                                        placeholder='Selecione Recorrência'
-                                        fluid
-                                        selection
-                                        options={[
-                                            { key: 'yes', text: 'Sim', value: 'yes' },
-                                            { key: 'no', text: 'Não', value: 'no' },
-                                        ]}
-                                        value={recorrencia}
-                                        onChange={observandoRecorrencia}
-                                    />
-                                </Form.Field>
-                                <Form.Field width={8}>
-                                    <label>Frequência</label>
-                                    <Dropdown
-                                        placeholder='Selecione Frequência'
-                                        fluid
-                                        selection
-                                        options={opcoesFrequencia}
-                                        value={frequencia}
-                                        onChange={mudandoFrequencia}
-                                        disabled={!frequenciaHabilitada}
-                                    />
-                                </Form.Field>
+      try {
+        const response = await registrarReceita({
+          usuario: { id: userId },
+          nome: name,
+          descricao: description,
+          valor: value,
+          categoria: category,
+          recorrente: recurrence,
+          periodo: frequency,
+          dataDeCobranca: formattedDate,
+          paga: false,
+        });
+        console.log("Receita registrada:", response.data);
+        notifySuccess("Receita registrada com sucesso!");
+        setTimeout(() => {
+          navigate("/receitas");
+        }, 3000);
+      } catch (error) {
+        notifyError(mensagemErro);
+      }
+    } else {
+      notifyError("Preencha os campos necessários no formulário.");
+    }
+  };
 
-                            </Form.Group>
+  const handleAtualizarReceita = async (e) => {
+    e.preventDefault();
+    const formattedDate = formatDate(date);
 
-                            <Form.Field>
-                                <label>Descrição</label>
-                                <input
-                                    placeholder='Digite uma descrição para a receita'
-                                    value={descricao}
-                                    onChange={(e) => setDescricao(e.target.value)}
-                                />
-                            </Form.Field>
-                        </Form>
-                    </div>
-                    <div className="calendar-container">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateCalendar 
-                            // onChange={setData}
-                            // value={data}
-                            />
-                        </LocalizationProvider>
-                    </div>
-                </div>
-                <div className="save-button-container">
-                    <button className='botao'onClick={handleSave}>Salvar</button>
-                </div>
-            </div>
+    try {
+      const response = await atualizarReceita(receitaId, {
+        usuario: { id: 1 }, // Substituir pelo ID do usuário logado
+        nome: name,
+        descricao: description,
+        valor: value,
+        categoria: category,
+        recorrente: recurrence,
+        periodo: frequency,
+        dataDeCobranca: formattedDate,
+        paga: false,
+      });
+      console.log("Receita atualizada:", response.data);
+      setSuccess("Receita atualizada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar a receita:", error);
+      setError("Erro ao atualizar a receita.");
+    }
+  };
+
+  const handleDeletarReceita = async (e) => {
+    e.preventDefault();
+    try {
+      await deletarReceita(receitaId);
+      console.log("Receita deletada");
+      setSuccess("Receita deletada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao deletar a receita:", error);
+      setError("Erro ao deletar a receita.");
+    }
+  };
+
+  return (
+    <>
+      <div className="container">
+        <div>
+          <Header />
         </div>
-    );
+        <div className="receita">
+          <div className="receita-form">
+            <h1>Cadastro de Receita</h1>
+            <div className="form-content">
+              <div className="form-fields">
+                <Form>
+                  <Form.Field>
+                    <label>Nome</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite o nome da Receita"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Valor</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite o valor da Receita"
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Categoria</label>
+                    <Dropdown
+                      className="input-field"
+                      placeholder="Selecione a Categoria"
+                      fluid
+                      selection
+                      options={categoryOptions}
+                      value={category}
+                      onChange={(e, { value }) => setCategory(value)}
+                    />
+                  </Form.Field>
+                  <Form.Group className="grupoRecorrente">
+                    <Form.Field className="custom-radio">
+                      <label>Recorrente</label>
+                      <Radio
+                        toggle
+                        label={recurrence ? "Sim" : "Não"}
+                        checked={recurrence}
+                        onChange={() => setRecurrence(!recurrence)}
+                      />
+                    </Form.Field>
+                    {recurrence === true && (
+                      <>
+                        <Form.Field
+                          fluid
+                          className="dropdownFrequencia"
+                          error={!!errors.frequency}
+                        >
+                          <Dropdown
+                            className="input-field dropdownFrequencia"
+                            placeholder="Selecione Frequência"
+                            fluid
+                            selection
+                            options={freqOptions}
+                            value={frequency}
+                            onChange={(e, { value }) => setFrequency(value)}
+                          />
+                        </Form.Field>
+                      </>
+                    )}
+                  </Form.Group>
+
+                  <Form.Field>
+                    <label>Descrição</label>
+                    <input
+                      className="input-field"
+                      placeholder="Digite uma descrição para a receita"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </Form.Field>
+                </Form>
+              </div>
+              <div className="calendar-container">
+                <Calendar onChange={setDate} value={date} />
+              </div>
+            </div>
+            <div className="save-button-container">
+              {receitaId ? (
+                <>
+                  <Button
+                    className="save-button"
+                    onClick={handleAtualizarReceita}
+                  >
+                    Atualizar
+                  </Button>
+                  <Button
+                    className="delete-button"
+                    onClick={handleDeletarReceita}
+                  >
+                    Deletar
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  className="save-button"
+                  onClick={handleRegistrarReceita}
+                >
+                  Salvar
+                </Button>
+              )}
+            </div>
+            {success && <div className="success-message">{success}</div>}
+            {error && <div className="error-message">{error}</div>}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default FormReceita;

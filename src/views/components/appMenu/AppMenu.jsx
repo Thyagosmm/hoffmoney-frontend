@@ -1,19 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Image, Menu } from "semantic-ui-react";
-import logo from "../../../assets/logo.png";
-import "./AppMenu.css"; // Importar o arquivo CSS
+import { Image, Menu, MenuItem } from "semantic-ui-react";
+import images from "../../../assets/images.js";
+import "./AppMenu.css";
+import { consultarSaldo } from "../../../api/UserApi";
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    const nome = localStorage.getItem("nome");
+    const nameParts = localStorage.getItem("nome");
     const email = localStorage.getItem("email");
-
-    if (userId && nome && email) {
+    
+    if (userId && nameParts && email) {
+      setFirstName(nameParts.split(" ")[0]);
       setIsLogged(true);
+
+      consultarSaldo(userId)
+        .then((response) => {
+          console.log("Saldo do usuário:", response.data);
+          localStorage.setItem("saldo", response.data);
+        })
+        .catch((error) => {
+          console.error(
+            "Erro ao consultar saldo:",
+            error.response ? error.response.data : error.message,
+          );
+        });
     }
   }, []);
 
@@ -28,7 +43,7 @@ const AppMenu = () => {
   return (
     <Menu inverted className="menu">
       <Menu.Item as={Link} to="/" header>
-        <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
+        <Image size="mini" src={images.logo} style={{ marginRight: "1.5em" }} />
         Hoffmoney
       </Menu.Item>
       {!isLogged ? (
@@ -50,11 +65,25 @@ const AppMenu = () => {
           <Menu.Item className="rote" as={Link} to="/receitas">
             Receitas
           </Menu.Item>
-          <Menu.Menu position="right">
-            <>
-              <Menu.Item>olá {localStorage.getItem("nome")}</Menu.Item>
-              <Menu.Item onClick={logout}>Sair</Menu.Item>
-            </>
+          <Menu.Menu position="right" className="menu-container">
+            <Menu.Item className="userInfo">
+              <MenuItem className="basicInfo">
+              <span>Bem-vindo, {firstName}!</span>
+              <span className="span">
+              Seu saldo é R$ {localStorage.getItem("saldo")}
+              </span>
+              </MenuItem>
+              <Menu.Item as={Link} to="/update" className="additional-info">
+              Editar Perfil
+              </Menu.Item>
+              <Menu.Item as={Link} to="/saldo" className="additional-info">
+              Editar Saldo
+              </Menu.Item>
+              <Menu.Item as={Link} to="/register" className="additional-info" onClick={logout}>
+              Sair
+              </Menu.Item>
+            </Menu.Item>
+            
           </Menu.Menu>
         </>
       )}

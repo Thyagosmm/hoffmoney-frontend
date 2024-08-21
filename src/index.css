@@ -1,3 +1,9 @@
+
+/* styles.css */
+.toast-font-large {
+  font-size: 1.5em; 
+  text-align: center;/* Ajuste o tamanho da fonte conforme necessário */
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +16,61 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+input{
+  width: 100%;
+  border-color: rgba(127, 253, 127, 0.733) !important;
+  color: rgb(0, 0, 0) !important;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.input-field {
+  width: 100%;
+  border-color: rgba(127, 253, 127, 0.733) !important;
+  color: rgb(0, 0, 0) !important;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+.input-field::placeholder {
+  color: rgba(0, 0, 0, 0.671)!important;
+}
+.footer {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  height: max-content;
+  width: 100%;
+  align-items: center;
+}
+
+
+p{
+  font-size: 1.5rem;
+  width: 100%!important;
+  height: max-content!important;
+}
+
+.footer-link {
+  height: max-content;
+  width: max-content;
+  color: rgb(102, 218, 113);
+  font-size: 4rem !important;
+  text-shadow:
+    0.2rem 0.2rem 0.3rem #0000004f,
+    0.2rem 0.2rem 0.3rem #0000004f,
+    0.2rem 0.2rem 0.3rem #0000004f,
+    0.2rem 0.2rem 0.3rem #0000004f;
+}
+
+.footer-link:hover {
+  color: rgb(0, 0, 0);
+  font-size: 4rem !important;
+  text-shadow:
+    0.2rem 0.2rem 3rem rgb(102, 218, 113),
+    0.2rem 0.2rem 3rem rgb(102, 218, 113),
+    0.2rem 0.2rem 3rem rgb(102, 218, 113),
+    0.2rem 0.2rem 3rem rgb(102, 218, 113);
 }
