@@ -23,8 +23,8 @@
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.total-container{
-  color: white;
+.total-container {
+  color: black;
 }
 
 /* Título do formulário */
@@ -281,9 +281,9 @@
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #00ff2a8f;
 }
-.filter-container{
-    width: 100vw    ;
-height: max-content;
+.filter-container {
+  width: 100vw;
+  height: max-content;
 }
 /* Media Queries para dispositivos móveis */
 @media (max-width: 768px) {
@@ -306,17 +306,16 @@ height: max-content;
     padding: 10px 20px !important;
   }
 }
-.grupoRecorrente{
-  display: flex!important;
-  flex-direction: row!important;
-  width: 100%!important;
+.grupoRecorrente {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
   align-items: center;
 }
-.dropdownFrequencia{
-  display: flex!important;
-  height: max-content!important;
-  width: 100%!important;
-
+.dropdownFrequencia {
+  display: flex !important;
+  height: max-content !important;
+  width: 100% !important;
 }
 
 .custom-radio .ui.toggle.checkbox .box:before,

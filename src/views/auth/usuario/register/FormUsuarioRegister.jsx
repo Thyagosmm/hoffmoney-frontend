@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
-import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
 import { notifyError, notifySuccess } from "../../../utils/Utils";
+import "./FormUsuarioRegister.css";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
@@ -89,7 +89,7 @@ const FormUsuarioRegister = () => {
   };
 
   return (
-    <>
+    <div className="page-container">
       <Info />
       <Container className="form-right" textAlign="center">
         <h2>Criar Conta</h2>
@@ -157,7 +157,7 @@ const FormUsuarioRegister = () => {
           </Link>
         </div>
       </Container>
-    </>
+    </div>
   );
 };
 

@@ -32,19 +32,19 @@ export const listarDespesas = () => {
   if (!userId) {
     throw new Error("Usuário não está logado.");
   }
-  return api.get(`/despesas/usuario/${userId}`);
+  return api.get(`/despesas/${userId}`);
 };
 
 export const buscarDespesaPorId = (usuarioId, despesaId) => {
-  return api.get(`/despesas/usuario/${usuarioId}/${despesaId}`);
+  return api.get(`/despesas/${usuarioId}/${despesaId}`);
 };
 
 export const atualizarDespesa = (usuarioId, despesaId, despesaData) => {
-  return api.put(`/despesas/usuario/${usuarioId}/${despesaId}`, despesaData);
+  return api.put(`/despesas/${usuarioId}/${despesaId}`, despesaData);
 };
 
 export const deletarDespesa = (usuarioId, despesaId) => {
-  return api.delete(`/despesas/usuario/${usuarioId}/${despesaId}`);
+  return api.delete(`/despesas/${usuarioId}/${despesaId}`);
 };
 
 export const incrementarSaldo = (valor) => {
@@ -99,5 +99,7 @@ export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };
 export const atualizarPaga = (usuarioId, despesaId, novaPaga) => {
-  return api.put(`/despesas/usuario/${usuarioId}/${despesaId}/paga`, { paga: novaPaga });
+  return api.put(`/despesas/${usuarioId}/${despesaId}/paga`, {
+    paga: novaPaga,
+  });
 };

@@ -1,21 +1,19 @@
 import React from "react";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import FormUsuarioRegister from "./views/auth/usuario/register/FormUsuarioRegister";
-import FormLogin from "./views/auth/login/FormLogin";
-import FormForget from "./views/auth/forget/FormForget";
-import FormReset from "./views/auth/reset/FormReset";
-import FormReceita from "./views/receita/FormReceita";
 import ListaReceitas from "../src/views/receita/ListaReceitas";
-import FormDespesa from "./views/despesa/FormDespesa";
-import Home from "./views/home/Home";
-import ListaDespesas from "./views/despesa/ListaDespesas";
+import FormForget from "./views/auth/forget/FormForget";
+import FormLogin from "./views/auth/login/FormLogin";
+import FormReset from "./views/auth/reset/FormReset";
+import FormUsuarioRegister from "./views/auth/usuario/register/FormUsuarioRegister";
 import FormUsuarioUpdate from "./views/auth/usuario/update/FormUsuarioUpdate";
-import EditarSaldo from "./views/components/saldo/EditarSaldo";
-import EditarReceita from "./views/receita/EditarReceita";
 import EditarDespesa from "./views/despesa/EditarDespesa";
-
+import FormDespesa from "./views/despesa/FormDespesa";
+import ListaDespesas from "./views/despesa/ListaDespesas";
+import Home from "./views/home/Home";
+import EditarReceita from "./views/receita/EditarReceita";
+import FormReceita from "./views/receita/FormReceita";
 
 function App() {
   return (
@@ -26,7 +24,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<FormUsuarioRegister />} />
           <Route path="/update" element={<FormUsuarioUpdate />} />
-          <Route path="/saldo" element={<EditarSaldo />} />
           <Route path="/login" element={<FormLogin />} />
           <Route path="/despesas" element={<ListaDespesas />} />
           <Route path="/novaDespesa" element={<FormDespesa />} />

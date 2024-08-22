@@ -188,7 +188,7 @@ const ListaDespesas = () => {
       <Header />
       <Container className="despesas">
         <h1 className="containerHeader">Despesas</h1>
-        <Menu inverted>
+        <Menu>
           <Menu.Item
             name="menuFiltro"
             active={menuFiltro === true}

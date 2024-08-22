@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./AppMenu.css";
 import { consultarSaldo } from "../../../api/UserApi";
+import "./AppMenu.css";
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -20,7 +20,6 @@ const AppMenu = () => {
     if (userId && nameParts && email) {
       setFirstName(nameParts.split(" ")[0]);
       setIsLogged(true);
-
       consultarSaldo(userId)
         .then((response) => {
           console.log("Saldo do usuário:", response.data);
@@ -29,7 +28,7 @@ const AppMenu = () => {
         .catch((error) => {
           console.error(
             "Erro ao consultar saldo:",
-            error.response ? error.response.data : error.message,
+            error.response ? error.response.data : error.message
           );
         });
     }
@@ -91,12 +90,6 @@ const AppMenu = () => {
                     className="nav-link page-scroll d-flex flex-row align-items-center text-primary"
                     to="/login"
                   >
-                    <em
-                      data-feather="layout"
-                      width="18"
-                      height="18"
-                      className="mr-2"
-                    ></em>
                     Entrar
                   </Link>
                 </li>
@@ -128,9 +121,6 @@ const AppMenu = () => {
                       <div className="dropdown-menu show">
                         <Link className="dropdown-item nav-item" to="/update">
                           Editar Perfil
-                        </Link>
-                        <Link className="dropdown-item nav-item" to="/saldo">
-                          Editar Saldo
                         </Link>
                         <Link
                           className="dropdown-item nav-item"
