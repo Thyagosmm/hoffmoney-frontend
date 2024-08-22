@@ -62,7 +62,7 @@ const AppMenu = () => {
             <span data-feather="grid"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarCollapse">
-            <ul className="navbar-nav ml-auto">
+            <ul className="navbar-nav mr-auto">
               <li className="nav-item">
                 <a className="nav-link page-scroll" href="#features">
                   Recursos
@@ -83,6 +83,8 @@ const AppMenu = () => {
                   Blog
                 </a>
               </li>
+            </ul>
+            <ul className="navbar-nav ml-auto">
               {!isLogged ? (
                 <li className="nav-item">
                   <Link

@@ -1,5 +1,5 @@
 import React from "react";
-import { ToastContainer } from 'react-toastify';
+import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import FormUsuarioRegister from "./views/auth/usuario/register/FormUsuarioRegister";
@@ -20,27 +20,27 @@ import EditarDespesa from "./views/despesa/EditarDespesa";
 function App() {
   return (
     <>
-    <Router>
-      <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<FormUsuarioRegister />} />
-        <Route path="/update" element={<FormUsuarioUpdate />} />
-        <Route path="/saldo" element={<EditarSaldo />} />
-        <Route path="/login" element={<FormLogin />} />
-        <Route path="/despesas" element={<ListaDespesas />} />
-        <Route path="/novaDespesa" element={<FormDespesa />} />
-        <Route path="/editarReceita/:id" element={<EditarReceita />} />
-        <Route path="/editarDespesa/:id" element={<EditarDespesa />} />
-        <Route path="/forget" element={<FormForget />} />
-        <Route path="/reset" element={<FormReset />} />
-        <Route path="/receitas" element={<ListaReceitas />} />
-        <Route path="/novaReceita" element={<FormReceita />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<FormUsuarioRegister />} />
+          <Route path="/update" element={<FormUsuarioUpdate />} />
+          <Route path="/saldo" element={<EditarSaldo />} />
+          <Route path="/login" element={<FormLogin />} />
+          <Route path="/despesas" element={<ListaDespesas />} />
+          <Route path="/novaDespesa" element={<FormDespesa />} />
+          <Route path="/editarReceita/:id" element={<EditarReceita />} />
+          <Route path="/editarDespesa/:id" element={<EditarDespesa />} />
+          <Route path="/forget" element={<FormForget />} />
+          <Route path="/reset" element={<FormReset />} />
+          <Route path="/receitas" element={<ListaReceitas />} />
+          <Route path="/novaReceita" element={<FormReceita />} />
+        </Routes>
+      </Router>
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -50,6 +50,7 @@ function App() {
         pauseOnHover
         theme="light"
         font-size="1.5rem"
+        Bounce={true}
       />
     </>
   );

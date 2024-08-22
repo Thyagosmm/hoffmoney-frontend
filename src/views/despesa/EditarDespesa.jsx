@@ -174,7 +174,9 @@ const EditarDespesa = () => {
                       onChange={(e) => setDescricao(e.target.value)}
                     />
                   </Form.Field>
-                  <Button type="submit" className="save-button">Salvar</Button>
+                  <Button type="submit" className="form-button">
+                    Salvar
+                  </Button>
                 </Form>
               </div>
               <div className="calendar-container">

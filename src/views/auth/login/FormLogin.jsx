@@ -25,15 +25,15 @@ export default function FormLogin() {
     }
 
     try {
-      const data = await login(email, senha);
-      console.log("Dados recebidos da função login:", data);
+      const response = await login(email, senha);
+      console.log("Dados recebidos da função login:", response);
 
-      if (data && Object.keys(data).length > 0) {
-        console.log("Usuário logado com sucesso:", data);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("nome", data.nome);
-        localStorage.setItem("email", data.email);
-        localStorage.setItem("saldo", data.saldo);
+      if (response && Object.keys(response).length > 0) {
+        console.log("Usuário logado com sucesso:", response);
+        localStorage.setItem("userId", response.id);
+        localStorage.setItem("nome", response.nome);
+        localStorage.setItem("email", response.email);
+        localStorage.setItem("saldo", response.saldo);
 
         console.log("Dados salvos no localStorage:");
         console.log("userId:", localStorage.getItem("userId"));
@@ -42,24 +42,11 @@ export default function FormLogin() {
         console.log("saldo:", localStorage.getItem("saldo"));
         notifySuccess("Login realizado com sucesso!");
         window.location.href = "/";
-      } else {
-        console.error("Error logging in user:", data);
-        if (data.response && data.status === 401) {
-          notifyWarn("Credenciais inválidas. Por favor, tente novamente.");
-        } else {
-          notifyError(
-            "Erro ao fazer login. Por favor, tente novamente mais tarde.",
-          );
-        }
       }
     } catch (error) {
-      console.error("Error logging in user:", error);
-      if (error.response && error.response.status === 400) {
-        notifyError("Credenciais inválidas. Por favor, tente novamente.");
-      } else {
-        notifyError(
-          "Erro ao fazer login. Por favor, tente novamente mais tarde.",
-        );
+      if (error.response && error.response.status === 401) {
+        console.error("Error registering user:", error);
+        notifyError(error.response.data);
       }
     }
   };

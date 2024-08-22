@@ -89,7 +89,7 @@ const FormUsuarioRegister = () => {
   };
 
   return (
-    <div className="page-container">
+    <>
       <Info />
       <Container className="form-right" textAlign="center">
         <h2>Criar Conta</h2>
@@ -157,7 +157,7 @@ const FormUsuarioRegister = () => {
           </Link>
         </div>
       </Container>
-    </div>
+    </>
   );
 };
 

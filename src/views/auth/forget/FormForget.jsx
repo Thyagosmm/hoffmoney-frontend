@@ -52,10 +52,7 @@ const validateEmail = (email) => {
                   onChange={handleEmailChange}
                 />
               </Form.Field>
-              <Button
-                className="forgot-password-button"
-                onClick={handleForgotPassword}
-              >
+              <Button className="form-button" onClick={handleForgotPassword}>
                 Avançar
               </Button>
             </Form>

@@ -451,6 +451,7 @@ pre {
 
 .container {
   width: 100%;
+  align-items: center!important;
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
@@ -4002,10 +4003,6 @@ button.close {
 
 .modal {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   z-index: 1050;
   display: none;
   overflow: hidden;
@@ -7509,10 +7506,10 @@ body {
 /*smart scrolling*/
 .smart-scroll {
 
-  position: relative;
+  position: fixed;
   top: 0;
   z-index: 1020;
-  width: 100%;
+  width: 100vw;
   transition: all .3s ease-out; }
   .smart-scroll.scrolling {
     -webkit-transform: translateY(-100%);

@@ -188,7 +188,7 @@ const ListaDespesas = () => {
       <Header />
       <Container className="despesas">
         <h1 className="containerHeader">Despesas</h1>
-        <Menu compact>
+        <Menu inverted>
           <Menu.Item
             name="menuFiltro"
             active={menuFiltro === true}
@@ -197,11 +197,22 @@ const ListaDespesas = () => {
             <Icon name="filter" />
             Filtrar
           </Menu.Item>
-          <Menu.Item position="right">
-            <Button icon color="green" onClick={handleCreateNew}>
+          <Menu.Item position="left">
+            <Button
+              className="form-button"
+              icon
+              color="green"
+              onClick={handleCreateNew}
+            >
               <Icon name="plus" />
               Nova Despesa
             </Button>
+          </Menu.Item>
+          <Menu.Item position="right">
+            <div className="total-container">
+              <strong>Total em Despesas: R$ </strong>
+              <span>{total}</span>
+            </div>
           </Menu.Item>
         </Menu>
         {menuFiltro && (
@@ -261,7 +272,7 @@ const ListaDespesas = () => {
                     <Button
                       icon
                       color="green"
-                      onClick={() => handleOpenModal(despesa.id)}
+                      onClick={() => handleOpenModal(despesa.id, "check")}
                     >
                       <Icon name="check" />
                     </Button>
@@ -275,7 +286,7 @@ const ListaDespesas = () => {
                     <Button
                       icon
                       color="red"
-                      onClick={() => handleOpenModal(despesa.id)}
+                      onClick={() => handleOpenModal(despesa.id, "delete")}
                     >
                       <Icon name="trash" />
                     </Button>
@@ -291,49 +302,47 @@ const ListaDespesas = () => {
                 </List.Item>
               ))
             ) : (
-              <p>Nenhuma despesa encontrada.</p>
+              <span>Nenhuma despesa encontrada.</span>
             )}
           </List>
         </Segment>
-        <div className="total-container">
-          <strong>Total Despesas: </strong>
-          <span>{total}</span>
-        </div>
-      </Container>
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        size="small"
-        dimmer="blurring"
-        closeIcon
-      >
-        <SemanticHeader
-          icon={actionType === "delete" ? "trash" : "check"}
-          content={
-            actionType === "delete" ? "Excluir Despesa" : "Confirmar Pagamento"
-          }
-        />
-        <Modal.Content>
-          <p>
-            {actionType === "delete"
-              ? "Você tem certeza que deseja excluir esta despesa?"
-              : "Você realmente pagou esta despesa?"}
-          </p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={() => setModalOpen(false)}>
-            <Icon name="remove" /> Não
-          </Button>
-          <Button
-            color="green"
-            onClick={
-              actionType === "delete" ? handleDelete : handleAtualizarPaga
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          size="small"
+          dimmer="blurring"
+          closeIcon
+        >
+          <SemanticHeader
+            icon={actionType === "delete" ? "trash" : "check"}
+            content={
+              actionType === "delete"
+                ? "Excluir Despesa"
+                : "Confirmar Pagamento"
             }
-          >
-            <Icon name="checkmark" /> Sim
-          </Button>
-        </Modal.Actions>
-      </Modal>
+          />
+          <Modal.Content>
+            <span>
+              {actionType === "delete"
+                ? "Você tem certeza que deseja excluir esta despesa?"
+                : "Você realmente pagou esta despesa?"}
+            </span>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={() => setModalOpen(false)}>
+              <Icon name="remove" /> Não
+            </Button>
+            <Button
+              color="green"
+              onClick={
+                actionType === "delete" ? handleDelete : handleAtualizarPaga
+              }
+            >
+              <Icon name="checkmark" /> Sim
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      </Container>
     </>
   );
 };

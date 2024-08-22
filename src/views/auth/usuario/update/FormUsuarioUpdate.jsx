@@ -121,7 +121,7 @@ const FormUsuarioUpdate = () => {
         }
         if (password !== confirmPassword) {
           notifyError(
-            "A nova senha e a confirmação da nova senha não coincidem."
+            "A nova senha e a confirmação da nova senha não coincidem.",
           );
           return;
         }
@@ -135,6 +135,7 @@ const FormUsuarioUpdate = () => {
       const response = await updateUser(userId, userData);
       console.log("User updated:", response.data);
       notifySuccess("Usuário atualizado com sucesso!");
+      setTimeout(() => (window.location.href = "/"), 5000);
     } catch (error) {
       console.error("Error updating user:", error);
       notifyError("Erro ao atualizar o usuário.");
@@ -144,7 +145,7 @@ const FormUsuarioUpdate = () => {
   return (
     <>
       <AppMenu />
-      <Container textAlign="center">
+      <Container className="form-right" textAlign="center">
         <h2>Editar Perfil</h2>
         <Form className="form-container">
           <Form.Field className="form-field">
