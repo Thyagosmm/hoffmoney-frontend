@@ -1,11 +1,4 @@
-.despesas {
-    border: 1px solid #00e676;    margin: 2rem!important;
-    width: 80vw!important;
-    height: max-content!important;
-    padding: 2rem!important;
-    border-radius: 2rem;
-    
-}
+
 .containerHeader{
     width: 100%!important;
     text-align: center!important;
@@ -40,12 +33,39 @@
 .list-description{
     color: white!important;
 }
+.segment-despesas{
+    background-color: black!important;
+    margin: 0!important;
+}
+.lista-items{
+    place-items: center!important;
+    background-color: white!important;
+}
+.items-lista{
+    padding: 0.5rem!important;
+    margin: 0!important;
+justify-items: center;
+}
+.header-pagas{
+    font-size: x-large!important;
+    text-align: center!important;
+    color: rgb(0, 255, 0)!important;
+}
+.header-nao-pagas{
+    font-size: x-large!important;
+    text-align: center!important;
+    color: rgb(255, 0, 0)!important;
+}
 .list-header{
     background: black!important;
     color: white!important;
     font-size: 1.5em!important;
     margin-bottom: 0.5rem!important;
     text-align: center!important;
+}
+.despesas{
+    display: flex!important;
+    flex-direction: row!important;
 }
 .totalDespesas{
     margin-left: 5rem!important;

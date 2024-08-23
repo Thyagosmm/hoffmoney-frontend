@@ -20,6 +20,7 @@ import {
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
@@ -34,7 +35,8 @@ const ListaDespesas = () => {
   const [categoria, setCategoria] = useState("");
   const [valor, setValor] = useState("");
   const [dataDeCobranca, setDataDeCobranca] = useState("");
-
+  const [despesasPagas, setDespesasPagas] = useState([]);
+  const [despesasNaoPagas, setDespesasNaoPagas] = useState([]);
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
   }
@@ -69,7 +71,7 @@ const ListaDespesas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam
+    dataDeCobrancaParam,
   ) {
     let formData = new FormData();
 
@@ -106,20 +108,14 @@ const ListaDespesas = () => {
         const { data } = await listarDespesas();
         console.log("Despesas:", data);
 
-        const despesasAgrupadas = data.reduce((acc, despesa) => {
-          const key = despesa.id;
-          if (!acc[key]) {
-            acc[key] = { ...despesa, count: 1 };
-          } else {
-            acc[key].count += 1;
-          }
-          return acc;
-        }, {});
+        const despesasPagas = data.filter((despesa) => despesa.paga);
+        const despesasNaoPagas = data.filter((despesa) => !despesa.paga);
 
-        const despesasAgrupadasList = Object.values(despesasAgrupadas);
-        setDespesas(despesasAgrupadasList);
-        const totalDespesas = despesasAgrupadasList.reduce((sum, despesa) => {
-          return sum + despesa.valor * despesa.count;
+        setDespesasPagas(despesasPagas);
+        setDespesasNaoPagas(despesasNaoPagas);
+
+        const totalDespesas = data.reduce((sum, despesa) => {
+          return sum + despesa.valor;
         }, 0);
         setTotal(totalDespesas);
       } catch (error) {
@@ -129,7 +125,6 @@ const ListaDespesas = () => {
 
     getDespesas();
   }, []);
-
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -140,12 +135,16 @@ const ListaDespesas = () => {
     try {
       await deletarDespesa(usuarioId, despesaToEdit);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit)
+        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit),
       );
       setModalOpen(false);
+      notifySuccess("Despesa deletada com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Erro ao excluir despesa:", error);
-      setError("Não foi possível excluir a despesa.");
+      notifyError("Não foi possível excluir a despesa.");
     }
   };
 
@@ -156,21 +155,23 @@ const ListaDespesas = () => {
   };
   const handleAtualizarPaga = async () => {
     try {
-      const usuarioId = localStorage.getItem("userId");
-      const response = await atualizarPaga(usuarioId, despesaToEdit, true);
+      const response = await atualizarPaga(despesaToEdit, true);
       // Atualize o estado da despesa localmente
       setDespesas((prevDespesas) =>
         prevDespesas.map((despesa) =>
-          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa
-        )
+          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa,
+        ),
       );
-      console.log("Despesa atualizada com sucesso:", response.data);
+      console.log("Despesa atualizada com sucesso:", response.status);
       setModalOpen(false);
+      notifySuccess("Despesa paga com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
     }
   };
-
   const handleEdit = (id) => {
     navigate(`/editarDespesa/${id}`);
   };
@@ -186,7 +187,7 @@ const ListaDespesas = () => {
   return (
     <>
       <Header />
-      <Container className="despesas">
+      <Container className="container-bordered">
         <h1 className="containerHeader">Despesas</h1>
         <Menu>
           <Menu.Item
@@ -263,49 +264,90 @@ const ListaDespesas = () => {
             </Form>
           </Segment>
         )}
-        <Segment className="segment-despesas">
-          <List divided verticalAlign="middle">
-            {despesas.length > 0 ? (
-              despesas.map((despesa) => (
-                <List.Item key={despesa.id}>
-                  <List.Content floated="right">
-                    <Button
-                      icon
-                      color="green"
-                      onClick={() => handleOpenModal(despesa.id, "check")}
-                    >
-                      <Icon name="check" />
-                    </Button>
-                    <Button
-                      icon
-                      color="blue"
-                      onClick={() => handleEdit(despesa.id)}
-                    >
-                      <Icon name="edit" />
-                    </Button>
-                    <Button
-                      icon
-                      color="red"
-                      onClick={() => handleOpenModal(despesa.id, "delete")}
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </List.Content>
-                  <Icon name="money" size="large" color="red" />
-                  <List.Content>
-                    <List.Header>{despesa.nome}</List.Header>
-                    <List.Description>
-                      Categoria: {despesa.categoria} | Valor: {despesa.valor} |
-                      Data de Cobrança: {despesa.dataDeCobranca}
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              ))
-            ) : (
-              <span>Nenhuma despesa encontrada.</span>
-            )}
-          </List>
-        </Segment>
+        <div className="despesas">
+          <Segment className="segment-despesas">
+            <h2 className="header-nao-pagas">Despesas Não Pagas</h2>
+            <List className="lista-items" divided verticalAlign="middle">
+              {despesasNaoPagas.length > 0 ? (
+                despesasNaoPagas.map((despesa) => (
+                  <List.Item className="items-lista" key={despesa.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="green"
+                        onClick={() => handleOpenModal(despesa.id, "check")}
+                      >
+                        <Icon name="check" />
+                      </Button>
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(despesa.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="red" />
+                    <List.Content>
+                      <List.Header>{despesa.nome}</List.Header>
+                      <List.Description>
+                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
+                        | Data de Cobrança: {despesa.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma despesa não paga encontrada.</span>
+              )}
+            </List>
+          </Segment>
+          <Segment className="segment-despesas">
+            <h2 className="header-pagas">Despesas Pagas</h2>
+            <List className="lista-items" divided verticalAlign="middle">
+              {despesasPagas.length > 0 ? (
+                despesasPagas.map((despesa) => (
+                  <List.Item className="items-lista" key={despesa.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(despesa.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="green" />
+                    <List.Content>
+                      <List.Header>{despesa.nome}</List.Header>
+                      <List.Description>
+                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
+                        | Data de Cobrança: {despesa.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma despesa paga encontrada.</span>
+              )}
+            </List>
+          </Segment>
+        </div>
+
         <Modal
           open={modalOpen}
           onClose={() => setModalOpen(false)}

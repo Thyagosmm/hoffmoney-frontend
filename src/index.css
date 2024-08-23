@@ -57,7 +57,16 @@ input {
   padding: 10px;
   border-radius: 5px;
 }
+.container-bordered {
+  flex-direction: column;
+  border: 1px solid #00e676;    
+  height: max-content!important;
+  padding: 2rem!important;
+  border-radius: 2rem;
+  box-sizing: border-box; /* Inclui o padding e a borda no tamanho total do elemento */
 
+  
+}
 .input-field {
   width: 100%;
   border-color: rgba(127, 253, 127, 0.733) !important;
