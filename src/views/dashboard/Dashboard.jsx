@@ -1,8 +1,9 @@
 import React from "react";
 import { Button, Container } from "semantic-ui-react";
+import Acoes from "../components/acoes/acoes";
 import Limite from "../components/graficos/Limite";
-import "./Dashboard.css"; // Importa o arquivo CSS
 import Line from "../components/graficos/Line";
+import "./Dashboard.css"; // Importa o arquivo CSS
 
 const Dashboard = () => {
   return (
@@ -19,7 +20,12 @@ const Dashboard = () => {
             </div>
           </Container>
 
-          <Container className="container-bordered"></Container>
+          <Container className="container-bordered">
+            <h2>Ações</h2>
+            <div>
+              <Acoes />
+            </div>
+          </Container>
 
           <Container className="container-bordered"></Container>
         </Container>

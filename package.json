@@ -20,7 +20,10 @@
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
     "slick-carousel": "^1.8.1",
-    "web-vitals": "^4.2.3"
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "web-vitals": "^4.2.3",
+    "yahoo-finance2": "^2.11.3"
   },
   "scripts": {
     "start": "react-scripts start --host",
