@@ -306,17 +306,8 @@
     padding: 10px 20px !important;
   }
 }
-.grupoRecorrente {
-  display: flex !important;
-  flex-direction: row !important;
-  width: 100% !important;
-  align-items: center;
-}
-.dropdownFrequencia {
-  display: flex !important;
-  height: max-content !important;
-  width: 100% !important;
-}
+
+
 
 .custom-radio .ui.toggle.checkbox .box:before,
 .custom-radio .ui.toggle.checkbox label:before {

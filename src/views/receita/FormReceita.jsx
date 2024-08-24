@@ -37,7 +37,6 @@ const FormReceita = ({ receitaId }) => {
           setName(receita.nome);
           setValue(receita.valor);
           setCategory(receita.categoria);
-          setRecurrence(receita.recorrente);
           setFrequency(receita.periodo);
           setDescription(receita.descricao);
           setDate(new Date(receita.dataDeCobranca));
@@ -87,10 +86,10 @@ const FormReceita = ({ receitaId }) => {
   ];
 
   const freqOptions = [
-    { key: 'diario', text: 'Diariamente', value: 'diario' },
-    { key: 'semanal', text: 'Semanalmente', value: 'semanal' },
-    { key: 'mensal', text: 'Mensalmente', value: 'mensal' },
-    { key: 'anual', text: 'Anualmente', value: 'anual' }
+    { key: "diario", text: "Diariamente", value: "diario" },
+    { key: "semanal", text: "Semanalmente", value: "semanal" },
+    { key: "mensal", text: "Mensalmente", value: "mensal" },
+    { key: "anual", text: "Anualmente", value: "anual" },
   ];
 
   const formatDate = (date) => {
@@ -112,7 +111,6 @@ const FormReceita = ({ receitaId }) => {
           descricao: description,
           valor: value,
           categoria: category,
-          recorrente: recurrence,
           periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -141,7 +139,6 @@ const FormReceita = ({ receitaId }) => {
         descricao: description,
         valor: value,
         categoria: category,
-        recorrente: recurrence,
         periodo: frequency,
         dataDeCobranca: formattedDate,
         paga: false,
@@ -208,36 +205,6 @@ const FormReceita = ({ receitaId }) => {
                       onChange={(e, { value }) => setCategory(value)}
                     />
                   </Form.Field>
-                  <Form.Group className="grupoRecorrente">
-                    <Form.Field className="custom-radio">
-                      <label>Recorrente</label>
-                      <Radio
-                        toggle
-                        label={recurrence ? "Sim" : "Não"}
-                        checked={recurrence}
-                        onChange={() => setRecurrence(!recurrence)}
-                      />
-                    </Form.Field>
-                    {recurrence === true && (
-                      <>
-                        <Form.Field
-                          fluid
-                          className="dropdownFrequencia"
-                          error={!!errors.frequency}
-                        >
-                          <Dropdown
-                            className="input-field dropdownFrequencia"
-                            placeholder="Selecione Frequência"
-                            fluid
-                            selection
-                            options={freqOptions}
-                            value={frequency}
-                            onChange={(e, { value }) => setFrequency(value)}
-                          />
-                        </Form.Field>
-                      </>
-                    )}
-                  </Form.Group>
 
                   <Form.Field>
                     <label>Descrição</label>

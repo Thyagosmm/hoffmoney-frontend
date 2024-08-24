@@ -37,7 +37,6 @@ const FormDespesa = ({ despesaId }) => {
           setName(despesa.nome);
           setValue(despesa.valor);
           setCategory(despesa.categoria);
-          setRecurrence(despesa.recorrente);
           setFrequency(despesa.periodo);
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
@@ -73,6 +72,9 @@ const FormDespesa = ({ despesaId }) => {
       newErrors.category = "Por favor, insira a categoria.";
       notifyError("Por favor, insira a categoria.");
     }
+    if (category === "Outros") {
+      setCategory(newCategory);
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,20 +97,18 @@ const FormDespesa = ({ despesaId }) => {
 
   const handleRegistrarDespesa = async (e) => {
     if (validate()) {
-      if (category === "Outros") {
-        setCategory(newCategory);
-      }
       e.preventDefault();
       const formattedDate = formatDate(date);
 
       try {
+        const categoriaFinal =
+          category === "outros" ? novaCategoria : newCategory;
         const response = await registrarDespesa({
           usuario: { id: userId },
           nome: name,
           descricao: description,
           valor: value,
-          categoria: category,
-          recorrente: recurrence,
+          categoria: categoriaFinal,
           periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -139,7 +139,6 @@ const FormDespesa = ({ despesaId }) => {
           descricao: description,
           valor: value,
           categoria: category,
-          recorrente: recurrence,
           periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -224,57 +223,7 @@ const FormDespesa = ({ despesaId }) => {
                     />
                   </Form.Field>
                 )}
-                <Form.Group className="grupoRecorrente">
-                  <Form.Field className="custom-radio">
-                    <label>Recorrente</label>
-                    <Radio
-                      toggle
-                      label={recurrence ? "Sim" : "Não"}
-                      checked={recurrence}
-                      onChange={() => setRecurrence(!recurrence)}
-                    />
-                  </Form.Field>
-                  {recurrence === true && (
-                    <>
-                      <Form.Field
-                        fluid
-                        className="dropdownFrequencia"
-                        error={!!errors.frequency}
-                      >
-                        <Dropdown
-                          className="input-field dropdownFrequencia"
-                          placeholder="Selecione Frequência"
-                          fluid
-                          selection
-                          options={[
-                            {
-                              key: "diario",
-                              text: "Diariamente",
-                              value: "diario",
-                            },
-                            {
-                              key: "semanal",
-                              text: "Semanalmente",
-                              value: "semanal",
-                            },
-                            {
-                              key: "mensal",
-                              text: "Mensalmente",
-                              value: "mensal",
-                            },
-                            {
-                              key: "anual",
-                              text: "Anualmente",
-                              value: "anual",
-                            },
-                          ]}
-                          value={frequency}
-                          onChange={(e, { value }) => setFrequency(value)}
-                        />
-                      </Form.Field>
-                    </>
-                  )}
-                </Form.Group>
+
                 <Form.Field error={!!errors.description}>
                   <label>Descrição</label>
                   <input
