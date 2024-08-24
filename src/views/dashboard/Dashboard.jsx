@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Container } from "semantic-ui-react";
-import Acoes from "../components/acoes/acoes";
+import Acoes from "../components/acoes/Acoes";
 import Limite from "../components/graficos/Limite";
 import Line from "../components/graficos/Line";
 import "./Dashboard.css"; // Importa o arquivo CSS
