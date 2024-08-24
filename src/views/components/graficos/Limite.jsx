@@ -76,7 +76,11 @@ function Limite() {
     },
   };
 
-  return <Doughnut data={chartData} options={options} />;
+  return (
+    <div>
+      <Doughnut data={chartData} options={options} />;
+    </div>
+  );
 }
 
 export default Limite;

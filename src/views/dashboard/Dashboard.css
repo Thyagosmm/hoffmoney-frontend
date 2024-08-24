@@ -37,7 +37,6 @@
     margin: 0!important;
     min-height: 100%!important;
 
-    max-height: 40vh!important; /* Define a altura dos containers */
     box-sizing: border-box!important; /* Inclui o padding e a borda no tamanho total do elemento */
     flex: 1 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
   }
