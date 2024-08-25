@@ -21,10 +21,9 @@ const Dashboard = () => {
           </Container>
 
           <Container className="container-bordered">
-            <h2>Ações</h2>
-            <div>
-              <Acoes />
-            </div>
+            <h3>Ações</h3>
+
+            <Acoes />
           </Container>
 
           <Container className="container-bordered"></Container>
