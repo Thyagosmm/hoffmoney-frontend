@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
-import "./FormUsuarioRegister.css";
 import Info from "../../../components/info/Info";
 import { notifyError, notifySuccess } from "../../../utils/Utils";
+import "./FormUsuarioRegister.css";
 
 const FormUsuarioRegister = () => {
   const [name, setName] = useState("");
@@ -89,78 +89,74 @@ const FormUsuarioRegister = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="page-container">
       <Info />
-      <div className="register-right">
-        <Container textAlign="center">
-          <h2>Criar Conta</h2>
-          <div className="form-container">
-            <Form>
-              <Form.Field className="form-field">
-                <label>Nome</label>
-                <input
-                  className="input-field"
-                  placeholder="Nome"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Form.Field>
-              <Form.Field className="form-field">
-                <label className="label-input">
-                  Email
-                  {!isEmailValid ? (
-                    <Message className="inputError" negative>
-                      Email inválido.
-                    </Message>
-                  ) : (
-                    <Message className="inputSuccess" positive>
-                      Email válido
-                    </Message>
-                  )}
-                </label>
-                <input
-                  className="input-field"
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={handleEmailChange}
-                />
-              </Form.Field>
-              <Form.Field className="form-field">
-                <label className="label-input">
-                  Senha
-                  {charsRemaining > 0 ? (
-                    <Message className="inputError" negative>
-                      Faltam {charsRemaining} caracteres
-                    </Message>
-                  ) : (
-                    <Message className="inputSuccess" positive>
-                      Senha válida
-                    </Message>
-                  )}
-                </label>
-                <input
-                  className="input-field"
-                  type="password"
-                  placeholder="Senha"
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-              </Form.Field>
-              <Button className="register-button" onClick={handleRegister}>
-                Cadastrar-se
-              </Button>
-            </Form>
-          </div>
-          <Divider />
-          <div className="footer">
-            <p>Ou já tem uma conta?</p>
-            <Link className="footer-link" to="/login">
-              Login
-            </Link>
-          </div>
-        </Container>
-      </div>
+      <Container className="form-right" textAlign="center">
+        <h2>Criar Conta</h2>
+        <Form className="form-container">
+          <Form.Field className="form-field">
+            <label>Nome</label>
+            <input
+              className="input-field"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Form.Field>
+          <Form.Field className="form-field">
+            <label className="label-input">
+              Email
+              {!isEmailValid ? (
+                <Message className="inputError" negative>
+                  Email inválido.
+                </Message>
+              ) : (
+                <Message className="inputSuccess" positive>
+                  Email válido
+                </Message>
+              )}
+            </label>
+            <input
+              className="input-field"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </Form.Field>
+          <Form.Field className="form-field">
+            <label className="label-input">
+              Senha
+              {charsRemaining > 0 ? (
+                <Message className="inputError" negative>
+                  Faltam {charsRemaining} caracteres
+                </Message>
+              ) : (
+                <Message className="inputSuccess" positive>
+                  Senha válida
+                </Message>
+              )}
+            </label>
+            <input
+              className="input-field"
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </Form.Field>
+          <Button className="form-button" onClick={handleRegister}>
+            Cadastrar-se
+          </Button>
+        </Form>
+        <Divider />
+        <div className="footer">
+          <p>Ou já tem uma conta?</p>
+          <Link className="footer-link" to="/login">
+            Login
+          </Link>
+        </div>
+      </Container>
     </div>
   );
 };

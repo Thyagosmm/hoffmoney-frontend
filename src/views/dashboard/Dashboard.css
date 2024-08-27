@@ -1,0 +1,54 @@
+.dashboard-container {
+    display: flex!important;
+    gap: 0.5rem!important; /* Adiciona um espaçamento entre os containers */
+    flex-direction: column!important;
+    max-width: 100vw!important; /* Define a largura máxima do dashboard como 100% da largura da viewport */
+    margin: 0 auto!important; /* Centraliza o dashboard horizontalmente */
+    padding: 0!important; /* Adiciona um padding ao redor do dashboard usando vh */
+    box-sizing: border-box!important; /* Inclui o padding e a borda no tamanho total do elemento */
+    height:85vh!important; /* Define a altura do dashboard para ocupar toda a altura da viewport */
+  }
+  
+  .container-group {
+    display: flex!important;
+    width: 100%!important;
+    gap: 0.5rem!important; /* Adiciona um espaçamento entre os containers */
+    flex-wrap: wrap!important;
+    justify-content: space-between!important;
+    flex: 1!important; /* Permite que o grupo de contêineres cresça para ocupar o espaço disponível */
+    max-height: 40vh!important; /* Define a altura máxima para dividir o espaço */
+  }
+  .doughnut-container{
+    position: fixed!important;
+  }
+  
+.limite {
+    position: absolute; /* Posiciona a div limite de forma absoluta */
+    top: 50%; /* Move a div para o meio verticalmente */
+    left: 50%; /* Move a div para o meio horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta a posição para centralizar */
+    text-align: center; /* Centraliza o texto dentro da div */
+}
+  .container-bordered {
+    display: flex!important;
+      align-items: center!important; /* Centraliza horizontalmente */
+  justify-content: center!important; /* Centraliza verticalmente */
+    position: relative!important; 
+    margin: 0!important;
+    min-height: 100%!important;
+
+    box-sizing: border-box!important; /* Inclui o padding e a borda no tamanho total do elemento */
+    flex: 1 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
+  }
+  
+  /* Media query para telas menores */
+  @media (max-width: 768px) {
+    .container-group {
+      flex-direction: column!important;
+    }
+  
+    .container-bordered {
+      flex: 1 1 100%!important; /* Define a largura das colunas para 100% em telas pequenas */
+      margin: 1vh 0!important; /* Remove a margem lateral em telas pequenas */
+    }
+  }

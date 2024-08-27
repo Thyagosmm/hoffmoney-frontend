@@ -13,6 +13,9 @@
 .text {
   font-size: 1.5rem;
 }
+.homeLink{
+  display: absolute;
+}
 .menu-container :hover {
   display: absolute;
   height: auto;

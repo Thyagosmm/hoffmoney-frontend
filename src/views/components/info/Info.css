@@ -7,17 +7,22 @@
   justify-content: center;
 }
 
-
+ .infoLogo {
+    width: 25vw;
+  }
 
 .social-links {
   display: flex;
   gap: 2rem;
   justify-content: space-between;
-  width: 100%;
+  width: 20vw;
   margin-top: 1rem;
 }
 
 .social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
@@ -27,9 +32,7 @@
     padding: 1rem;
   }
 
-  .infoLogo {
-    width: 50%;
-  }
+ 
 
 
   .social-link {

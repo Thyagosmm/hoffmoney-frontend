@@ -13,8 +13,6 @@ const EditarDespesa = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
-  const [recorrencia, setRecorrencia] = useState("");
-  const [frequencia, setFrequencia] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { id } = useParams();
@@ -30,8 +28,6 @@ const EditarDespesa = () => {
         setValor(despesaData.valor);
         setCategoria(despesaData.categoria);
         setDescricao(despesaData.descricao);
-        setRecorrencia(despesaData.recorrente);
-        setFrequencia(despesaData.periodo);
         const dataDespesa = new Date(despesaData.dataDeCobranca);
         if (!isNaN(dataDespesa.getTime())) {
           setData(dataDespesa);
@@ -84,7 +80,6 @@ const EditarDespesa = () => {
         valor,
         categoria,
         descricao,
-        recorrente: recorrencia,
         periodo: frequencia,
         dataDeCobranca: formattedDate,
       });
@@ -139,32 +134,7 @@ const EditarDespesa = () => {
                       onChange={(e, { value }) => setCategoria(value)}
                     />
                   </Form.Field>
-                  <Form.Field>
-                    <label>Recorrência</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Recorrência"
-                      fluid
-                      selection
-                      options={recOptions}
-                      value={recorrencia}
-                      onChange={(e, { value }) => setRecorrencia(value)}
-                    />
-                  </Form.Field>
-                  {recorrencia && (
-                    <Form.Field>
-                      <label>Frequência</label>
-                      <Dropdown
-                        className="input-field"
-                        placeholder="Selecione Frequência"
-                        fluid
-                        selection
-                        options={freqOptions}
-                        value={frequencia}
-                        onChange={(e, { value }) => setFrequencia(value)}
-                      />
-                    </Form.Field>
-                  )}
+
                   <Form.Field>
                     <label>Descrição</label>
                     <input
@@ -174,7 +144,9 @@ const EditarDespesa = () => {
                       onChange={(e) => setDescricao(e.target.value)}
                     />
                   </Form.Field>
-                  <Button type="submit" className="save-button">Salvar</Button>
+                  <Button type="submit" className="form-button">
+                    Salvar
+                  </Button>
                 </Form>
               </div>
               <div className="calendar-container">

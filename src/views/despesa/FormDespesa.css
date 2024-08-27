@@ -4,14 +4,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100%; /* Altura mínima para preencher a tela */
+  min-height: max-content!important;
+  max-height: max-content!important; /* Altura mínima para preencher a tela */
   padding: 20px;
-  background: url("../../assets/textura.jpg") repeat; /* Caminho para a imagem de textura */
   background-size: cover; /* Faz com que a imagem cubra todo o fundo */
 }
 
 /* Formulário de despesa */
 .despesa-form {
+  border: 0.1rem solid #82d690;
   display: flex;
   width: max-content;
   flex-direction: column;
@@ -23,7 +24,9 @@
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+.total-container {
+  color: black;
+}
 
 /* Título do formulário */
 .despesa-form h1 {
@@ -279,9 +282,9 @@
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #00ff2a8f;
 }
-.filter-container{
-    width: 100vw    ;
-height: max-content;
+.filter-container {
+  width: 100vw;
+  height: max-content;
 }
 /* Media Queries para dispositivos móveis */
 @media (max-width: 768px) {
@@ -304,18 +307,8 @@ height: max-content;
     padding: 10px 20px !important;
   }
 }
-.grupoRecorrente{
-  display: flex!important;
-  flex-direction: row!important;
-  width: 100%!important;
-  align-items: center;
-}
-.dropdownFrequencia{
-  display: flex!important;
-  height: max-content!important;
-  width: 100%!important;
 
-}
+
 
 .custom-radio .ui.toggle.checkbox .box:before,
 .custom-radio .ui.toggle.checkbox label:before {

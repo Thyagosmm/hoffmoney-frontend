@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8085/api",
+  baseURL: "http://192.168.0.200:8085/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -32,19 +32,19 @@ export const listarDespesas = () => {
   if (!userId) {
     throw new Error("Usuário não está logado.");
   }
-  return api.get(`/despesas/usuario/${userId}`);
+  return api.get(`/despesas/${userId}`);
 };
 
 export const buscarDespesaPorId = (usuarioId, despesaId) => {
-  return api.get(`/despesas/usuario/${usuarioId}/${despesaId}`);
+  return api.get(`/despesas/${usuarioId}/${despesaId}`);
 };
 
 export const atualizarDespesa = (usuarioId, despesaId, despesaData) => {
-  return api.put(`/despesas/usuario/${usuarioId}/${despesaId}`, despesaData);
+  return api.put(`/despesas/${usuarioId}/${despesaId}`, despesaData);
 };
 
 export const deletarDespesa = (usuarioId, despesaId) => {
-  return api.delete(`/despesas/usuario/${usuarioId}/${despesaId}`);
+  return api.delete(`/despesas/${usuarioId}/${despesaId}`);
 };
 
 export const incrementarSaldo = (valor) => {
@@ -97,4 +97,11 @@ export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
 
 export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
+};
+export const atualizarPaga = (despesaId, novaPaga) => {
+  return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };

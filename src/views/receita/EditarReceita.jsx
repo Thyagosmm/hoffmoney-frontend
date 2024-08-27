@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Dropdown } from 'semantic-ui-react';
+import { Form, Button, Dropdown, Radio } from 'semantic-ui-react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './FormReceita.css';
@@ -13,10 +13,9 @@ const EditarReceita = () => {
   const [categoria, setCategoria] = useState('');
   const [descricao, setDescricao] = useState('');
   const [data, setData] = useState(new Date());
-  const [recorrencia, setRecorrencia] = useState('');
-  const [frequencia, setFrequencia] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [errors, setErrors] = useState("");
+  const [success, setSuccess] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
   const usuarioId = localStorage.getItem("userId");
@@ -30,47 +29,40 @@ const EditarReceita = () => {
         setValor(receitaData.valor);
         setCategoria(receitaData.categoria);
         setDescricao(receitaData.descricao);
-        setRecorrencia(receitaData.recorrente);
-        setFrequencia(receitaData.periodo);
         const dataReceita = new Date(receitaData.dataDeCobranca);
         if (!isNaN(dataReceita.getTime())) {
           setData(dataReceita);
         } else {
-          console.error('Data inválida:', receitaData.dataDeCobranca);
+          console.error("Data inválida:", receitaData.dataDeCobranca);
         }
       } catch (error) {
-        console.error('Erro ao carregar a receita', error);
-        setError('Erro ao carregar a receita.');
+        console.error("Erro ao carregar a receita", error);
+        setError("Erro ao carregar a receita.");
       }
     };
 
     carregarReceita();
   }, [id, usuarioId]);
 
-  const recOptions = [
-    { key: 'sim', text: 'Sim', value: true },
-    { key: 'nao', text: 'Não', value: false }
-  ];
-
   const freqOptions = [
-    { key: 'diario', text: 'Diariamente', value: 'diario' },
-    { key: 'semanal', text: 'Semanalmente', value: 'semanal' },
-    { key: 'mensal', text: 'Mensalmente', value: 'mensal' },
-    { key: 'anual', text: 'Anualmente', value: 'anual' }
+    { key: "diario", text: "Diariamente", value: "diario" },
+    { key: "semanal", text: "Semanalmente", value: "semanal" },
+    { key: "mensal", text: "Mensalmente", value: "mensal" },
+    { key: "anual", text: "Anualmente", value: "anual" },
   ];
 
   const categoryOptions = [
-    { key: 'Alimentação', text: 'Alimentação', value: 'Alimentação' },
-    { key: 'Transporte', text: 'Transporte', value: 'Transporte' },
-    { key: 'Aluguel', text: 'Aluguel', value: 'Aluguel' },
-    { key: 'Utilidades', text: 'Utilidades', value: 'Utilidades' },
-    { key: 'Entretenimento', text: 'Entretenimento', value: 'Entretenimento' },
-    { key: 'Outros', text: 'Outros', value: 'Outros' },
+    { key: "Salario", text: "Salário", value: "Salario" },
+    { key: "Honorarios", text: "Honorários", value: "Honorarios" },
+    { key: "Comissoes", text: "Comissões", value: "Comissoes" },
+    { key: "Juros", text: "Juros", value: "Juros" },
+    { key: "Dividendos", text: "Dividendos", value: "Dividendos" },
+    { key: "Outros", text: "Outros", value: "Outros" },
   ];
 
   const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
@@ -84,15 +76,14 @@ const EditarReceita = () => {
         valor,
         categoria,
         descricao,
-        recorrente: recorrencia,
         periodo: frequencia,
         dataDeCobranca: formattedDate,
       });
-      setSuccess('Receita atualizada com sucesso!');
-      navigate('/receitas');
+      setSuccess("Receita atualizada com sucesso!");
+      navigate("/receitas");
     } catch (error) {
-      console.error('Erro ao atualizar a receita', error);
-      setError('Erro ao atualizar a receita.');
+      console.error("Erro ao atualizar a receita", error);
+      setError("Erro ao atualizar a receita.");
     }
   };
 
@@ -139,32 +130,7 @@ const EditarReceita = () => {
                       onChange={(e, { value }) => setCategoria(value)}
                     />
                   </Form.Field>
-                  <Form.Field>
-                    <label>Recorrência</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Recorrência"
-                      fluid
-                      selection
-                      options={recOptions}
-                      value={recorrencia}
-                      onChange={(e, { value }) => setRecorrencia(value)}
-                    />
-                  </Form.Field>
-                  {recorrencia && (
-                    <Form.Field>
-                      <label>Frequência</label>
-                      <Dropdown
-                        className="input-field"
-                        placeholder="Selecione Frequência"
-                        fluid
-                        selection
-                        options={freqOptions}
-                        value={frequencia}
-                        onChange={(e, { value }) => setFrequencia(value)}
-                      />
-                    </Form.Field>
-                  )}
+
                   <Form.Field>
                     <label>Descrição</label>
                     <input
@@ -174,7 +140,9 @@ const EditarReceita = () => {
                       onChange={(e) => setDescricao(e.target.value)}
                     />
                   </Form.Field>
-                  <Button type="submit" className="save-button">Salvar</Button>
+                  <Button type="submit" className="save-button">
+                    Salvar
+                  </Button>
                 </Form>
               </div>
               <div className="calendar-container">

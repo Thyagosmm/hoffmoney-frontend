@@ -11,7 +11,7 @@ import {
   atualizarDespesa,
   buscarDespesaPorId,
 } from "../../api/UserApi";
-import Header from "../components/appMenu/AppMenu";
+import AppMenu from "../components/appMenu/AppMenu";
 import { useNavigate } from "react-router-dom";
 
 const FormDespesa = ({ despesaId }) => {
@@ -37,7 +37,6 @@ const FormDespesa = ({ despesaId }) => {
           setName(despesa.nome);
           setValue(despesa.valor);
           setCategory(despesa.categoria);
-          setRecurrence(despesa.recorrente);
           setFrequency(despesa.periodo);
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
@@ -73,6 +72,9 @@ const FormDespesa = ({ despesaId }) => {
       newErrors.category = "Por favor, insira a categoria.";
       notifyError("Por favor, insira a categoria.");
     }
+    if (category === "Outros") {
+      setCategory(newCategory);
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,20 +97,18 @@ const FormDespesa = ({ despesaId }) => {
 
   const handleRegistrarDespesa = async (e) => {
     if (validate()) {
-      if (category === "Outros") {
-        setCategory(newCategory);
-      }
       e.preventDefault();
       const formattedDate = formatDate(date);
 
       try {
+        const categoriaFinal =
+          category === "outros" ? novaCategoria : newCategory;
         const response = await registrarDespesa({
           usuario: { id: userId },
           nome: name,
           descricao: description,
           valor: value,
-          categoria: category,
-          recorrente: recurrence,
+          categoria: categoriaFinal,
           periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -122,7 +122,6 @@ const FormDespesa = ({ despesaId }) => {
         notifyError(mensagemErro);
       }
     } else {
-      notifyError("Por favor, corrija os campos vermelhos no formulário.");
     }
   };
 
@@ -140,7 +139,6 @@ const FormDespesa = ({ despesaId }) => {
           descricao: description,
           valor: value,
           categoria: category,
-          recorrente: recurrence,
           periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -172,153 +170,93 @@ const FormDespesa = ({ despesaId }) => {
 
   return (
     <>
-      <div className="container">
-        <div>
-          <Header />
-        </div>
-        <div className="despesa">
-          <div className="despesa-form">
-            <h1>Cadastro de Despesa</h1>
-            <div className="form-content">
-              <div className="form-fields">
-                <Form>
-                  <Form.Field error={!!errors.name}>
-                    <label>Nome</label>
+      <AppMenu />
+      <div className="despesa">
+        <div className="despesa-form">
+          <h1>Cadastro de Despesa</h1>
+          <div className="form-content">
+            <div className="form-fields">
+              <Form>
+                <Form.Field error={!!errors.name}>
+                  <label>Nome</label>
+                  <input
+                    className="input-field"
+                    placeholder="Digite o nome da Despesa"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Form.Field>
+                <Form.Field error={!!errors.value}>
+                  <label>Valor</label>
+                  <NumericFormat
+                    customInput={Input}
+                    placeholder="Valor"
+                    value={value}
+                    onValueChange={(values) => setValue(values.value)}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    prefix="R$ "
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                  />
+                </Form.Field>
+                <Form.Field error={!!errors.category}>
+                  <label>Categoria</label>
+                  <Dropdown
+                    className="input-field"
+                    placeholder="Selecione Categoria"
+                    fluid
+                    selection
+                    options={categoryOptions}
+                    value={category}
+                    onChange={(e, { value }) => setCategory(value)}
+                  />
+                </Form.Field>
+                {category === "Outros" && (
+                  <Form.Field error={!!errors.newCategory}>
+                    <label>Nova Categoria</label>
                     <input
                       className="input-field"
-                      placeholder="Digite o nome da Despesa"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Digite o nome da nova categoria"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
                     />
                   </Form.Field>
-                  <Form.Field error={!!errors.value}>
-                    <label>Valor</label>
-                    <NumericFormat
-                      customInput={Input}
-                      placeholder="Valor"
-                      value={value}
-                      onValueChange={(values) => setValue(values.value)}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      prefix="R$ "
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                    />
-                  </Form.Field>
-                  <Form.Field error={!!errors.category}>
-                    <label>Categoria</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione Categoria"
-                      fluid
-                      selection
-                      options={categoryOptions}
-                      value={category}
-                      onChange={(e, { value }) => setCategory(value)}
-                    />
-                  </Form.Field>
-                  {category === "Outros" && (
-                    <Form.Field error={!!errors.newCategory}>
-                      <label>Nova Categoria</label>
-                      <input
-                        className="input-field"
-                        placeholder="Digite o nome da nova categoria"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                      />
-                    </Form.Field>
-                  )}
-                  <Form.Group className="grupoRecorrente">
-                    <Form.Field className="custom-radio">
-                      <label>Recorrente</label>
-                      <Radio
-                        toggle
-                        label={recurrence ? "Sim" : "Não"}
-                        checked={recurrence}
-                        onChange={() => setRecurrence(!recurrence)}
-                      />
-                    </Form.Field>
-                    {recurrence === true && (
-                      <>
-                        <Form.Field
-                          fluid
-                          className="dropdownFrequencia"
-                          error={!!errors.frequency}
-                        >
-                          <Dropdown
-                            className="input-field dropdownFrequencia"
-                            placeholder="Selecione Frequência"
-                            fluid
-                            selection
-                            options={[
-                              {
-                                key: "diario",
-                                text: "Diariamente",
-                                value: "diario",
-                              },
-                              {
-                                key: "semanal",
-                                text: "Semanalmente",
-                                value: "semanal",
-                              },
-                              {
-                                key: "mensal",
-                                text: "Mensalmente",
-                                value: "mensal",
-                              },
-                              {
-                                key: "anual",
-                                text: "Anualmente",
-                                value: "anual",
-                              },
-                            ]}
-                            value={frequency}
-                            onChange={(e, { value }) => setFrequency(value)}
-                          />
-                        </Form.Field>
-                      </>
-                    )}
-                  </Form.Group>
-                  <Form.Field error={!!errors.description}>
-                    <label>Descrição</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite uma descrição para a despesa"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                  </Form.Field>
-                </Form>
-              </div>
-              <div className="calendar-container">
-                <Calendar onChange={setDate} value={date} />
-              </div>
+                )}
+
+                <Form.Field error={!!errors.description}>
+                  <label>Descrição</label>
+                  <input
+                    className="input-field"
+                    placeholder="Digite uma descrição para a despesa"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Form.Field>
+              </Form>
             </div>
-            <div className="save-button-container">
-              {despesaId ? (
-                <>
-                  <Button
-                    className="save-button"
-                    onClick={handleAtualizarDespesa}
-                  >
-                    Atualizar
-                  </Button>
-                  <Button
-                    className="delete-button"
-                    onClick={handleDeletarDespesa}
-                  >
-                    Deletar
-                  </Button>
-                </>
-              ) : (
+            <div className="calendar-container">
+              <Calendar onChange={setDate} value={date} />
+            </div>
+          </div>
+          <div className="save-button-container">
+            {despesaId ? (
+              <>
                 <Button
-                  className="save-button"
-                  onClick={handleRegistrarDespesa}
+                  className="form-button"
+                  onClick={handleAtualizarDespesa}
                 >
-                  Salvar
+                  Atualizar
                 </Button>
-              )}
-            </div>
+                <Button className="form-button" onClick={handleDeletarDespesa}>
+                  Deletar
+                </Button>
+              </>
+            ) : (
+              <Button className="form-button" onClick={handleRegistrarDespesa}>
+                Salvar
+              </Button>
+            )}
           </div>
         </div>
       </div>

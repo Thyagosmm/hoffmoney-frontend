@@ -1,9 +1,26 @@
+<<<<<<< HEAD
 import React from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import images from "../../assets/images.js";
 import { Edit, Monitor, BarChart, Globe, ArrowRight, Instagram } from "react-feather";
+=======
+import React, { useEffect, useState } from "react";
+import AppMenu from "../components/appMenu/AppMenu.jsx";
+import Dashboard from "../dashboard/Dashboard.jsx";
+import Landing from "../landing/Landing.jsx";
+import "./Home.css";
+
+const Home = () => {
+  const [isLogged, setIsLogged] = useState(false);
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      setIsLogged(true);
+    }
+  }, []);
+>>>>>>> e0e5e9a272d59e6643a7c262ba19d8fc4a4b9973
 
 const Home1 = () => {
   const settings = {
@@ -17,6 +34,7 @@ const Home1 = () => {
   };
   return (
     <>
+<<<<<<< HEAD
       {/* Navigation */}
       <section className="smart-scroll">
         <div className="container-fluid">
@@ -619,6 +637,10 @@ const Home1 = () => {
           </div>
         </div>
       </footer>
+=======
+      <AppMenu />
+      {isLogged ? <Dashboard /> : <Landing />}
+>>>>>>> e0e5e9a272d59e6643a7c262ba19d8fc4a4b9973
     </>
   );
 };

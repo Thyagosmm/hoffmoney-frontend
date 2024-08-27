@@ -1,35 +1,42 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Menu,
-  Segment,
-  Icon,
-  Button,
-  Container,
-  List,
-  Modal,
-  Header as SemanticHeader,
-} from "semantic-ui-react";
-import { listarDespesas, deletarDespesa } from "../../api/UserApi";
-import Header from "../../views/components/appMenu/AppMenu";
-import "./ListaDespesas.css";
 import axios from "axios";
 import { format, parse } from "date-fns";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Form,
+  Icon,
+  List,
+  Menu,
+  Modal,
+  Segment,
+  Header as SemanticHeader,
+} from "semantic-ui-react";
+import {
+  atualizarPaga,
+  deletarDespesa,
+  listarDespesas,
+} from "../../api/UserApi";
+import Header from "../../views/components/appMenu/AppMenu";
+import "./ListaDespesas.css";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [despesaToDelete, setDespesaToDelete] = useState(null);
+  const [despesaToEdit, setDespesaToEdit] = useState(null);
+  const [actionType, setActionType] = useState(""); // Novo estado para controlar o tipo de ação
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [valor, setValor] = useState("");
   const [dataDeCobranca, setDataDeCobranca] = useState("");
-
+  const [despesasPagas, setDespesasPagas] = useState([]);
+  const [despesasNaoPagas, setDespesasNaoPagas] = useState([]);
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
   }
@@ -64,7 +71,7 @@ const ListaDespesas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam
+    dataDeCobrancaParam,
   ) {
     let formData = new FormData();
 
@@ -101,20 +108,14 @@ const ListaDespesas = () => {
         const { data } = await listarDespesas();
         console.log("Despesas:", data);
 
-        const despesasAgrupadas = data.reduce((acc, despesa) => {
-          const key = despesa.id;
-          if (!acc[key]) {
-            acc[key] = { ...despesa, count: 1 };
-          } else {
-            acc[key].count += 1;
-          }
-          return acc;
-        }, {});
+        const despesasPagas = data.filter((despesa) => despesa.paga);
+        const despesasNaoPagas = data.filter((despesa) => !despesa.paga);
 
-        const despesasAgrupadasList = Object.values(despesasAgrupadas);
-        setDespesas(despesasAgrupadasList);
-        const totalDespesas = despesasAgrupadasList.reduce((sum, despesa) => {
-          return sum + despesa.valor * despesa.count;
+        setDespesasPagas(despesasPagas);
+        setDespesasNaoPagas(despesasNaoPagas);
+
+        const totalDespesas = data.reduce((sum, despesa) => {
+          return sum + despesa.valor;
         }, 0);
         setTotal(totalDespesas);
       } catch (error) {
@@ -124,7 +125,6 @@ const ListaDespesas = () => {
 
     getDespesas();
   }, []);
-
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -133,22 +133,45 @@ const ListaDespesas = () => {
     }
 
     try {
-      await deletarDespesa(usuarioId, despesaToDelete);
+      await deletarDespesa(usuarioId, despesaToEdit);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaToDelete)
+        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit),
       );
       setModalOpen(false);
+      notifySuccess("Despesa deletada com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Erro ao excluir despesa:", error);
-      setError("Não foi possível excluir a despesa.");
+      notifyError("Não foi possível excluir a despesa.");
     }
   };
 
-  const handleOpenModal = (id) => {
-    setDespesaToDelete(id);
+  const handleOpenModal = (id, action) => {
+    setDespesaToEdit(id);
+    setActionType(action);
     setModalOpen(true);
   };
-
+  const handleAtualizarPaga = async () => {
+    try {
+      const response = await atualizarPaga(despesaToEdit, true);
+      // Atualize o estado da despesa localmente
+      setDespesas((prevDespesas) =>
+        prevDespesas.map((despesa) =>
+          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa,
+        ),
+      );
+      console.log("Despesa atualizada com sucesso:", response.status);
+      setModalOpen(false);
+      notifySuccess("Despesa paga com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    } catch (error) {
+      console.error("Erro ao atualizar a despesa:", error);
+    }
+  };
   const handleEdit = (id) => {
     navigate(`/editarDespesa/${id}`);
   };
@@ -164,9 +187,9 @@ const ListaDespesas = () => {
   return (
     <>
       <Header />
-      <Container className="despesas">
+      <Container className="container-bordered">
         <h1 className="containerHeader">Despesas</h1>
-        <Menu compact>
+        <Menu>
           <Menu.Item
             name="menuFiltro"
             active={menuFiltro === true}
@@ -175,11 +198,22 @@ const ListaDespesas = () => {
             <Icon name="filter" />
             Filtrar
           </Menu.Item>
-          <Menu.Item position="right">
-            <Button icon color="green" onClick={handleCreateNew}>
+          <Menu.Item position="left">
+            <Button
+              className="form-button"
+              icon
+              color="green"
+              onClick={handleCreateNew}
+            >
               <Icon name="plus" />
               Nova Despesa
             </Button>
+          </Menu.Item>
+          <Menu.Item position="right">
+            <div className="total-container">
+              <strong>Total em Despesas: R$ </strong>
+              <span>{total}</span>
+            </div>
           </Menu.Item>
         </Menu>
         {menuFiltro && (
@@ -230,67 +264,127 @@ const ListaDespesas = () => {
             </Form>
           </Segment>
         )}
-        <Segment className="segment-despesas">
-          <List divided verticalAlign="middle">
-            {despesas.length > 0 ? (
-              despesas.map((despesa) => (
-                <List.Item key={despesa.id}>
-                  <List.Content floated="right">
-                    <Button
-                      icon
-                      color="blue"
-                      onClick={() => handleEdit(despesa.id)}
-                    >
-                      <Icon name="edit" />
-                    </Button>
-                    <Button
-                      icon
-                      color="red"
-                      onClick={() => handleOpenModal(despesa.id)}
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </List.Content>
-                  <Icon name="money" size="large" color="red" />
-                  <List.Content>
-                    <List.Header>{despesa.nome}</List.Header>
-                    <List.Description>
-                      Categoria: {despesa.categoria} | Valor: {despesa.valor} |
-                      Data de Cobrança: {despesa.dataDeCobranca}
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              ))
-            ) : (
-              <p>Nenhuma despesa encontrada.</p>
-            )}
-          </List>
-        </Segment>
-        <div className="total-container">
-          <strong>Total Despesas: </strong>
-          <span>{total}</span>
+        <div className="despesas">
+          <Segment className="segment-despesas">
+            <h2 className="header-nao-pagas">Despesas Não Pagas</h2>
+            <List className="lista-items" divided verticalAlign="middle">
+              {despesasNaoPagas.length > 0 ? (
+                despesasNaoPagas.map((despesa) => (
+                  <List.Item className="items-lista" key={despesa.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="green"
+                        onClick={() => handleOpenModal(despesa.id, "check")}
+                      >
+                        <Icon name="check" />
+                      </Button>
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(despesa.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="red" />
+                    <List.Content>
+                      <List.Header>{despesa.nome}</List.Header>
+                      <List.Description>
+                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
+                        | Data de Cobrança: {despesa.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma despesa não paga encontrada.</span>
+              )}
+            </List>
+          </Segment>
+          <Segment className="segment-despesas">
+            <h2 className="header-pagas">Despesas Pagas</h2>
+            <List className="lista-items" divided verticalAlign="middle">
+              {despesasPagas.length > 0 ? (
+                despesasPagas.map((despesa) => (
+                  <List.Item className="items-lista" key={despesa.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(despesa.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="green" />
+                    <List.Content>
+                      <List.Header>{despesa.nome}</List.Header>
+                      <List.Description>
+                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
+                        | Data de Cobrança: {despesa.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma despesa paga encontrada.</span>
+              )}
+            </List>
+          </Segment>
         </div>
+
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          size="small"
+          dimmer="blurring"
+          closeIcon
+        >
+          <SemanticHeader
+            icon={actionType === "delete" ? "trash" : "check"}
+            content={
+              actionType === "delete"
+                ? "Excluir Despesa"
+                : "Confirmar Pagamento"
+            }
+          />
+          <Modal.Content>
+            <span>
+              {actionType === "delete"
+                ? "Você tem certeza que deseja excluir esta despesa?"
+                : "Você realmente pagou esta despesa?"}
+            </span>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={() => setModalOpen(false)}>
+              <Icon name="remove" /> Não
+            </Button>
+            <Button
+              color="green"
+              onClick={
+                actionType === "delete" ? handleDelete : handleAtualizarPaga
+              }
+            >
+              <Icon name="checkmark" /> Sim
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </Container>
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        size="small"
-        dimmer="blurring"
-        closeIcon
-      >
-        <SemanticHeader icon="trash" content="Excluir Despesa" />
-        <Modal.Content>
-          <p>Você tem certeza que deseja excluir esta despesa?</p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={() => setModalOpen(false)}>
-            <Icon name="remove" /> Não
-          </Button>
-          <Button color="green" onClick={handleDelete}>
-            <Icon name="checkmark" /> Sim
-          </Button>
-        </Modal.Actions>
-      </Modal>
     </>
   );
 };
