@@ -43,148 +43,102 @@ const AppMenu = () => {
   };
 
   return (
-    <><Menu inverted className="menu">
-      <Menu.Item as={Link} to="/" header>
-        <Image size="mini" src={images.logo} style={{ marginRight: "1.5em" }} />
-        Hoffmoney
-      </Menu.Item>
-      {!isLogged ? (
-        <Menu.Menu position="right">
-          <>
-            <Menu.Item className="rote" as={Link} to="/login">
-              Login
-            </Menu.Item>
-            <Menu.Item className="rote" as={Link} to="/register">
-              Registrar-se
-            </Menu.Item>
-          </>
-        </Menu.Menu>
-      ) : (
-        <>
-          <Menu.Item className="rote" as={Link} to="/despesas">
-            Despesas
-          </Menu.Item>
-          <Menu.Item className="rote" as={Link} to="/receitas">
-            Receitas
-          </Menu.Item>
-          <Menu.Menu position="right" className="menu-container">
-            <Menu.Item className="userInfo">
-              <MenuItem className="basicInfo">
-                <span>Bem-vindo, {firstName}!</span>
-                <span className="span">
-                  Seu saldo é R$ {localStorage.getItem("saldo")}
-                </span>
-              </MenuItem>
-              <Menu.Item as={Link} to="/update" className="additional-info">
-                Editar Perfil
-              </Menu.Item>
-              <Menu.Item as={Link} to="/saldo" className="additional-info">
-                Editar Saldo
-              </Menu.Item>
-              <Menu.Item as={Link} to="/register" className="additional-info" onClick={logout}>
-                Sair
-              </Menu.Item>
-            </Menu.Item>
-
-          </Menu.Menu>
-        </>
-      )}
-    </Menu><section className="smart-scroll">
-        <div className="container-fluid">
-          <nav className="navbar navbar-expand-md navbar-dark">
-            <Link className="navbar-brand heading-black" to="/">
-              HoffMoney
-            </Link>
-            <button
-              className="navbar-toggler navbar-toggler-right border-0"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-              aria-controls="navbarCollapse"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span data-feather="grid"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarCollapse">
-              <ul className="navbar-nav mr-auto">
+    <section className="smart-scroll">
+      <div className="container-fluid">
+        <nav className="navbar navbar-expand-md navbar-dark">
+          <Link className="navbar-brand heading-black" to="/">
+            HoffMoney
+          </Link>
+          <button
+            className="navbar-toggler navbar-toggler-right border-0"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span data-feather="grid"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarCollapse">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <a className="nav-link page-scroll" href="#features">
+                  Recursos
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link page-scroll" href="#pricing">
+                  Planos
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link page-scroll" href="#faq">
+                  FAQ
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link page-scroll" href="#blog">
+                  Blog
+                </a>
+              </li>
+            </ul>
+            <ul className="navbar-nav ml-auto">
+              {!isLogged ? (
                 <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#features">
-                    Recursos
-                  </a>
+                  <Link
+                    className="nav-link page-scroll d-flex flex-row align-items-center text-primary"
+                    to="/login"
+                  >
+                    Entrar
+                  </Link>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#pricing">
-                    Planos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#faq">
-                    FAQ
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#blog">
-                    Blog
-                  </a>
-                </li>
-              </ul>
-              <ul className="navbar-nav ml-auto">
-                {!isLogged ? (
+              ) : (
+                <>
                   <li className="nav-item">
-                    <Link
-                      className="nav-link page-scroll d-flex flex-row align-items-center text-primary"
-                      to="/login"
-                    >
-                      Entrar
+                    <Link className="nav-link page-scroll" to="/despesas">
+                      Despesas
                     </Link>
                   </li>
-                ) : (
-                  <>
-                    <li className="nav-item">
-                      <Link className="nav-link page-scroll" to="/despesas">
-                        Despesas
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link page-scroll" to="/receitas">
-                        Receitas
-                      </Link>
-                    </li>
-                    <li
-                      className="nav-item dropdown"
-                      onMouseEnter={toggleDropdown}
-                      onMouseLeave={toggleDropdown}
-                    >
-                      <span className="nav-link dropdown-toggle">
-                        <span>Bem-vindo, {firstName}!</span>
-                        <span>
-                          Seu saldo é R$
-                          {localStorage.getItem("saldo")}
-                        </span>
+                  <li className="nav-item">
+                    <Link className="nav-link page-scroll" to="/receitas">
+                      Receitas
+                    </Link>
+                  </li>
+                  <li
+                    className="nav-item dropdown"
+                    onMouseEnter={toggleDropdown}
+                    onMouseLeave={toggleDropdown}
+                  >
+                    <span className="nav-link dropdown-toggle">
+                      <span>Bem-vindo, {firstName}!</span>
+                      <span>
+                        Seu saldo é R$
+                        {localStorage.getItem("saldo")}
                       </span>
-                      {isDropdownOpen && (
-                        <div className="dropdown-menu show">
-                          <Link className="dropdown-item nav-item" to="/update">
-                            Editar Perfil
-                          </Link>
-                          <Link
-                            className="dropdown-item nav-item"
-                            to="/"
-                            onClick={logout}
-                          >
-                            Sair
-                          </Link>
-                        </div>
-                      )}
-                    </li>
-                  </>
-                )}
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </section></>
+                    </span>
+                    {isDropdownOpen && (
+                      <div className="dropdown-menu show">
+                        <Link className="dropdown-item nav-item" to="/update">
+                          Editar Perfil
+                        </Link>
+                        <Link
+                          className="dropdown-item nav-item"
+                          to="/"
+                          onClick={logout}
+                        >
+                          Sair
+                        </Link>
+                      </div>
+                    )}
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </section>
   );
 };
 
