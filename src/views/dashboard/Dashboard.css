@@ -22,12 +22,24 @@
     position: fixed!important;
   }
   
-.limite {
-    position: absolute; /* Posiciona a div limite de forma absoluta */
-    top: 50%; /* Move a div para o meio verticalmente */
-    left: 50%; /* Move a div para o meio horizontalmente */
-    transform: translate(-50%, -50%); /* Ajusta a posição para centralizar */
-    text-align: center; /* Centraliza o texto dentro da div */
+  .chart-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .limite {
+    position: absolute;
+    width: max-content;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 10px; /* Opcional: para melhor espaçamento */
+    border-radius: 10px; /* Opcional: para bordas arredondadas */
+  }
+.acoes-container{
+  
+  max-width: max-content!important;
 }
   .container-bordered {
     display: flex!important;
@@ -36,9 +48,8 @@
     position: relative!important; 
     margin: 0!important;
     min-height: 100%!important;
-
-    box-sizing: border-box!important; /* Inclui o padding e a borda no tamanho total do elemento */
-    flex: 1 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
+    max-height: 100%!important;
+    flex: 2 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
   }
   
   /* Media query para telas menores */

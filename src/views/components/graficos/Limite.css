@@ -1,0 +1,40 @@
+.limite-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+  .limite {
+    text-align: center; /* Centraliza o texto dentro da div */
+}
+  
+  .chart-container {
+    flex: 1;
+  }
+  
+  .categories-list {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+  }
+  
+  .category-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: max-content;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 2px solid;
+    border-radius: 5px;
+  }
+  .category-label {
+    margin: 0!important;
+    font-weight: bold;
+  }
+  
+  .category-percentage {
+    margin: 0!important;
+
+  }
