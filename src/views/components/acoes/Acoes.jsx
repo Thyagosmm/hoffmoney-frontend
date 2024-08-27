@@ -15,7 +15,7 @@ const Acoes = () => {
         );
 
         if (!responseApi.ok) {
-          throw new Error("Erro ao buscar dados das ações");
+          notifyError("Erro ao buscar dados das ações");
         }
 
         const data = await responseApi.json();
@@ -47,36 +47,32 @@ const Acoes = () => {
 
   return (
     <div className="acoes">
-      <div className="lista">
-        <Grid className="lista-acoes">
-          {altas.map((row, rowIndex) => (
-            <Grid.Row className="acoes-linha" key={rowIndex}>
-              {row.map((acao, colIndex) => (
-                <Grid.Column className="altas-item" key={colIndex}>
-                  <div className="text-acao">{acao.ticker}</div>
-                  <div className="text-acao">{acao.price}</div>
-                  <div className="text-acao">{acao.change_percentage}</div>
-                </Grid.Column>
-              ))}
-            </Grid.Row>
-          ))}
-        </Grid>
-      </div>
-      <div className="lista">
-        <Grid className="lista-acoes">
-          {baixas.map((row, rowIndex) => (
-            <Grid.Row className="acoes-linha" key={rowIndex}>
-              {row.map((acao, colIndex) => (
-                <Grid.Column className="baixas-item" key={colIndex}>
-                  <div className="text-acao">{acao.ticker}</div>
-                  <div className="text-acao">{acao.price}</div>
-                  <div className="text-acao">{acao.change_percentage}</div>
-                </Grid.Column>
-              ))}
-            </Grid.Row>
-          ))}
-        </Grid>
-      </div>
+      <Grid className="lista-acoes">
+        {altas.map((row, rowIndex) => (
+          <Grid.Row className="acoes-linha" key={rowIndex}>
+            {row.map((acao, colIndex) => (
+              <Grid.Column className="altas-item" key={colIndex}>
+                <div className="text-acao">{acao.ticker}</div>
+                <div className="text-acao">{acao.price}</div>
+                <div className="text-acao">{acao.change_percentage}</div>
+              </Grid.Column>
+            ))}
+          </Grid.Row>
+        ))}
+      </Grid>
+      <Grid className="lista-acoes">
+        {baixas.map((row, rowIndex) => (
+          <Grid.Row className="acoes-linha" key={rowIndex}>
+            {row.map((acao, colIndex) => (
+              <Grid.Column className="baixas-item" key={colIndex}>
+                <div className="text-acao">{acao.ticker}</div>
+                <div className="text-acao">{acao.price}</div>
+                <div className="text-acao">{acao.change_percentage}</div>
+              </Grid.Column>
+            ))}
+          </Grid.Row>
+        ))}
+      </Grid>
     </div>
   );
 };

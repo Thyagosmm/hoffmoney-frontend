@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 import { listarDespesas } from "../../../api/UserApi";
+import "./Limite.css";
+import { Button } from "semantic-ui-react";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
@@ -42,8 +44,15 @@ function Limite() {
         // Filtrar despesas pagas
         const despesasPagas = despesas.filter((despesa) => despesa.paga);
 
+        const total = despesasPagas.reduce(
+          (acc, despesa) => acc + despesa.valor,
+          0,
+        );
         const categorias = despesasPagas.map((despesa) => despesa.categoria);
         const valores = despesasPagas.map((despesa) => despesa.valor);
+        const porcentagens = valores.map((valor) =>
+          ((valor / total) * 100).toFixed(2),
+        );
 
         setChartData((prevData) => ({
           ...prevData,
@@ -55,6 +64,8 @@ function Limite() {
             },
           ],
         }));
+
+        setPorcentagens(porcentagens);
       } catch (error) {
         console.error("Erro ao buscar dados das despesas", error);
       }
@@ -62,6 +73,7 @@ function Limite() {
 
     fetchData();
   }, []);
+  const [porcentagens, setPorcentagens] = useState([]);
 
   const options = {
     borderRadius: 7,
@@ -77,8 +89,29 @@ function Limite() {
   };
 
   return (
-    <div>
-      <Doughnut data={chartData} options={options} />;
+    <div className="limite-container">
+      <div className="chart-container">
+        <div className="chart-wrapper">
+          <Doughnut data={chartData} options={options} />
+          <div className="limite">
+            <p>Limite de Gastos</p>
+            <p>R$ 1.500,00</p>
+            <Button className="form-button">Editar</Button>
+          </div>
+        </div>
+      </div>
+      <div className="categories-list">
+        {chartData.labels.map((label, index) => (
+          <div
+            key={index}
+            className="category-item"
+            style={{ borderColor: chartData.datasets[0].borderColor[index] }}
+          >
+            <h5 className="category-label">{label}</h5>
+            <h5 className="category-percentage">{porcentagens[index]}%</h5>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
