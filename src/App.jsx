@@ -25,7 +25,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/novacategoriadespesa" element={<FormCategoriaDespesa />} />
-          <Route path="/editarcategoriadespesa" element={<EditarCategoriaDespesa />} />
+          <Route path="/editarcategoriadespesa/:id" element={<EditarCategoriaDespesa />} />
           <Route path="/categoriadespesa" element={<ListaCategoriaDespesa />} />
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<FormUsuarioRegister />} />

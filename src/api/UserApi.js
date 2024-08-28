@@ -98,6 +98,23 @@ export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
 export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
 };
+
+export const buscarCategoriaDespesaPorId = (categoriaId) => {
+  return api.get(`/categoriadespesa/${categoriaId}`);
+};
+
+export const atualizarCategoriaDespesa = (categoriaId, categoriaData) => {
+  return api.put(`/categoriadespesa/${categoriaId}`, categoriaData);
+};
+
+export const registrarCategoriaDespesa = (categoriaData) => {
+  return api.post("/categoriadespesa", categoriaData);
+};
+
+export const deletarCategoriaDespesa = (categoriaId) => {
+  return api.delete(`/categoriadespesa/${categoriaId}`);
+};
+
 export const atualizarPaga = (despesaId, novaPaga) => {
   return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
     headers: {

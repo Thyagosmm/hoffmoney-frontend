@@ -14,6 +14,7 @@ import {
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaCategoriaDespesa.css";
 import { notifyError, notifySuccess } from "../utils/Utils";
+import { deletarCategoriaDespesa } from '../../api/UserApi';
 
 const ListaCategoriaDespesa = () => {
   const [categorias, setCategorias] = useState([]);
@@ -38,7 +39,7 @@ const ListaCategoriaDespesa = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8085/api/categoriadespesa/${categoriaToEdit}`);
+      await deletarCategoriaDespesa(categoriaToEdit);
       setCategorias((prevCategorias) =>
         prevCategorias.filter((categoria) => categoria.id !== categoriaToEdit)
       );
@@ -57,11 +58,11 @@ const ListaCategoriaDespesa = () => {
   };
 
   const handleEdit = (id) => {
-    navigate(`/editarCategoria/${id}`);
+    navigate(`/editarcategoriadespesa/${id}`);
   };
 
   const handleCreateNew = () => {
-    navigate("/novaCategoria");
+    navigate("/novacategoriadespesa");
   };
 
   if (error) {
@@ -87,39 +88,41 @@ const ListaCategoriaDespesa = () => {
           </Menu.Item>
         </Menu>
         <Segment className="segment-categorias">
-          <List divided verticalAlign="middle">
-            {categorias.length > 0 ? (
-              categorias.map((categoria) => (
-                <List.Item className="items-lista" key={categoria.id}>
-                  <List.Content floated="right">
-                    <Button
-                      icon
-                      color="blue"
-                      onClick={() => handleEdit(categoria.id)}
-                    >
-                      <Icon name="edit" />
-                    </Button>
-                    <Button
-                      icon
-                      color="red"
-                      onClick={() => handleOpenModal(categoria.id, "delete")}
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </List.Content>
-                  <Icon name="tags" size="large" color="teal" />
-                  <List.Content>
-                    <List.Header>{categoria.nome}</List.Header>
-                    <List.Description>
-                      Descrição: {categoria.descricao}
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              ))
-            ) : (
-              <span>Nenhuma categoria encontrada.</span>
-            )}
-          </List>
+          <Menu>
+            <List divided verticalAlign="middle">
+              {categorias.length > 0 ? (
+                categorias.map((categoria) => (
+                  <List.Item className="items-lista" key={categoria.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(categoria.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(categoria.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="tags" size="large" color="teal" />
+                    <List.Content>
+                      <List.Header>{categoria.nome}</List.Header>
+                      <List.Description>
+                        {categoria.descricaoDespesa}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma categoria encontrada.</span>
+              )}
+            </List>
+          </Menu>
         </Segment>
 
         <Modal

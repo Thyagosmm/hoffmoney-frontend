@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button } from "semantic-ui-react";
-import { buscarCategoriaPorId, atualizarCategoria } from "../../api/UserApi";
-import Header from "../components/appMenu/AppMenu";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Form, Input, Message } from "semantic-ui-react";
+import { buscarCategoriaDespesaPorId, atualizarCategoriaDespesa } from "../../api/UserApi";
+import AppMenu from "../components/appMenu/AppMenu";
+import { notifyError, notifySuccess } from "../utils/Utils";
 import "./FormCategoriaDespesa.css";
 
 const EditarCategoriaDespesa = () => {
-  const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const usuarioId = localStorage.getItem("userId");
@@ -17,72 +18,72 @@ const EditarCategoriaDespesa = () => {
   useEffect(() => {
     const carregarCategoria = async () => {
       try {
-        const response = await buscarCategoriaPorId(usuarioId, id);
+        const response = await buscarCategoriaDespesaPorId(id); 
         const categoriaData = response.data;
-        setNome(categoriaData.nome);
-        setDescricao(categoriaData.descricao);
+        setDescription(categoriaData.descricaoDespesa);
       } catch (error) {
-        console.error("Erro ao carregar a categoria", error);
-        setError("Erro ao carregar a categoria.");
+        notifyError("Erro ao carregar a categoria de despesa.");
+        console.error("Erro ao carregar a categoria:", error);
       }
     };
-
+  
     carregarCategoria();
-  }, [id, usuarioId]);
+  }, [id]);
 
-  const handleSubmit = async (e) => {
+  const validate = () => {
+    if (!description) {
+      notifyError("A descrição é obrigatória.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleAtualizarCategoria = async (e) => {
     e.preventDefault();
-    try {
-      await atualizarCategoria(usuarioId, id, {
-        nome,
-        descricao,
-      });
-      setSuccess("Categoria atualizada com sucesso!");
-      navigate("/categorias");
-    } catch (error) {
-      console.error("Erro ao atualizar a categoria", error);
-      setError("Erro ao atualizar a categoria.");
+    if (validate()) {
+      setLoading(true);
+      try {
+        await atualizarCategoriaDespesa(id, { descricaoDespesa: description });
+        notifySuccess("Categoria atualizada com sucesso!");
+        navigate("/categoriadespesa");
+      } catch (error) {
+        notifyError("Erro ao atualizar a categoria de despesa.");
+        console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
+  
+  
 
   return (
     <>
-      <div className="container">
-        <Header />
-        <div className="categoria">
-          <div className="categoria-form">
-            <h1>Editar Categoria</h1>
-            <div className="form-content">
-              <div className="form-fields">
-                <Form onSubmit={handleSubmit}>
-                  <Form.Field>
-                    <label>Nome</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite o nome da Categoria"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      required
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Descrição</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite uma descrição para a categoria"
-                      value={descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
-                    />
-                  </Form.Field>
-                  <Button type="submit" className="form-button">
-                    Salvar
-                  </Button>
-                </Form>
-              </div>
+      <AppMenu />
+      <div className="categoria-despesa">
+        <div className="categoria-despesa-form">
+          <h1>Editar Categoria de Despesa</h1>
+          <Form onSubmit={handleAtualizarCategoria} loading={loading} error={!!error}>
+            <Form.Field error={!!error}>
+              <label>Descrição</label>
+              <Input
+                placeholder="Digite a descrição da Categoria"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              {error && (
+                <Message error content={error} />
+              )}
+            </Form.Field>
+            <div className="save-button-container-categoria">
+              <Button type="submit" className="save-button-categoria">
+                Salvar
+              </Button>
+              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriadespesa")}>
+                Voltar
+              </Button>
             </div>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
-          </div>
+          </Form>
         </div>
       </div>
     </>

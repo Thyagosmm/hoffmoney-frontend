@@ -101,6 +101,11 @@ const AppMenu = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link className="nav-link page-scroll" to="/categoriadespesa">
+                      Categoria Despesa
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link className="nav-link page-scroll" to="/receitas">
                       Receitas
                     </Link>

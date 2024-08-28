@@ -80,7 +80,6 @@ const EditarDespesa = () => {
         valor,
         categoria,
         descricao,
-        periodo: frequencia,
         dataDeCobranca: formattedDate,
       });
       setSuccess("Despesa atualizada com sucesso!");
