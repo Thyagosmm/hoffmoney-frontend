@@ -38,6 +38,7 @@
     margin: 0!important;
 }
 .lista-items{
+    border-radius: 0.5rem;
     place-items: center!important;
     background-color: white!important;
 }
@@ -47,11 +48,13 @@
 justify-items: center;
 }
 .header-pagas{
+    width: 100%!important;
     font-size: x-large!important;
     text-align: center!important;
     color: rgb(0, 255, 0)!important;
 }
 .header-nao-pagas{
+    width: 100%!important;
     font-size: x-large!important;
     text-align: center!important;
     color: rgb(255, 0, 0)!important;

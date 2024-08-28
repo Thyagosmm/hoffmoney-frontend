@@ -266,7 +266,8 @@ const ListaDespesas = () => {
         )}
         <div className="despesas">
           <Segment className="segment-despesas">
-            <h2 className="header-nao-pagas">Despesas Não Pagas</h2>
+            <Menu>
+            <h2 className="header-nao-pagas">Despesas Não Pagas</h2></Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasNaoPagas.length > 0 ? (
                 despesasNaoPagas.map((despesa) => (
@@ -309,8 +310,8 @@ const ListaDespesas = () => {
               )}
             </List>
           </Segment>
-          <Segment className="segment-despesas">
-            <h2 className="header-pagas">Despesas Pagas</h2>
+          <Segment className="segment-despesas"><Menu>
+            <h2 className="header-pagas">Despesas Pagas</h2></Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasPagas.length > 0 ? (
                 despesasPagas.map((despesa) => (

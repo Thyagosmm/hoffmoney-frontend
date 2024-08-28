@@ -76,7 +76,6 @@ const EditarReceita = () => {
         valor,
         categoria,
         descricao,
-        periodo: frequencia,
         dataDeCobranca: formattedDate,
       });
       setSuccess("Receita atualizada com sucesso!");
