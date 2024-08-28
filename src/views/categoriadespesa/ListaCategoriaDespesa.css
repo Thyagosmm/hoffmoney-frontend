@@ -1,0 +1,98 @@
+.containerHeader {
+  width: 100%!important;
+  text-align: center!important;
+  margin-bottom: 1rem!important;
+  color: white;
+}
+
+.listaCategorias {
+  display: flex!important;
+  width: 100%!important;
+  height: 100%!important;
+  flex-wrap: wrap!important;
+  justify-content: center!important;
+  align-items: center!important;
+}
+
+.list-icon {
+  height: 1rem!important;
+  width: max-content!important;
+  place-self: center!important;
+  color: white!important;
+  font-size: 2.5rem!important;
+}
+
+.list-item {
+  justify-items: center!important;
+  align-items: center!important;
+  border-radius: 1rem!important;
+  background: black!important;
+  padding: 1rem!important;
+  border-bottom: 0.1rem solid white!important;
+}
+
+.list-description {
+  color: white!important;
+}
+
+.segment-categorias {
+  background-color: black!important;
+  margin: 0!important;
+}
+
+.lista-items {
+  place-items: center!important;
+  background-color: white!important;
+}
+
+.items-lista {
+  padding: 0.5rem!important;
+  margin: 0!important;
+  justify-items: center;
+}
+
+.header-categorias {
+  font-size: x-large!important;
+  text-align: center!important;
+  color: rgb(0, 255, 0)!important;
+}
+
+.header-outros {
+  font-size: x-large!important;
+  text-align: center!important;
+  color: rgb(255, 0, 0)!important;
+}
+
+.list-header {
+  background: black!important;
+  color: white!important;
+  font-size: 1.5em!important;
+  margin-bottom: 0.5rem!important;
+  text-align: center!important;
+}
+
+.categorias {
+  display: flex!important;
+  flex-direction: row!important;
+}
+
+.totalCategorias {
+  margin-left: 5rem!important;
+}
+
+.btnCadastrarCategoria {
+  width: max-content!important;
+  display: block!important;
+  margin: 1rem auto!important;
+  padding: 0.5rem 1rem!important;
+  background-color: rgb(43, 187, 14)!important;
+  color: white!important;
+  border: none!important;
+  border-radius: 4px!important;
+  cursor: pointer!important;
+  font-size: 1.5em!important;
+}
+
+.btnCadastrarCategoria:hover {
+  background-color: black!important;
+}

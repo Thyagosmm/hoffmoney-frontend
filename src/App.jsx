@@ -14,6 +14,9 @@ import ListaDespesas from "./views/despesa/ListaDespesas";
 import Home from "./views/home/Home";
 import EditarReceita from "./views/receita/EditarReceita";
 import FormReceita from "./views/receita/FormReceita";
+import FormCategoriaDespesa from "./views/categoriadespesa/FormCategoriaDespesa";
+import EditarCategoriaDespesa from "./views/categoriadespesa/EditarCategoriaDespesa";
+import ListaCategoriaDespesa from "./views/categoriadespesa/ListaCategoriaDespesa";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/novacategoriadespesa" element={<FormCategoriaDespesa />} />
+          <Route path="/editarcategoriadespesa" element={<EditarCategoriaDespesa />} />
+          <Route path="/categoriadespesa" element={<ListaCategoriaDespesa />} />
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<FormUsuarioRegister />} />
           <Route path="/update" element={<FormUsuarioUpdate />} />

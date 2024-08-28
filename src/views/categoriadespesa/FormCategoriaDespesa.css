@@ -1,0 +1,104 @@
+/* Container principal */
+.categoria-despesa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: max-content !important;
+  max-height: max-content !important;
+  padding: 20px;
+  background-size: cover;
+}
+
+/* Formulário de categoria de despesa */
+.categoria-despesa-form {
+  border: 0.1rem solid #82d690;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 700px; /* Limita a largura do formulário */
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título do formulário */
+.categoria-despesa-form h1 {
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+/* Container para campos do formulário */
+.form-content-categoria {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Campos do formulário */
+.form-fields-categoria {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Estilo dos campos de entrada */
+.categoria-despesa-form .field input,
+.categoria-despesa-form .field .ui.dropdown {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Estilo dos rótulos dos campos */
+.categoria-despesa-form .field label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Container do botão de salvar */
+.save-button-container-categoria {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 40px;
+}
+
+/* Botão de salvar */
+.save-button-categoria {
+  background-color: rgb(152, 251, 152) !important;
+  color: black !important;
+  padding: 15px 30px !important;
+  font-size: 1.5rem !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button-categoria:hover {
+  background-color: rgb(123, 208, 123);
+}
+
+/* Media Queries para dispositivos móveis */
+@media (max-width: 768px) {
+  .categoria-despesa-form {
+    padding: 15px;
+  }
+
+  .form-content-categoria {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .save-button-categoria {
+    font-size: 1.2rem !important;
+    padding: 10px 20px !important;
+  }
+}
