@@ -1,0 +1,103 @@
+/* Container principal */
+.categoria-receita {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-size: cover;
+  }
+  
+  /* Formulário de categoria de receita */
+  .categoria-receita-form {
+    border: 0.1rem solid #82d690;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título do formulário */
+  .categoria-receita-form h1 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Campo de entrada */
+  .categoria-receita-form .field input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Estilo dos rótulos dos campos */
+  .categoria-receita-form .field label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  /* Container dos botões de ação */
+  .save-button-container-categoria {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  /* Botão de salvar */
+  .save-button-categoria {
+    background-color: rgb(152, 251, 152) !important;
+    color: black !important;
+    padding: 15px 30px !important;
+    font-size: 1.2rem !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .save-button-categoria:hover {
+    background-color: rgb(123, 208, 123);
+  }
+  
+  /* Botão de voltar */
+  .cancel-button-categoria {
+    background-color: #f8d7da !important;
+    color: black !important;
+    padding: 15px 30px !important;
+    font-size: 1.2rem !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .cancel-button-categoria:hover {
+    background-color: #f5c6cb;
+  }
+  
+  /* Media Queries para dispositivos móveis */
+  @media (max-width: 768px) {
+    .categoria-receita-form {
+      padding: 15px;
+    }
+  
+    .save-button-container-categoria {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .save-button-categoria,
+    .cancel-button-categoria {
+      font-size: 1rem !important;
+      padding: 10px 20px !important;
+    }
+  }
+  

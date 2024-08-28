@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Container } from "semantic-ui-react";
-import Acoes from "../components/acoes/Acoes";
+import { Container } from "semantic-ui-react";
 import AcoesPreenchidas from "../components/acoes/AcoesPreenchidas";
 
 import Limite from "../components/graficos/Limite";
@@ -11,7 +10,6 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard-container">
-        <h1>Dashboard</h1>
         <Container className="container-group">
           <Container className="container-bordered">
             <Limite />

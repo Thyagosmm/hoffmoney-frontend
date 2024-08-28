@@ -115,6 +115,22 @@ export const deletarCategoriaDespesa = (categoriaId) => {
   return api.delete(`/categoriadespesa/${categoriaId}`);
 };
 
+export const buscarCategoriaReceitaPorId = (categoriaId) => {
+  return api.get(`/categoriareceita/${categoriaId}`);
+};
+
+export const atualizarCategoriaReceita = (categoriaId, categoriaData) => {
+  return api.put(`/categoriareceita/${categoriaId}`, categoriaData);
+};
+
+export const registrarCategoriaReceita = (categoriaData) => {
+  return api.post("/categoriareceita", categoriaData);
+};
+
+export const deletarCategoriaReceita = (categoriaId) => {
+  return api.delete(`/categoriareceita/${categoriaId}`);
+};
+
 export const atualizarPaga = (despesaId, novaPaga) => {
   return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
     headers: {

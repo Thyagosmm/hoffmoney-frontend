@@ -17,6 +17,9 @@ import FormReceita from "./views/receita/FormReceita";
 import FormCategoriaDespesa from "./views/categoriadespesa/FormCategoriaDespesa";
 import EditarCategoriaDespesa from "./views/categoriadespesa/EditarCategoriaDespesa";
 import ListaCategoriaDespesa from "./views/categoriadespesa/ListaCategoriaDespesa";
+import FormCategoriaReceita from "./views/categoriareceita/FormCategoriaReceita";
+import EditarCategoriaReceita from "./views/categoriareceita/EditarCategoriaReceita";
+import ListaCategoriaReceita from "./views/categoriareceita/ListaCategoriaReceita";
 
 function App() {
   return (
@@ -24,6 +27,9 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/novacategoriareceita" element={<FormCategoriaReceita />} />
+          <Route path="/editarcategoriareceita/:id" element={<EditarCategoriaReceita />} />
+          <Route path="/categoriareceita" element={<ListaCategoriaReceita />} />
           <Route path="/novacategoriadespesa" element={<FormCategoriaDespesa />} />
           <Route path="/editarcategoriadespesa/:id" element={<EditarCategoriaDespesa />} />
           <Route path="/categoriadespesa" element={<ListaCategoriaDespesa />} />

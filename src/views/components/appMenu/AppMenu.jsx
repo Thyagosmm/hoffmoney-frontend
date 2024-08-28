@@ -110,6 +110,11 @@ const AppMenu = () => {
                       Receitas
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link page-scroll" to="/categoriareceita">
+                      Categoria Receita
+                    </Link>
+                  </li>
                   <li
                     className="nav-item dropdown"
                     onMouseEnter={toggleDropdown}
