@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Dropdown, Radio, Input } from "semantic-ui-react";
+import { Form, Button, Dropdown, Input } from "semantic-ui-react";
 import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -10,25 +10,24 @@ import {
   deletarDespesa,
   atualizarDespesa,
   buscarDespesaPorId,
+  listarCategoriasDespesa,
 } from "../../api/UserApi";
 import AppMenu from "../components/appMenu/AppMenu";
 import { useNavigate } from "react-router-dom";
 
 const FormDespesa = ({ despesaId }) => {
   const [name, setName] = useState("");
-  const [value, setValue] = useState(""); // Valor da despesa
-  const [recurrence, setRecurrence] = useState("");
-  const [frequency, setFrequency] = useState("");
+  const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
-  const [userId, setUSerId] = useState("");
+  const [userId, setUserId] = useState("");
   const [category, setCategory] = useState("");
-  const [newCategory, setNewCategory] = useState("");
+  const [categoryOptions, setCategoryOptions] = useState([]);
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUSerId(localStorage.getItem("userId"));
+    setUserId(localStorage.getItem("userId"));
     if (despesaId) {
       const fetchDespesa = async () => {
         try {
@@ -37,7 +36,6 @@ const FormDespesa = ({ despesaId }) => {
           setName(despesa.nome);
           setValue(despesa.valor);
           setCategory(despesa.categoria);
-          setFrequency(despesa.periodo);
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
         } catch (error) {
@@ -47,6 +45,22 @@ const FormDespesa = ({ despesaId }) => {
       };
       fetchDespesa();
     }
+
+    const fetchCategorias = async () => {
+      try {
+        const response = await listarCategoriasDespesa();
+        const categorias = response.data.map(categoria => ({
+          key: categoria.id,
+          text: categoria.descricaoDespesa,
+          value: categoria.id,
+        }));
+        setCategoryOptions(categorias);
+      } catch (error) {
+        notifyError("Erro ao carregar categorias.", error);
+      }
+    };
+
+    fetchCategorias();
   }, [despesaId]);
 
   const validate = () => {
@@ -59,34 +73,16 @@ const FormDespesa = ({ despesaId }) => {
       newErrors.value = "Por favor, insira o valor.";
       notifyError("Por favor, insira o valor.");
     }
-    if (recurrence) {
-      if (!frequency.trim()) {
-        newErrors.frequency = "Por favor, insira a frequência.";
-        notifyError("Por favor, insira a frequência.");
-      }
-    }
-    if (date == null) {
+    if (!date || isNaN(date.getTime())) {
       notifyError("A data não pode ser nula ou indefinida.");
     }
-    if (!category.trim()) {
-      newErrors.category = "Por favor, insira a categoria.";
-      notifyError("Por favor, insira a categoria.");
-    }
-    if (category === "Outros") {
-      setCategory(newCategory);
+    if (!category) {
+      newErrors.category = "Por favor, selecione uma categoria.";
+      notifyError("Por favor, selecione uma categoria.");
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  const categoryOptions = [
-    { key: "Alimentação", text: "Alimentação", value: "Alimentação" },
-    { key: "Transporte", text: "Transporte", value: "Transporte" },
-    { key: "Aluguel", text: "Aluguel", value: "Aluguel" },
-    { key: "Utilidades", text: "Utilidades", value: "Utilidades" },
-    { key: "Entretenimento", text: "Entretenimento", value: "Entretenimento" },
-    { key: "Outros", text: "Outros", value: "Outros" },
-  ];
 
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
@@ -101,16 +97,13 @@ const FormDespesa = ({ despesaId }) => {
       const formattedDate = formatDate(date);
 
       try {
-        const categoriaFinal =
-          category === "outros" ? novaCategoria : newCategory;
         const response = await registrarDespesa({
           usuario: { id: userId },
           nome: name,
           descricao: description,
           valor: value,
-          categoria: categoriaFinal,
-          periodo: frequency,
-          dataDeCobranca: formattedDate,
+          categoria: category,
+          dataDeCobranca: formattedDate, // Envia a data formatada
           paga: false,
         });
         console.log("Despesa registrada:", response.data);
@@ -121,7 +114,6 @@ const FormDespesa = ({ despesaId }) => {
       } catch (error) {
         notifyError(mensagemErro);
       }
-    } else {
     }
   };
 
@@ -129,9 +121,6 @@ const FormDespesa = ({ despesaId }) => {
     if (validate()) {
       e.preventDefault();
       const formattedDate = formatDate(date);
-      if (category === "Outros") {
-        setCategory(newCategory);
-      }
       try {
         const response = await atualizarDespesa(despesaId, {
           usuario: { id: userId }, // Substituir pelo ID do usuário logado
@@ -139,7 +128,6 @@ const FormDespesa = ({ despesaId }) => {
           descricao: description,
           valor: value,
           categoria: category,
-          periodo: frequency,
           dataDeCobranca: formattedDate,
           paga: false,
         });
@@ -149,10 +137,9 @@ const FormDespesa = ({ despesaId }) => {
         notifyError(mensagemErro);
         console.error("Erro ao atualizar a despesa:", error);
       }
-    } else {
-      notifyError("Por favor, corrija os campos vermelhos no formulário.");
     }
   };
+
   const handleDeletarDespesa = async (e) => {
     e.preventDefault();
     try {
@@ -207,22 +194,11 @@ const FormDespesa = ({ despesaId }) => {
                     placeholder="Selecione Categoria"
                     fluid
                     selection
-                    options={categoryOptions}
+                    options={categoryOptions} // Usar categorias dinâmicas
                     value={category}
                     onChange={(e, { value }) => setCategory(value)}
                   />
                 </Form.Field>
-                {category === "Outros" && (
-                  <Form.Field error={!!errors.newCategory}>
-                    <label>Nova Categoria</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite o nome da nova categoria"
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value)}
-                    />
-                  </Form.Field>
-                )}
 
                 <Form.Field error={!!errors.description}>
                   <label>Descrição</label>

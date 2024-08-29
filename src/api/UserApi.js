@@ -23,8 +23,8 @@ export async function login(email, senha) {
   }
 }
 
-export const registrarDespesa = (despesaData) => {
-  return api.post("/despesas", despesaData);
+export const registrarDespesa = (despesa) => {
+  return api.post("/despesas", despesa);
 };
 
 export const listarDespesas = () => {
@@ -97,6 +97,10 @@ export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
 
 export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
+};
+
+export const listarCategoriasDespesa = () => {
+  return api.get("/categoriadespesa");
 };
 
 export const buscarCategoriaDespesaPorId = (categoriaId) => {
