@@ -20,7 +20,7 @@ const EditarCategoriaDespesa = () => {
       try {
         const response = await buscarCategoriaDespesaPorId(id); 
         const categoriaData = response.data;
-        setDescription(categoriaData.descricaoDespesa);
+        setDescription(categoriaData.descricaoCategoriaDespesa);
       } catch (error) {
         notifyError("Erro ao carregar a categoria de despesa.");
         console.error("Erro ao carregar a categoria:", error);
@@ -43,7 +43,7 @@ const EditarCategoriaDespesa = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaDespesa(id, { descricaoDespesa: description });
+        await atualizarCategoriaDespesa(id, { descricaoCategoriaDespesa: description });
         notifySuccess("Categoria atualizada com sucesso!");
         navigate("/categoriadespesa");
       } catch (error) {

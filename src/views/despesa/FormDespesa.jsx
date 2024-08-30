@@ -35,7 +35,7 @@ const FormDespesa = ({ despesaId }) => {
           const despesa = response.data;
           setName(despesa.nome);
           setValue(despesa.valor);
-          setCategory(despesa.categoria);
+          setCategory(despesa.categoria.id);
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
         } catch (error) {
@@ -51,7 +51,7 @@ const FormDespesa = ({ despesaId }) => {
         const response = await listarCategoriasDespesa();
         const categorias = response.data.map(categoria => ({
           key: categoria.id,
-          text: categoria.descricaoDespesa,
+          text: categoria.descricaoCategoriaDespesa,
           value: categoria.id,
         }));
         setCategoryOptions(categorias);
@@ -88,7 +88,7 @@ const FormDespesa = ({ despesaId }) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
 
   const handleRegistrarDespesa = async (e) => {
@@ -102,7 +102,7 @@ const FormDespesa = ({ despesaId }) => {
           nome: name,
           descricao: description,
           valor: value,
-          categoria: category,
+          categoria: { descricaoCategoriaDespesa: category},
           dataDeCobranca: formattedDate, // Envia a data formatada
           paga: false,
         });

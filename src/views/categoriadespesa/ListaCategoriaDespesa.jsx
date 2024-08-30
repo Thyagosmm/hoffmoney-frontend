@@ -113,7 +113,7 @@ const ListaCategoriaDespesa = () => {
                     <List.Content>
                       <List.Header>{categoria.nome}</List.Header>
                       <List.Description>
-                        {categoria.descricaoDespesa}
+                        {categoria.descricaoCategoriaDespesa}
                       </List.Description>
                     </List.Content>
                   </List.Item>

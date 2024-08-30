@@ -40,7 +40,7 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
     if (validate()) {
       setLoading(true);
       try {
-        await registrarCategoriaDespesa({ descricaoDespesa: description });
+        await registrarCategoriaDespesa({ descricaoCategoriaDespesa: description });
         notifySuccess("Categoria registrada com sucesso!");
         navigate("/categoriadespesa");
       } catch (error) {
