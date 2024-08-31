@@ -15,7 +15,9 @@ import {
 } from "semantic-ui-react";
 import {
   atualizarPaga,
+  decrementarSaldo,
   deletarDespesa,
+  incrementarSaldo,
   listarDespesas,
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
@@ -24,6 +26,7 @@ import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
+  const [valorDespesa, setValorDespesa] = useState(0);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -148,26 +151,29 @@ const ListaDespesas = () => {
     }
   };
 
-  const handleOpenModal = (id, action) => {
+  const handleOpenModal = (id, action, valor) => {
     setDespesaToEdit(id);
     setActionType(action);
+    setValorDespesa(valor); // Armazene o valor da despesa no estado
     setModalOpen(true);
   };
   const handleAtualizarPaga = async () => {
     try {
       const response = await atualizarPaga(despesaToEdit, true);
+      // Decrementar o saldo do usuário
+      console.log(response.data);
+      await decrementarSaldo(valorDespesa);
+
       // Atualize o estado da despesa localmente
       setDespesas((prevDespesas) =>
         prevDespesas.map((despesa) =>
           despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa,
         ),
       );
-      console.log("Despesa atualizada com sucesso:", response.status);
-      setModalOpen(false);
-      notifySuccess("Despesa paga com sucesso!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      if (response.data) {
+        notifySuccess("Despesa paga com sucesso!");
+        handleOpenModal(false);
+      }
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
     }
@@ -267,7 +273,8 @@ const ListaDespesas = () => {
         <div className="despesas">
           <Segment className="segment-despesas">
             <Menu>
-            <h2 className="header-nao-pagas">Despesas Não Pagas</h2></Menu>
+              <h2 className="header-nao-pagas">Despesas Não Pagas</h2>
+            </Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasNaoPagas.length > 0 ? (
                 despesasNaoPagas.map((despesa) => (
@@ -276,7 +283,9 @@ const ListaDespesas = () => {
                       <Button
                         icon
                         color="green"
-                        onClick={() => handleOpenModal(despesa.id, "check")}
+                        onClick={() =>
+                          handleOpenModal(despesa.id, "pagar", despesa.valor)
+                        }
                       >
                         <Icon name="check" />
                       </Button>
@@ -310,8 +319,10 @@ const ListaDespesas = () => {
               )}
             </List>
           </Segment>
-          <Segment className="segment-despesas"><Menu>
-            <h2 className="header-pagas">Despesas Pagas</h2></Menu>
+          <Segment className="segment-despesas">
+            <Menu>
+              <h2 className="header-pagas">Despesas Pagas</h2>
+            </Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasPagas.length > 0 ? (
                 despesasPagas.map((despesa) => (

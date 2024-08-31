@@ -8,6 +8,9 @@ import { Button } from "semantic-ui-react";
 Chart.register(ArcElement, Tooltip, Legend);
 
 function Limite() {
+  const [porcentagens, setPorcentagens] = useState([]);
+  const [categoriasAgrupadas, setCategoriasAgrupadas] = useState({});
+
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -34,6 +37,17 @@ function Limite() {
     ],
   });
 
+  const agruparCategorias = (categorias) => {
+    return categorias.reduce((acc, categoria) => {
+      const { descricao } = categoria;
+      if (!acc[descricao]) {
+        acc[descricao] = [];
+      }
+      acc[descricao].push(categoria);
+      return acc;
+    }, {});
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,17 +61,28 @@ function Limite() {
           (acc, despesa) => acc + despesa.valor,
           0,
         );
-        const categorias = despesasPagas.map(
-          (despesa) => despesa.categoriaDespesa.descricaoCategoriaDespesa,
+
+        // Agrupar categorias
+        const categorias = despesasPagas.map((despesa) => ({
+          descricao: despesa.categoriaDespesa.descricaoCategoriaDespesa,
+          valor: despesa.valor,
+        }));
+
+        const agrupadas = agruparCategorias(categorias);
+        setCategoriasAgrupadas(agrupadas);
+
+        // Calcular valores e porcentagens
+        const labels = Object.keys(agrupadas);
+        const valores = labels.map((label) =>
+          agrupadas[label].reduce((acc, categoria) => acc + categoria.valor, 0),
         );
-        const valores = despesasPagas.map((despesa) => despesa.valor);
         const porcentagens = valores.map((valor) =>
           ((valor / total) * 100).toFixed(2),
         );
 
         setChartData((prevData) => ({
           ...prevData,
-          labels: categorias,
+          labels: labels,
           datasets: [
             {
               ...prevData.datasets[0],
@@ -73,7 +98,6 @@ function Limite() {
 
     fetchData();
   }, []);
-  const [porcentagens, setPorcentagens] = useState([]);
 
   const options = {
     borderRadius: 7,
