@@ -19,7 +19,7 @@ const Dashboard = () => {
           <Container className="container-bordered acoes-container">
             <h3>Ações</h3>
 
-            <Acoes />
+            <AcoesPreenchidas />
           </Container>
         </Container>
         <Container className="container-group">
