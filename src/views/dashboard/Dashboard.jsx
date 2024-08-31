@@ -5,6 +5,7 @@ import AcoesPreenchidas from "../components/acoes/AcoesPreenchidas";
 import Limite from "../components/graficos/Limite";
 import Line from "../components/graficos/Line";
 import "./Dashboard.css"; // Importa o arquivo CSS
+import Acoes from "../components/acoes/Acoes";
 
 const Dashboard = () => {
   return (
@@ -18,7 +19,7 @@ const Dashboard = () => {
           <Container className="container-bordered acoes-container">
             <h3>Ações</h3>
 
-            <AcoesPreenchidas />
+            <Acoes />
           </Container>
         </Container>
         <Container className="container-group">

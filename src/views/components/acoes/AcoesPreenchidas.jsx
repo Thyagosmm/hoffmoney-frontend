@@ -1,4 +1,5 @@
-const Acoes = () => {
+import "./Acoes.css";
+const AcoesPreenchidas = () => {
   return (
     <div class="acoes">
       <div class="ui grid lista-acoes">
@@ -104,4 +105,4 @@ const Acoes = () => {
     </div>
   );
 };
-export default Acoes;
+export default AcoesPreenchidas;

@@ -12,7 +12,6 @@ function Limite() {
     labels: [],
     datasets: [
       {
-        label: "Despesas",
         data: [],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -66,7 +65,6 @@ function Limite() {
             },
           ],
         }));
-
         setPorcentagens(porcentagens);
       } catch (error) {
         console.error("Erro ao buscar dados das despesas", error);
