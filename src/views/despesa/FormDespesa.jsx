@@ -102,7 +102,7 @@ const FormDespesa = ({ despesaId }) => {
           nome: name,
           descricao: description,
           valor: value,
-          categoria: { descricaoCategoriaDespesa: category},
+          categoriaDespesa: { id: category },
           dataDeCobranca: formattedDate, // Envia a data formatada
           paga: false,
         });

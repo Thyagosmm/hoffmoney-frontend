@@ -48,7 +48,9 @@ function Limite() {
           (acc, despesa) => acc + despesa.valor,
           0,
         );
-        const categorias = despesasPagas.map((despesa) => despesa.categoria);
+        const categorias = despesasPagas.map(
+          (despesa) => despesa.categoriaDespesa.descricaoCategoriaDespesa,
+        );
         const valores = despesasPagas.map((despesa) => despesa.valor);
         const porcentagens = valores.map((valor) =>
           ((valor / total) * 100).toFixed(2),

@@ -75,6 +75,7 @@ const FormUsuarioRegister = () => {
         nome: name,
         email,
         senha: password,
+        saldo: 0,
       });
       console.log("User registered:", response.data);
       notifySuccess("Usuário registrado com sucesso!");
