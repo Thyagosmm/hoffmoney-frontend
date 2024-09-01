@@ -21,8 +21,8 @@ const FormDespesa = ({ despesaId }) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
   const [userId, setUserId] = useState("");
-  const [category, setCategory] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [idCategoriaDespesa, setIdCategoriaDespesa] = useState("");
+  const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const FormDespesa = ({ despesaId }) => {
           const despesa = response.data;
           setName(despesa.nome);
           setValue(despesa.valor);
-          setCategory(despesa.categoria.id);
+          setIdCategoriaDespesa(despesa.categoriaDespesa.id);
           setDescription(despesa.descricao);
           setDate(new Date(despesa.dataDeCobranca));
         } catch (error) {
@@ -49,12 +49,12 @@ const FormDespesa = ({ despesaId }) => {
     const fetchCategorias = async () => {
       try {
         const response = await listarCategoriasDespesa();
-        const categorias = response.data.map(categoria => ({
+        const dropDownCategoriaDespesa = response.data.map(categoria => ({
           key: categoria.id,
           text: categoria.descricaoCategoriaDespesa,
           value: categoria.id,
         }));
-        setCategoryOptions(categorias);
+        setListaCategoriaDespesa(dropDownCategoriaDespesa);
       } catch (error) {
         notifyError("Erro ao carregar categorias.", error);
       }
@@ -76,8 +76,8 @@ const FormDespesa = ({ despesaId }) => {
     if (!date || isNaN(date.getTime())) {
       notifyError("A data não pode ser nula ou indefinida.");
     }
-    if (!category) {
-      newErrors.category = "Por favor, selecione uma categoria.";
+    if (!idCategoriaDespesa) {
+      newErrors.categoriaDespesa = "Por favor, selecione uma categoria.";
       notifyError("Por favor, selecione uma categoria.");
     }
     setErrors(newErrors);
@@ -102,7 +102,7 @@ const FormDespesa = ({ despesaId }) => {
           nome: name,
           descricao: description,
           valor: value,
-          categoria: { descricaoCategoriaDespesa: category},
+          idCategoriaDespesa: idCategoriaDespesa,
           dataDeCobranca: formattedDate, // Envia a data formatada
           paga: false,
         });
@@ -123,11 +123,11 @@ const FormDespesa = ({ despesaId }) => {
       const formattedDate = formatDate(date);
       try {
         const response = await atualizarDespesa(despesaId, {
-          usuario: { id: userId }, // Substituir pelo ID do usuário logado
+          usuario: { id: userId },
           nome: name,
           descricao: description,
           valor: value,
-          categoria: category,
+          idCategoriaDespesa: idCategoriaDespesa,
           dataDeCobranca: formattedDate,
           paga: false,
         });
@@ -187,16 +187,16 @@ const FormDespesa = ({ despesaId }) => {
                     fixedDecimalScale={true}
                   />
                 </Form.Field>
-                <Form.Field error={!!errors.category}>
+                <Form.Field error={!!errors.idCategoriaDespesa}>
                   <label>Categoria</label>
                   <Dropdown
                     className="input-field"
                     placeholder="Selecione Categoria"
                     fluid
                     selection
-                    options={categoryOptions} // Usar categorias dinâmicas
-                    value={category}
-                    onChange={(e, { value }) => setCategory(value)}
+                    options={listaCategoriaDespesa}
+                    value={idCategoriaDespesa}
+                    onChange={(e, { value }) => setIdCategoriaDespesa(value)}
                   />
                 </Form.Field>
 

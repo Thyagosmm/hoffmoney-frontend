@@ -32,7 +32,10 @@ export const listarDespesas = () => {
   if (!userId) {
     throw new Error("Usuário não está logado.");
   }
-  return api.get(`/despesas/${userId}`);
+  return api.get(`/despesas/${userId}`).then((response) => {
+    console.log(response.data); // Verifique a estrutura dos dados retornados
+    return response;
+  });
 };
 
 export const buscarDespesaPorId = (usuarioId, despesaId) => {
