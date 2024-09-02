@@ -55,11 +55,9 @@ export default function FormLogin() {
     console.log("Email:", e.target.value);
     const emailValue = e.target.value;
     setEmail(emailValue);
-    // Chamar a função de validação
     setIsEmailValid(validateEmail(emailValue));
   };
 
-  // Definir uma função de validação
   const validateEmail = (email) => {
     const re =
       /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;

@@ -16,18 +16,15 @@ const FormUsuarioRegister = () => {
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
-    // Chamar a função de validação
     setIsEmailValid(validateEmail(emailValue));
   };
 
-  // Definir uma função de validação
   const validateEmail = (email) => {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
     return re.test(String(email).toLowerCase());
   };
 
-  // Função para verificar a senha
   const verificarSenha = (password) => {
     const criterios = {
       comprimento: password.length >= 8,
@@ -36,25 +33,22 @@ const FormUsuarioRegister = () => {
     return criterios;
   };
 
-  // Função para calcular caracteres restantes
   const calcularCaracteresRestantes = (password) => {
     return 8 - password.length;
   };
 
-  // Manipulador de mudança de input
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     const resultado = verificarSenha(newPassword);
     setCharsRemaining(calcularCaracteresRestantes(newPassword));
-    console.log(resultado); // Aqui você pode substituir por uma lógica para exibir os resultados na UI
-    console.log(password); // Aqui você pode substituir por uma lógica para exibir os resultados na UI
+    console.log(resultado); 
+    console.log(password);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Validar campos
     if (!name || !email || !password) {
       notifyError("Todos os campos são obrigatórios.");
       return;
@@ -78,8 +72,7 @@ const FormUsuarioRegister = () => {
       });
       console.log("User registered:", response.data);
       notifySuccess("Usuário registrado com sucesso!");
-      setTimeout(() => (window.location.href = "/login"), 5000);
-      // Redirecionar ou limpar campos...
+      setTimeout(() => (window.location.href = "/login"), 1500);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.error("Error registering user:", error);

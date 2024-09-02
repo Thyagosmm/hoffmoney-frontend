@@ -166,7 +166,7 @@ const ListaDespesas = () => {
       notifySuccess("Despesa paga com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1500);
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
     }

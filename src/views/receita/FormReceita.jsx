@@ -119,7 +119,7 @@ const FormReceita = ({ receitaId }) => {
         notifySuccess("Receita registrada com sucesso!");
         setTimeout(() => {
           navigate("/receitas");
-        }, 3000);
+        }, 1500);
       } catch (error) {
         notifyError(mensagemErro);
       }
