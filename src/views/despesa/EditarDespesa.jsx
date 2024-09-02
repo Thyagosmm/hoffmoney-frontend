@@ -3,7 +3,7 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
-import { buscarDespesaPorId, atualizarDespesa } from "../../api/UserApi";
+import { buscarDespesaPorId, atualizarDespesa, listarCategoriasDespesa } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -13,6 +13,8 @@ const EditarDespesa = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
+  const [paga, setPaga] = useState(false);  // Estado inicial definido como false
+  const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { id } = useParams();
@@ -26,7 +28,7 @@ const EditarDespesa = () => {
         const despesaData = response.data;
         setNome(despesaData.nome);
         setValor(despesaData.valor);
-        setCategoria(despesaData.categoria);
+        setCategoria(despesaData.categoriaDespesa.id);  // Atualizado para usar id da categoria
         setDescricao(despesaData.descricao);
         const dataDespesa = new Date(despesaData.dataDeCobranca);
         if (!isNaN(dataDespesa.getTime())) {
@@ -34,6 +36,7 @@ const EditarDespesa = () => {
         } else {
           console.error("Data inválida:", despesaData.dataDeCobranca);
         }
+        setPaga(despesaData.paga ?? false);  // Define paga como false se for null ou undefined
       } catch (error) {
         console.error("Erro ao carregar a despesa", error);
         setError("Erro ao carregar a despesa.");
@@ -41,34 +44,30 @@ const EditarDespesa = () => {
     };
 
     carregarDespesa();
+
+    const fetchCategorias = async () => {
+      try {
+        const response = await listarCategoriasDespesa();
+        const dropDownCategoriaDespesa = response.data.map(categoria => ({
+          key: categoria.id,
+          text: categoria.descricaoCategoriaDespesa,
+          value: categoria.id,
+        }));
+        setListaCategoriaDespesa(dropDownCategoriaDespesa);
+      } catch (error) {
+        console.error("Erro ao carregar categorias", error);
+        setError("Erro ao carregar categorias.");
+      }
+    };
+
+    fetchCategorias();
   }, [id, usuarioId]);
-
-  const recOptions = [
-    { key: "sim", text: "Sim", value: true },
-    { key: "nao", text: "Não", value: false },
-  ];
-
-  const freqOptions = [
-    { key: "diario", text: "Diariamente", value: "diario" },
-    { key: "semanal", text: "Semanalmente", value: "semanal" },
-    { key: "mensal", text: "Mensalmente", value: "mensal" },
-    { key: "anual", text: "Anualmente", value: "anual" },
-  ];
-
-  const categoryOptions = [
-    { key: "Alimentação", text: "Alimentação", value: "Alimentação" },
-    { key: "Transporte", text: "Transporte", value: "Transporte" },
-    { key: "Aluguel", text: "Aluguel", value: "Aluguel" },
-    { key: "Utilidades", text: "Utilidades", value: "Utilidades" },
-    { key: "Entretenimento", text: "Entretenimento", value: "Entretenimento" },
-    { key: "Outros", text: "Outros", value: "Outros" },
-  ];
 
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
 
   const handleSubmit = async (e) => {
@@ -78,9 +77,10 @@ const EditarDespesa = () => {
       await atualizarDespesa(usuarioId, id, {
         nome,
         valor,
-        categoria,
+        idCategoriaDespesa: categoria,  // Atualizado para usar o id da categoria
         descricao,
         dataDeCobranca: formattedDate,
+        paga: paga  // Certificando que "paga" é enviado com valor false por padrão
       });
       setSuccess("Despesa atualizada com sucesso!");
       navigate("/despesas");
@@ -97,63 +97,48 @@ const EditarDespesa = () => {
         <div className="despesa">
           <div className="despesa-form">
             <h1>Editar Despesa</h1>
-            <div className="form-content">
-              <div className="form-fields">
-                <Form onSubmit={handleSubmit}>
-                  <Form.Field>
-                    <label>Nome</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite o nome da Despesa"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      required
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Valor</label>
-                    <input
-                      className="input-field"
-                      type="number"
-                      placeholder="Digite o valor da Despesa"
-                      value={valor}
-                      onChange={(e) => setValor(e.target.value)}
-                      required
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Categoria</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione a Categoria"
-                      fluid
-                      selection
-                      options={categoryOptions}
-                      value={categoria}
-                      onChange={(e, { value }) => setCategoria(value)}
-                    />
-                  </Form.Field>
-
-                  <Form.Field>
-                    <label>Descrição</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite uma descrição para a despesa"
-                      value={descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
-                    />
-                  </Form.Field>
-                  <Button type="submit" className="form-button">
-                    Salvar
-                  </Button>
-                </Form>
-              </div>
-              <div className="calendar-container">
+            <Form onSubmit={handleSubmit}>
+              <Form.Field>
+                <label>Nome</label>
+                <input
+                  placeholder="Digite o nome da Despesa"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Valor</label>
+                <input
+                  placeholder="Digite o valor da Despesa"
+                  value={valor}
+                  onChange={(e) => setValor(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Categoria</label>
+                <Dropdown
+                  placeholder="Selecione a categoria"
+                  fluid
+                  selection
+                  options={listaCategoriaDespesa}  // Carregando opções de categorias
+                  value={categoria}
+                  onChange={(e, { value }) => setCategoria(value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Descrição</label>
+                <input
+                  placeholder="Digite uma descrição para a despesa"
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Data</label>
                 <Calendar onChange={setData} value={data} />
-              </div>
-            </div>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
+              </Form.Field>
+              <Button type="submit" primary>Salvar</Button>
+            </Form>
           </div>
         </div>
       </div>

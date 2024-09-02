@@ -110,7 +110,7 @@ const FormDespesa = ({ despesaId }) => {
         notifySuccess("Despesa registrada com sucesso!");
         setTimeout(() => {
           navigate("/despesas");
-        }, 3000);
+        }, 1500);
       } catch (error) {
         notifyError(mensagemErro);
       }
@@ -148,7 +148,7 @@ const FormDespesa = ({ despesaId }) => {
       notifySuccess("Despesa deletada com sucesso!");
       setTimeout(() => {
         navigate("/despesas");
-      }, 5000);
+      }, 1500);
     } catch (error) {
       console.error("Erro ao deletar a despesa:", error);
       notifyError("Erro ao deletar a despesa.");

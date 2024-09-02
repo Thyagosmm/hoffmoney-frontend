@@ -27,8 +27,8 @@ const ListaDespesas = () => {
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [despesaToEdit, setDespesaToEdit] = useState(null);
-  const [actionType, setActionType] = useState(""); // Novo estado para controlar o tipo de ação
+  const [despesaId, setDespesaId] = useState(null);
+  const [actionType, setActionType] = useState("");
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
@@ -131,17 +131,17 @@ const ListaDespesas = () => {
       console.error("Usuário não autenticado.");
       return;
     }
-
+  
     try {
-      await deletarDespesa(usuarioId, despesaToEdit);
+      await deletarDespesa(usuarioId, despesaId);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit),
+        prevDespesas.filter((despesa) => despesa.id !== despesaId),
       );
       setModalOpen(false);
       notifySuccess("Despesa deletada com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1500);
     } catch (error) {
       console.error("Erro ao excluir despesa:", error);
       notifyError("Não foi possível excluir a despesa.");
@@ -149,17 +149,16 @@ const ListaDespesas = () => {
   };
 
   const handleOpenModal = (id, action) => {
-    setDespesaToEdit(id);
+    setDespesaId(id);
     setActionType(action);
     setModalOpen(true);
   };
   const handleAtualizarPaga = async () => {
     try {
-      const response = await atualizarPaga(despesaToEdit, true);
-      // Atualize o estado da despesa localmente
+      const response = await atualizarPaga(despesaId, true);
       setDespesas((prevDespesas) =>
         prevDespesas.map((despesa) =>
-          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa,
+          despesa.id === despesaId ? { ...despesa, paga: true } : despesa,
         ),
       );
       console.log("Despesa atualizada com sucesso:", response.status);
