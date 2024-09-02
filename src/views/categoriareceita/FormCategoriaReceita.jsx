@@ -17,7 +17,7 @@ const FormCategoriaReceita = ({ categoriaId }) => {
       const fetchCategoria = async () => {
         try {
           const response = await buscarCategoriaReceitaPorId(categoriaId);
-          setDescription(response.data.descricaoReceita);
+          setDescription(response.data.descricao);
         } catch (error) {
           notifyError("Erro ao buscar a categoria de receita.");
           console.error(error);
@@ -40,7 +40,7 @@ const FormCategoriaReceita = ({ categoriaId }) => {
     if (validate()) {
       setLoading(true);
       try {
-        await registrarCategoriaReceita({ descricaoReceita: description });
+        await registrarCategoriaReceita({ descricaoCategoriaReceita: description });
         notifySuccess("Categoria registrada com sucesso!");
         navigate("/categoriareceita");
       } catch (error) {

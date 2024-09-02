@@ -7,6 +7,8 @@ const api = axios.create({
   },
 });
 
+// Funções de USUÁRIO
+
 export const registerUser = (userData) => {
   return api.post("/usuario", userData);
 };
@@ -22,6 +24,35 @@ export async function login(email, senha) {
     throw error;
   }
 }
+export const updateUser = (userId, userData) => {
+  return api.put(`/usuario/${userId}`, userData);
+};
+
+export const getUser = (userId) => {
+  return api.get(`/usuario/${userId}`);
+};
+
+// Funções de SALDO
+
+export const incrementarSaldo = (valor) => {
+  const userId = localStorage.getItem("userId");
+  return api.put(`/usuario/incrementar`, { id: userId, valor });
+};
+
+export const decrementarSaldo = (valor) => {
+  const userId = localStorage.getItem("userId");
+  return api.put(`/usuario/decrementar`, { id: userId, valor });
+};
+
+export const consultarSaldo = (userId) => {
+  return api.get(`/usuario/saldo`, {
+    params: {
+      id: userId,
+    },
+  });
+};
+
+// Funções de DESPESA
 
 export const registrarDespesa = (despesa) => {
   return api.post("/despesas", despesa);
@@ -33,7 +64,7 @@ export const listarDespesas = () => {
     throw new Error("Usuário não está logado.");
   }
   return api.get(`/despesas/${userId}`).then((response) => {
-    console.log(response.data); // Verifique a estrutura dos dados retornados
+    console.log(response.data);
     return response;
   });
 };
@@ -50,36 +81,18 @@ export const deletarDespesa = (usuarioId, despesaId) => {
   return api.delete(`/despesas/${usuarioId}/${despesaId}`);
 };
 
-export const incrementarSaldo = (valor) => {
-  const userId = localStorage.getItem("userId");
-
-  return api.put(`/usuario/incrementar`, { id: userId, valor });
-};
-
-export const decrementarSaldo = (valor) => {
-  const userId = localStorage.getItem("userId");
-
-  return api.put(`/usuario/decrementar`, { id: userId, valor });
-};
-
-export const consultarSaldo = (userId) => {
-  return api.get(`/usuario/saldo`, {
-    params: {
-      id: userId,
+export const atualizarPaga = (despesaId, novaPaga) => {
+  return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
+    headers: {
+      "Content-Type": "application/json",
     },
   });
 };
 
-export const updateUser = (userId, userData) => {
-  return api.put(`/usuario/${userId}`, userData);
-};
+// Funções de RECEITA
 
-export const getUser = (userId) => {
-  return api.get(`/usuario/${userId}`);
-};
-
-export const registrarReceita = (receitaData) => {
-  return api.post("/receitas", receitaData);
+export const registrarReceita = (receita) => {
+  return api.post("/receitas", receita);
 };
 
 export const listarReceitas = () => {
@@ -87,20 +100,25 @@ export const listarReceitas = () => {
   if (!userId) {
     throw new Error("Usuário não está logado.");
   }
-  return api.get(`/receitas/usuario/${userId}`);
+  return api.get(`/receitas/${userId}`).then((response) => {
+    console.log(response.data);
+    return response;
+  });
 };
 
 export const buscarReceitaPorId = (usuarioId, receitaId) => {
-  return api.get(`/receitas/usuario/${usuarioId}/${receitaId}`);
+  return api.get(`/receitas/${usuarioId}/${receitaId}`);
 };
 
 export const atualizarReceita = (usuarioId, receitaId, receitaData) => {
-  return api.put(`/receitas/usuario/${usuarioId}/${receitaId}`, receitaData);
+  return api.put(`/receitas/${usuarioId}/${receitaId}`, receitaData);
 };
 
 export const deletarReceita = (usuarioId, receitaId) => {
-  return api.delete(`/receitas/usuario/${usuarioId}/${receitaId}`);
+  return api.delete(`/receitas/${usuarioId}/${receitaId}`);
 };
+
+// Funções de CATEGORIA DE DESPESA
 
 export const listarCategoriasDespesa = () => {
   return api.get("/categoriadespesa");
@@ -122,6 +140,12 @@ export const deletarCategoriaDespesa = (categoriaId) => {
   return api.delete(`/categoriadespesa/${categoriaId}`);
 };
 
+// Funções de CATEGORIA DE RECEITA
+
+export const listarCategoriasReceita = () => {
+  return api.get("/categoriareceita");
+};
+
 export const buscarCategoriaReceitaPorId = (categoriaId) => {
   return api.get(`/categoriareceita/${categoriaId}`);
 };
@@ -136,12 +160,4 @@ export const registrarCategoriaReceita = (categoriaData) => {
 
 export const deletarCategoriaReceita = (categoriaId) => {
   return api.delete(`/categoriareceita/${categoriaId}`);
-};
-
-export const atualizarPaga = (despesaId, novaPaga) => {
-  return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 };
