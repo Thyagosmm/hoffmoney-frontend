@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { format, parse } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Form,
-  Menu,
-  Segment,
-  Icon,
   Button,
   Container,
+  Form,
+  Icon,
   List,
+  Menu,
   Modal,
+  Segment,
   Header as SemanticHeader,
 } from "semantic-ui-react";
 import { listarReceitas, deletarReceita } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { format, parse } from "date-fns";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaReceitas = () => {
   const [receitas, setReceitas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [receitaToDelete, setReceitaToDelete] = useState(null);
+  const [receitaId, setReceitaId] = useState(null);
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
@@ -86,7 +87,10 @@ const ListaReceitas = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8085/api/receitas/filtrar", formData);
+      const response = await axios.post(
+        "http://localhost:8085/api/receitas/filtrar",
+        formData
+      );
       setReceitas(response.data);
     } catch (error) {
       setError(error.message);
@@ -131,9 +135,9 @@ const ListaReceitas = () => {
     }
 
     try {
-      await deletarReceita(usuarioId, receitaToDelete);
+      await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaToDelete)
+        prevReceitas.filter((receita) => receita.id !== receitaId)
       );
       setModalOpen(false);
       notifySuccess("Receita deletada com sucesso!");
@@ -147,7 +151,7 @@ const ListaReceitas = () => {
   };
 
   const handleOpenModal = (id) => {
-    setReceitaToDelete(id);
+    setReceitaId(id);
     setModalOpen(true);
   };
 
@@ -268,8 +272,8 @@ const ListaReceitas = () => {
                   <List.Content>
                     <List.Header>{receita.nome}</List.Header>
                     <List.Description>
-                      Categoria: {receita.categoria} | Valor: {receita.valor}{" "}
-                      | Data de Cobrança: {receita.dataDeCobranca}
+                      Categoria: {receita.categoria} | Valor: {receita.valor} |
+                      Data de Cobrança: {receita.dataDeCobranca}
                     </List.Description>
                   </List.Content>
                 </List.Item>
@@ -287,14 +291,9 @@ const ListaReceitas = () => {
           dimmer="blurring"
           closeIcon
         >
-          <SemanticHeader
-            icon="trash"
-            content="Excluir Receita"
-          />
+          <SemanticHeader icon="trash" content="Excluir Receita" />
           <Modal.Content>
-            <span>
-              Você tem certeza que deseja excluir esta receita?
-            </span>
+            <span>Você tem certeza que deseja excluir esta receita?</span>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => setModalOpen(false)}>

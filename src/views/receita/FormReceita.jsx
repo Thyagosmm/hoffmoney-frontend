@@ -18,25 +18,26 @@ import { useNavigate } from "react-router-dom";
 const FormReceita = ({ receitaId }) => {
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
-  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
   const [userId, setUserId] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [idCategoriaReceita, setIdCategoriaReceita] = useState("");
+  const [listaCategoriaReceita, setlistaCategoriaReceita] = useState([]);
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     setUserId(localStorage.getItem("userId"));
-    
+
     const fetchReceita = async () => {
       if (receitaId) {
         try {
-          const response = await buscarReceitaPorId(receitaId);
+          const userId = localStorage.getItem("userId");
+          const response = await buscarReceitaPorId(userId, receitaId);
           const receita = response.data;
           setName(receita.nome);
           setValue(receita.valor);
-          setCategory(receita.categoria);
+          setIdCategoriaReceita(receita.categoriaReceita.id);
           setDescription(receita.descricao);
           setDate(new Date(receita.dataDeCobranca));
         } catch (error) {
@@ -46,15 +47,16 @@ const FormReceita = ({ receitaId }) => {
       }
     };
     
+
     const fetchCategorias = async () => {
       try {
         const response = await listarCategoriasReceita();
-        const dropDownOptions = response.data.map(cat => ({
+        const dropDownCategoriaReceita = response.data.map((cat) => ({
           key: cat.id,
-          text: cat.descricao,
+          text: cat.descricaoCategoriaReceita,
           value: cat.id,
         }));
-        setCategoryOptions(dropDownOptions);
+        setlistaCategoriaReceita(dropDownCategoriaReceita);
       } catch (error) {
         notifyError("Erro ao carregar categorias.", error);
       }
@@ -77,8 +79,8 @@ const FormReceita = ({ receitaId }) => {
     if (!date || isNaN(date.getTime())) {
       notifyError("A data não pode ser nula ou indefinida.");
     }
-    if (!category) {
-      newErrors.category = "Por favor, selecione uma categoria.";
+    if (!idCategoriaReceita) {
+      newErrors.categoriaReceita = "Por favor, selecione uma categoria.";
       notifyError("Por favor, selecione uma categoria.");
     }
     setErrors(newErrors);
@@ -96,17 +98,19 @@ const FormReceita = ({ receitaId }) => {
     if (validate()) {
       e.preventDefault();
       const formattedDate = formatDate(date);
-
+      const numericValue = parseFloat(value.replace("R$ ", "").replace(".", "").replace(",", "."));
+      
       try {
         const response = await registrarReceita({
           usuario: { id: userId },
           nome: name,
           descricao: description,
-          valor: value,
-          categoria: category,
+          valor: numericValue,
+          idCategoriaReceita: idCategoriaReceita,
           dataDeCobranca: formattedDate,
           paga: false,
         });
+        console.log("Receita registrada:", response.data);
         notifySuccess("Receita registrada com sucesso!");
         setTimeout(() => {
           navigate("/receitas");
@@ -116,6 +120,7 @@ const FormReceita = ({ receitaId }) => {
       }
     }
   };
+  
 
   const handleAtualizarReceita = async (e) => {
     if (validate()) {
@@ -127,7 +132,7 @@ const FormReceita = ({ receitaId }) => {
           nome: name,
           descricao: description,
           valor: value,
-          categoria: category,
+          idCategoriaReceita: idCategoriaReceita,
           dataDeCobranca: formattedDate,
           paga: false,
         });
@@ -186,16 +191,16 @@ const FormReceita = ({ receitaId }) => {
                     fixedDecimalScale={true}
                   />
                 </Form.Field>
-                <Form.Field error={!!errors.category}>
+                <Form.Field error={!!errors.idCategoriaReceita}>
                   <label>Categoria</label>
                   <Dropdown
                     className="input-field"
                     placeholder="Selecione a Categoria"
                     fluid
                     selection
-                    options={categoryOptions}
-                    value={category}
-                    onChange={(e, { value }) => setCategory(value)}
+                    options={listaCategoriaReceita}
+                    value={idCategoriaReceita}
+                    onChange={(e, { value }) => setIdCategoriaReceita(value)}
                   />
                 </Form.Field>
 
@@ -233,7 +238,6 @@ const FormReceita = ({ receitaId }) => {
               </Button>
             )}
           </div>
-          {errors && <div className="error-message">{errors}</div>}
         </div>
       </div>
     </>

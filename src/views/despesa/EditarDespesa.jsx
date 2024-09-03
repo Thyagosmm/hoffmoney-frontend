@@ -28,7 +28,7 @@ const EditarDespesa = () => {
         const despesaData = response.data;
         setNome(despesaData.nome);
         setValor(despesaData.valor);
-        setCategoria(despesaData.categoriaDespesa.id);  // Atualizado para usar id da categoria
+        setCategoria(despesaData.categoriaDespesa.id);
         setDescricao(despesaData.descricao);
         const dataDespesa = new Date(despesaData.dataDeCobranca);
         if (!isNaN(dataDespesa.getTime())) {
@@ -36,7 +36,7 @@ const EditarDespesa = () => {
         } else {
           console.error("Data inválida:", despesaData.dataDeCobranca);
         }
-        setPaga(despesaData.paga ?? false);  // Define paga como false se for null ou undefined
+        setPaga(despesaData.paga ?? false);
       } catch (error) {
         console.error("Erro ao carregar a despesa", error);
         setError("Erro ao carregar a despesa.");
@@ -77,10 +77,10 @@ const EditarDespesa = () => {
       await atualizarDespesa(usuarioId, id, {
         nome,
         valor,
-        idCategoriaDespesa: categoria,  // Atualizado para usar o id da categoria
+        idCategoriaDespesa: categoria,
         descricao,
         dataDeCobranca: formattedDate,
-        paga: paga  // Certificando que "paga" é enviado com valor false por padrão
+        paga: paga
       });
       setSuccess("Despesa atualizada com sucesso!");
       navigate("/despesas");
@@ -120,7 +120,7 @@ const EditarDespesa = () => {
                   placeholder="Selecione a categoria"
                   fluid
                   selection
-                  options={listaCategoriaDespesa}  // Carregando opções de categorias
+                  options={listaCategoriaDespesa}
                   value={categoria}
                   onChange={(e, { value }) => setCategoria(value)}
                 />

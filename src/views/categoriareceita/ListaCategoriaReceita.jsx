@@ -45,6 +45,9 @@ const ListaCategoriaReceita = () => {
       );
       setModalOpen(false);
       notifySuccess("Categoria deletada com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
       notifyError("Não foi possível excluir a categoria.");

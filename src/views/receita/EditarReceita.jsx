@@ -13,6 +13,7 @@ const EditarReceita = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
+  const [paga, setPaga] = useState(false);
   const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -27,7 +28,7 @@ const EditarReceita = () => {
         const receitaData = response.data;
         setNome(receitaData.nome);
         setValor(receitaData.valor);
-        setCategoria(receitaData.categoriaReceita.id);  // Atualizado para usar id da categoria
+        setCategoria(receitaData.categoriaReceita.id);
         setDescricao(receitaData.descricao);
         const dataReceita = new Date(receitaData.dataDeCobranca);
         if (!isNaN(dataReceita.getTime())) {
@@ -35,6 +36,7 @@ const EditarReceita = () => {
         } else {
           console.error("Data inválida:", receitaData.dataDeCobranca);
         }
+        setPaga(despesaData.paga ?? false);
       } catch (error) {
         console.error("Erro ao carregar a receita", error);
         setError("Erro ao carregar a receita.");
@@ -75,9 +77,10 @@ const EditarReceita = () => {
       await atualizarReceita(usuarioId, id, {
         nome,
         valor,
-        idCategoriaReceita: categoria,  // Atualizado para usar o id da categoria
+        idCategoriaReceita: categoria,
         descricao,
         dataDeCobranca: formattedDate,
+        paga: paga
       });
       setSuccess("Receita atualizada com sucesso!");
       navigate("/receitas");
@@ -118,7 +121,7 @@ const EditarReceita = () => {
                   placeholder="Selecione a categoria"
                   fluid
                   selection
-                  options={listaCategoriaReceita}  // Carregando opções de categorias
+                  options={listaCategoriaReceita}
                   value={categoria}
                   onChange={(e, { value }) => setCategoria(value)}
                 />

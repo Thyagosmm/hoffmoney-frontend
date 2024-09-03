@@ -42,7 +42,9 @@ const FormCategoriaReceita = ({ categoriaId }) => {
       try {
         await registrarCategoriaReceita({ descricaoCategoriaReceita: description });
         notifySuccess("Categoria registrada com sucesso!");
-        navigate("/categoriareceita");
+        setTimeout(() => {
+          navigate("/categoriareceita");
+        }, 1500);
       } catch (error) {
         notifyError("Erro ao registrar a categoria de receita.");
         console.error(error);
