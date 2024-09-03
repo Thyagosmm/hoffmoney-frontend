@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Dropdown, Radio } from 'semantic-ui-react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import './FormReceita.css';
-import { buscarReceitaPorId, atualizarReceita } from '../../api/UserApi';
-import Header from '../components/appMenu/AppMenu';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Form, Button, Dropdown } from "semantic-ui-react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./FormReceita.css";
+import { buscarReceitaPorId, atualizarReceita, listarCategoriasReceita } from "../../api/UserApi";
+import Header from "../components/appMenu/AppMenu";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditarReceita = () => {
-  const [nome, setNome] = useState('');
-  const [valor, setValor] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [descricao, setDescricao] = useState('');
+  const [nome, setNome] = useState("");
+  const [valor, setValor] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
+  const [paga, setPaga] = useState(false);
+  const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
   const [error, setError] = useState("");
-  const [errors, setErrors] = useState("");
   const [success, setSuccess] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const EditarReceita = () => {
         const receitaData = response.data;
         setNome(receitaData.nome);
         setValor(receitaData.valor);
-        setCategoria(receitaData.categoria);
+        setCategoria(receitaData.categoriaReceita.id);
         setDescricao(receitaData.descricao);
         const dataReceita = new Date(receitaData.dataDeCobranca);
         if (!isNaN(dataReceita.getTime())) {
@@ -35,6 +36,7 @@ const EditarReceita = () => {
         } else {
           console.error("Data inválida:", receitaData.dataDeCobranca);
         }
+        setPaga(despesaData.paga ?? false);
       } catch (error) {
         console.error("Erro ao carregar a receita", error);
         setError("Erro ao carregar a receita.");
@@ -42,29 +44,30 @@ const EditarReceita = () => {
     };
 
     carregarReceita();
+
+    const fetchCategorias = async () => {
+      try {
+        const response = await listarCategoriasReceita();
+        const dropDownCategoriaReceita = response.data.map(categoria => ({
+          key: categoria.id,
+          text: categoria.descricaoCategoriaReceita,
+          value: categoria.id,
+        }));
+        setListaCategoriaReceita(dropDownCategoriaReceita);
+      } catch (error) {
+        console.error("Erro ao carregar categorias", error);
+        setError("Erro ao carregar categorias.");
+      }
+    };
+
+    fetchCategorias();
   }, [id, usuarioId]);
-
-  const freqOptions = [
-    { key: "diario", text: "Diariamente", value: "diario" },
-    { key: "semanal", text: "Semanalmente", value: "semanal" },
-    { key: "mensal", text: "Mensalmente", value: "mensal" },
-    { key: "anual", text: "Anualmente", value: "anual" },
-  ];
-
-  const categoryOptions = [
-    { key: "Salario", text: "Salário", value: "Salario" },
-    { key: "Honorarios", text: "Honorários", value: "Honorarios" },
-    { key: "Comissoes", text: "Comissões", value: "Comissoes" },
-    { key: "Juros", text: "Juros", value: "Juros" },
-    { key: "Dividendos", text: "Dividendos", value: "Dividendos" },
-    { key: "Outros", text: "Outros", value: "Outros" },
-  ];
 
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
 
   const handleSubmit = async (e) => {
@@ -74,9 +77,10 @@ const EditarReceita = () => {
       await atualizarReceita(usuarioId, id, {
         nome,
         valor,
-        categoria,
+        idCategoriaReceita: categoria,
         descricao,
         dataDeCobranca: formattedDate,
+        paga: paga
       });
       setSuccess("Receita atualizada com sucesso!");
       navigate("/receitas");
@@ -93,61 +97,49 @@ const EditarReceita = () => {
         <div className="receita">
           <div className="receita-form">
             <h1>Editar Receita</h1>
-            <div className="form-content">
-              <div className="form-fields">
-                <Form onSubmit={handleSubmit}>
-                  <Form.Field>
-                    <label>Nome</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite o nome da Receita"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      required
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Valor</label>
-                    <input
-                      className="input-field"
-                      type="number"
-                      placeholder="Digite o valor da Receita"
-                      value={valor}
-                      onChange={(e) => setValor(e.target.value)}
-                      required
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Categoria</label>
-                    <Dropdown
-                      className="input-field"
-                      placeholder="Selecione a Categoria"
-                      fluid
-                      selection
-                      options={categoryOptions}
-                      value={categoria}
-                      onChange={(e, { value }) => setCategoria(value)}
-                    />
-                  </Form.Field>
-
-                  <Form.Field>
-                    <label>Descrição</label>
-                    <input
-                      className="input-field"
-                      placeholder="Digite uma descrição para a receita"
-                      value={descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
-                    />
-                  </Form.Field>
-                  <Button type="submit" className="save-button">
-                    Salvar
-                  </Button>
-                </Form>
-              </div>
-              <div className="calendar-container">
+            <Form onSubmit={handleSubmit}>
+              <Form.Field>
+                <label>Nome</label>
+                <input
+                  placeholder="Digite o nome da Receita"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Valor</label>
+                <input
+                  type="number"
+                  placeholder="Digite o valor da Receita"
+                  value={valor}
+                  onChange={(e) => setValor(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Categoria</label>
+                <Dropdown
+                  placeholder="Selecione a categoria"
+                  fluid
+                  selection
+                  options={listaCategoriaReceita}
+                  value={categoria}
+                  onChange={(e, { value }) => setCategoria(value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Descrição</label>
+                <input
+                  placeholder="Digite uma descrição para a receita"
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Data</label>
                 <Calendar onChange={setData} value={data} />
-              </div>
-            </div>
+              </Form.Field>
+              <Button type="submit" primary>Salvar</Button>
+            </Form>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
           </div>
@@ -155,6 +147,6 @@ const EditarReceita = () => {
       </div>
     </>
   );
-}
+};
 
 export default EditarReceita;

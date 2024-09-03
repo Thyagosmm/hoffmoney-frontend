@@ -15,9 +15,7 @@ import {
 } from "semantic-ui-react";
 import {
   atualizarPaga,
-  decrementarSaldo,
   deletarDespesa,
-  incrementarSaldo,
   listarDespesas,
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
@@ -26,12 +24,11 @@ import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaDespesas = () => {
   const [despesas, setDespesas] = useState([]);
-  const [valorDespesa, setValorDespesa] = useState(0);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [despesaToEdit, setDespesaToEdit] = useState(null);
-  const [actionType, setActionType] = useState(""); // Novo estado para controlar o tipo de ação
+  const [despesaId, setDespesaId] = useState(null);
+  const [actionType, setActionType] = useState("");
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
@@ -134,46 +131,42 @@ const ListaDespesas = () => {
       console.error("Usuário não autenticado.");
       return;
     }
-
+  
     try {
-      await deletarDespesa(usuarioId, despesaToEdit);
+      await deletarDespesa(usuarioId, despesaId);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaToEdit),
+        prevDespesas.filter((despesa) => despesa.id !== despesaId),
       );
       setModalOpen(false);
       notifySuccess("Despesa deletada com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1500);
     } catch (error) {
       console.error("Erro ao excluir despesa:", error);
       notifyError("Não foi possível excluir a despesa.");
     }
   };
 
-  const handleOpenModal = (id, action, valor) => {
-    setDespesaToEdit(id);
+  const handleOpenModal = (id, action) => {
+    setDespesaId(id);
     setActionType(action);
-    setValorDespesa(valor); // Armazene o valor da despesa no estado
     setModalOpen(true);
   };
   const handleAtualizarPaga = async () => {
     try {
-      const response = await atualizarPaga(despesaToEdit, true);
-      // Decrementar o saldo do usuário
-      console.log(response.data);
-      await decrementarSaldo(valorDespesa);
-
-      // Atualize o estado da despesa localmente
+      const response = await atualizarPaga(despesaId, true);
       setDespesas((prevDespesas) =>
         prevDespesas.map((despesa) =>
-          despesa.id === despesaToEdit ? { ...despesa, paga: true } : despesa,
+          despesa.id === despesaId ? { ...despesa, paga: true } : despesa,
         ),
       );
-      if (response.data) {
-        notifySuccess("Despesa paga com sucesso!");
-        handleOpenModal(false);
-      }
+      console.log("Despesa atualizada com sucesso:", response.status);
+      setModalOpen(false);
+      notifySuccess("Despesa paga com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
     }
@@ -273,8 +266,7 @@ const ListaDespesas = () => {
         <div className="despesas">
           <Segment className="segment-despesas">
             <Menu>
-              <h2 className="header-nao-pagas">Despesas Não Pagas</h2>
-            </Menu>
+            <h2 className="header-nao-pagas">Despesas Não Pagas</h2></Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasNaoPagas.length > 0 ? (
                 despesasNaoPagas.map((despesa) => (
@@ -283,9 +275,7 @@ const ListaDespesas = () => {
                       <Button
                         icon
                         color="green"
-                        onClick={() =>
-                          handleOpenModal(despesa.id, "pagar", despesa.valor)
-                        }
+                        onClick={() => handleOpenModal(despesa.id, "check")}
                       >
                         <Icon name="check" />
                       </Button>
@@ -319,10 +309,8 @@ const ListaDespesas = () => {
               )}
             </List>
           </Segment>
-          <Segment className="segment-despesas">
-            <Menu>
-              <h2 className="header-pagas">Despesas Pagas</h2>
-            </Menu>
+          <Segment className="segment-despesas"><Menu>
+            <h2 className="header-pagas">Despesas Pagas</h2></Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasPagas.length > 0 ? (
                 despesasPagas.map((despesa) => (

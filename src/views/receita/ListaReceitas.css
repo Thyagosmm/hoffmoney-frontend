@@ -1,28 +1,34 @@
+/* ListaReceitas.css */
+
+/* Container principal */
 .receitas {
   border: 1px solid #000!important;
   margin: 2rem!important;
-  width: 80vw!important;
+  width: 100%!important; /* Altere para 100% para manter a consistência com ListaDespesas */
   height: max-content!important;
   padding: 2rem!important;
   border-radius: 2rem;
 }
 
-.containerHeader{
+/* Cabeçalho do container */
+.containerHeader {
   width: 100%!important;
   text-align: center!important;
   margin-bottom: 1rem!important;
 }
 
+/* Container da lista de receitas */
 .listaReceitas {
   display: flex!important;
   width: 100%!important;
-  height: 100%!important;
+  height: auto!important; /* Mudei para auto para melhor adaptação ao conteúdo */
   flex-wrap: wrap!important;
   justify-content: center!important;
   align-items: center!important;
 }
 
-.list-icon{
+/* Ícones da lista */
+.list-icon {
   height: 1rem!important;
   width: max-content!important;
   place-self: center!important;
@@ -30,20 +36,24 @@
   font-size: 2.5rem!important;
 }
 
-.list-item{
+/* Itens da lista */
+.list-item {
   justify-items: center!important;
   align-items: center!important;
   border-radius: 1rem!important;
   background: black!important;
   padding: 1rem!important;
   border-bottom: 0.1rem solid white!important;
+  margin-bottom: 1rem!important; /* Adicionado para separar os itens da lista */
 }
 
-.list-description{
+/* Descrição dos itens da lista */
+.list-description {
   color: white!important;
 }
 
-.list-header{
+/* Cabeçalho dos itens da lista */
+.list-header {
   background: black!important;
   color: white!important;
   font-size: 1.5em!important;
@@ -51,10 +61,12 @@
   text-align: center!important;
 }
 
-.totalReceitas{
+/* Total de receitas */
+.totalReceitas {
   margin-left: 5rem!important;
 }
 
+/* Botão de cadastrar receita */
 .btnCadastrarReceita {
   width: max-content!important;
   display: block!important;
@@ -68,6 +80,7 @@
   font-size: 1.5em!important;
 }
 
+/* Hover no botão de cadastrar receita */
 .btnCadastrarReceita:hover {
   background-color: black!important;
 }

@@ -29,7 +29,6 @@ const FormUsuarioUpdate = () => {
   const [changePassword, setChangePassword] = useState(false);
 
   useEffect(() => {
-    // Supondo que você tenha uma função para obter os dados do usuário
     const fetchUserData = async () => {
       try {
         const userId = localStorage.getItem("userId");
@@ -50,18 +49,15 @@ const FormUsuarioUpdate = () => {
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
-    // Chamar a função de validação
     setIsEmailValid(validateEmail(emailValue));
   };
 
-  // Definir uma função de validação
   const validateEmail = (email) => {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
     return re.test(String(email).toLowerCase());
   };
 
-  // Função para verificar a senha
   const validatePassword = (password) => {
     const minLength = 8;
     const charsRemaining = minLength - password.length;
@@ -92,7 +88,6 @@ const FormUsuarioUpdate = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    // Validar campos
     if (!name || !email) {
       notifyError("Nome e email são obrigatórios.");
       return;
@@ -135,7 +130,7 @@ const FormUsuarioUpdate = () => {
       const response = await updateUser(userId, userData);
       console.log("User updated:", response.data);
       notifySuccess("Usuário atualizado com sucesso!");
-      setTimeout(() => (window.location.href = "/"), 5000);
+      setTimeout(() => (window.location.href = "/"), 1500);
     } catch (error) {
       console.error("Error updating user:", error);
       notifyError("Erro ao atualizar o usuário.");

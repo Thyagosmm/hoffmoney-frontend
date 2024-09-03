@@ -8,13 +8,11 @@ export default function FormEsqueciSenha() {
   const [email, setEmail] = React.useState("");
   const [isEmailValid, setIsEmailValid] = React.useState(false);
   function handleForgotPassword() {
-    // Lógica para recuperação de senha
     console.log("Email:", email);
   }
 const handleEmailChange = (e) => {
   const emailValue = e.target.value;
   setEmail(emailValue);
-  // Chamar a função de validação
   setIsEmailValid(validateEmail(emailValue));
 };
 

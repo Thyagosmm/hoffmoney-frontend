@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { format, parse } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Form,
-  Menu,
-  Segment,
-  Icon,
   Button,
   Container,
+  Form,
+  Icon,
   List,
+  Menu,
   Modal,
+  Segment,
   Header as SemanticHeader,
 } from "semantic-ui-react";
 import { listarReceitas, deletarReceita } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { format, parse } from "date-fns";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const ListaReceitas = () => {
   const [receitas, setReceitas] = useState([]);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [receitaToDelete, setReceitaToDelete] = useState(null);
+  const [receitaId, setReceitaId] = useState(null);
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
@@ -50,11 +51,10 @@ const ListaReceitas = () => {
     if (value) {
       try {
         const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-        const formattedDate = format(parsedDate, "dd/MM/yyyy"); // Formatando a data para o formato dd/MM/yyyy
+        const formattedDate = format(parsedDate, "dd/MM/yyyy");
         filtrarReceitas(nome, categoria, valor, formattedDate);
       } catch (error) {
         console.error("Erro ao converter a data:", error);
-        // Adicionar mensagem de erro ao usuário, se desejado
       }
     } else {
       filtrarReceitas(nome, categoria, valor, "");
@@ -86,14 +86,15 @@ const ListaReceitas = () => {
       formData.append("dataDeCobranca", dataDeCobrancaParam);
     }
 
-    await axios
-      .post("http://localhost:8085/api/receitas/filtrar", formData)
-      .then((response) => {
-        setReceitas(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:8085/api/receitas/filtrar",
+        formData
+      );
+      setReceitas(response.data);
+    } catch (error) {
+      setError(error.message);
+    }
   }
 
   useEffect(() => {
@@ -134,19 +135,23 @@ const ListaReceitas = () => {
     }
 
     try {
-      await deletarReceita(usuarioId, receitaToDelete);
+      await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaToDelete)
+        prevReceitas.filter((receita) => receita.id !== receitaId)
       );
       setModalOpen(false);
+      notifySuccess("Receita deletada com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao excluir receita:", error);
-      setError("Não foi possível excluir a receita.");
+      notifyError("Não foi possível excluir a receita.");
     }
   };
 
   const handleOpenModal = (id) => {
-    setReceitaToDelete(id);
+    setReceitaId(id);
     setModalOpen(true);
   };
 
@@ -165,9 +170,9 @@ const ListaReceitas = () => {
   return (
     <>
       <Header />
-      <Container className="receitas">
+      <Container className="container-bordered">
         <h1 className="containerHeader">Receitas</h1>
-        <Menu compact>
+        <Menu>
           <Menu.Item
             name="menuFiltro"
             active={menuFiltro === true}
@@ -176,8 +181,9 @@ const ListaReceitas = () => {
             <Icon name="filter" />
             Filtrar
           </Menu.Item>
-          <Menu.Item position="right">
+          <Menu.Item position="left">
             <Button
+              className="form-button"
               icon
               color="green"
               onClick={handleCreateNew}
@@ -185,6 +191,12 @@ const ListaReceitas = () => {
               <Icon name="plus" />
               Nova Receita
             </Button>
+          </Menu.Item>
+          <Menu.Item position="right">
+            <div className="total-container">
+              <strong>Total em Receitas: R$ </strong>
+              <span>{total}</span>
+            </div>
           </Menu.Item>
         </Menu>
         {menuFiltro && (
@@ -236,10 +248,10 @@ const ListaReceitas = () => {
           </Segment>
         )}
         <Segment className="segment-receitas">
-          <List divided verticalAlign="middle">
+          <List className="lista-items" divided verticalAlign="middle">
             {receitas.length > 0 ? (
               receitas.map((receita) => (
-                <List.Item key={receita.id}>
+                <List.Item className="items-lista" key={receita.id}>
                   <List.Content floated="right">
                     <Button
                       icon
@@ -261,41 +273,43 @@ const ListaReceitas = () => {
                     <List.Header>{receita.nome}</List.Header>
                     <List.Description>
                       Categoria: {receita.categoria} | Valor: {receita.valor} |
-                      Data de Recebimento: {receita.dataDeCobranca}
+                      Data de Cobrança: {receita.dataDeCobranca}
                     </List.Description>
                   </List.Content>
                 </List.Item>
               ))
             ) : (
-              <p>Nenhuma receita encontrada.</p>
+              <span>Nenhuma receita encontrada.</span>
             )}
           </List>
         </Segment>
-        <div className="total-container">
-          <strong>Total Receitas: </strong>
-          <span>{total}</span>
-        </div>
+
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          size="small"
+          dimmer="blurring"
+          closeIcon
+        >
+          <SemanticHeader icon="trash" content="Excluir Receita" />
+          <Modal.Content>
+            <span>Você tem certeza que deseja excluir esta receita?</span>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={() => setModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              color="green"
+              onClick={handleDelete}
+              positive
+              icon="checkmark"
+              labelPosition="right"
+              content="Excluir"
+            />
+          </Modal.Actions>
+        </Modal>
       </Container>
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        size="small"
-        dimmer="blurring"
-        closeIcon
-      >
-        <SemanticHeader icon="trash" content="Excluir Receita" />
-        <Modal.Content>
-          <p>Você tem certeza que deseja excluir esta receita?</p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={() => setModalOpen(false)}>
-            <Icon name="remove" /> Não
-          </Button>
-          <Button color="green" onClick={handleDelete}>
-            <Icon name="checkmark" /> Sim
-          </Button>
-        </Modal.Actions>
-      </Modal>
     </>
   );
 };

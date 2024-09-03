@@ -19,7 +19,7 @@ const EditarCategoriaReceita = () => {
       try {
         const response = await buscarCategoriaReceitaPorId(id); 
         const categoriaData = response.data;
-        setDescription(categoriaData.descricaoReceita);
+        setDescription(categoriaData.descricaoCategoriaReceita);
       } catch (error) {
         notifyError("Erro ao carregar a categoria de receita.");
         console.error("Erro ao carregar a categoria:", error);
@@ -42,9 +42,11 @@ const EditarCategoriaReceita = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaReceita(id, { descricaoReceita: description });
+        await atualizarCategoriaReceita(id, { descricaoCategoriaReceita: description });
         notifySuccess("Categoria atualizada com sucesso!");
-        navigate("/categoriareceita");
+        setTimeout(() => {
+          navigate("/categoriareceita");
+        }, 1500);
       } catch (error) {
         notifyError("Erro ao atualizar a categoria de receita.");
         console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
