@@ -3,6 +3,9 @@
 /* Container principal */
 .receitas {
   border: 1px solid #000!important;
+  display: flex!important;
+  flex-direction: row!important;
+  gap:0.5rem!important;
   margin: 2rem!important;
   width: 100%!important; /* Altere para 100% para manter a consistência com ListaDespesas */
   height: max-content!important;
@@ -25,6 +28,10 @@
   flex-wrap: wrap!important;
   justify-content: center!important;
   align-items: center!important;
+}
+.segment-receitas{
+  width: 100%!important;
+  margin: 0!important;
 }
 
 /* Ícones da lista */

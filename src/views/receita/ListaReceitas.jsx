@@ -13,7 +13,12 @@ import {
   Segment,
   Header as SemanticHeader,
 } from "semantic-ui-react";
-import { listarReceitas, deletarReceita } from "../../api/UserApi";
+import {
+  listarReceitas,
+  deletarReceita,
+  receitaPaga,
+  incrementarSaldo,
+} from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
 import { notifyError, notifySuccess } from "../utils/Utils";
@@ -24,12 +29,15 @@ const ListaReceitas = () => {
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [receitaId, setReceitaId] = useState(null);
+  const [actionType, setActionType] = useState("");
   const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [valor, setValor] = useState("");
   const [dataDeCobranca, setDataDeCobranca] = useState("");
+  const [receitasPagas, setReceitasPagas] = useState([]);
+  const [receitasNaoPagas, setReceitasNaoPagas] = useState([]);
 
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
@@ -65,7 +73,7 @@ const ListaReceitas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam
+    dataDeCobrancaParam,
   ) {
     let formData = new FormData();
 
@@ -86,15 +94,14 @@ const ListaReceitas = () => {
       formData.append("dataDeCobranca", dataDeCobrancaParam);
     }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8085/api/receitas/filtrar",
-        formData
-      );
-      setReceitas(response.data);
-    } catch (error) {
-      setError(error.message);
-    }
+    await axios
+      .post("http://localhost:8085/api/receitas/filtrar", formData)
+      .then((response) => {
+        setReceitas(response.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   }
 
   useEffect(() => {
@@ -103,20 +110,14 @@ const ListaReceitas = () => {
         const { data } = await listarReceitas();
         console.log("Receitas:", data);
 
-        const receitasAgrupadas = data.reduce((acc, receita) => {
-          const key = receita.id;
-          if (!acc[key]) {
-            acc[key] = { ...receita, count: 1 };
-          } else {
-            acc[key].count += 1;
-          }
-          return acc;
-        }, {});
+        const receitasPagas = data.filter((receita) => receita.paga);
+        const receitasNaoPagas = data.filter((receita) => !receita.paga);
 
-        const receitasAgrupadasList = Object.values(receitasAgrupadas);
-        setReceitas(receitasAgrupadasList);
-        const totalReceitas = receitasAgrupadasList.reduce((sum, receita) => {
-          return sum + receita.valor * receita.count;
+        setReceitasPagas(receitasPagas);
+        setReceitasNaoPagas(receitasNaoPagas);
+
+        const totalReceitas = data.reduce((sum, receita) => {
+          return sum + receita.valor;
         }, 0);
         setTotal(totalReceitas);
       } catch (error) {
@@ -137,7 +138,7 @@ const ListaReceitas = () => {
     try {
       await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaId)
+        prevReceitas.filter((receita) => receita.id !== receitaId),
       );
       setModalOpen(false);
       notifySuccess("Receita deletada com sucesso!");
@@ -150,9 +151,24 @@ const ListaReceitas = () => {
     }
   };
 
-  const handleOpenModal = (id) => {
+  const handleOpenModal = (id, action) => {
     setReceitaId(id);
+    setActionType(action);
     setModalOpen(true);
+  };
+  const handleReceitaPaga = async () => {
+    try {
+      const response = await receitaPaga(receitaId, true);
+      console.log("Receita atualizada com sucesso:", response);
+      setModalOpen(false);
+      notifySuccess("Receita paga com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      console.error("Erro ao atualizar a receita:", error);
+      notifyError("Erro ao atualizar a receita.");
+    }
   };
 
   const handleEdit = (id) => {
@@ -247,42 +263,93 @@ const ListaReceitas = () => {
             </Form>
           </Segment>
         )}
-        <Segment className="segment-receitas">
-          <List className="lista-items" divided verticalAlign="middle">
-            {receitas.length > 0 ? (
-              receitas.map((receita) => (
-                <List.Item className="items-lista" key={receita.id}>
-                  <List.Content floated="right">
-                    <Button
-                      icon
-                      color="blue"
-                      onClick={() => handleEdit(receita.id)}
-                    >
-                      <Icon name="edit" />
-                    </Button>
-                    <Button
-                      icon
-                      color="red"
-                      onClick={() => handleOpenModal(receita.id)}
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </List.Content>
-                  <Icon name="money" size="large" color="green" />
-                  <List.Content>
-                    <List.Header>{receita.nome}</List.Header>
-                    <List.Description>
-                      Categoria: {receita.categoria} | Valor: {receita.valor} |
-                      Data de Cobrança: {receita.dataDeCobranca}
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              ))
-            ) : (
-              <span>Nenhuma receita encontrada.</span>
-            )}
-          </List>
-        </Segment>
+        <div className="receitas">
+          <Segment className="segment-receitas">
+            <Menu inverted>
+              <h2 className="header-nao-pagas">Não Recebidas</h2>
+            </Menu>
+            <List className="lista-items" divided verticalAlign="middle">
+              {receitasNaoPagas.length > 0 ? (
+                receitasNaoPagas.map((receita) => (
+                  <List.Item className="items-lista" key={receita.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="green"
+                        onClick={() => handleOpenModal(receita.id, "check")}
+                      >
+                        <Icon name="check" />
+                      </Button>
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(receita.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(receita.id, "delete")}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="red" />
+                    <List.Content>
+                      <List.Header>{receita.nome}</List.Header>
+                      <List.Description>
+                        {receita.categoriaReceita.descricaoCategoriaReceita} |
+                        R$ {receita.valor} | {receita.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma receita não recebida encontrada.</span>
+              )}
+            </List>
+          </Segment>
+          <Segment className="segment-receitas">
+            <Menu inverted>
+              <h2 className="header-pagas">Recebidas</h2>
+            </Menu>
+            <List className="lista-items" divided verticalAlign="middle">
+              {receitasPagas.length > 0 ? (
+                receitasPagas.map((receita) => (
+                  <List.Item className="items-lista" key={receita.id}>
+                    <List.Content floated="right">
+                      <Button
+                        icon
+                        color="blue"
+                        onClick={() => handleEdit(receita.id)}
+                      >
+                        <Icon name="edit" />
+                      </Button>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => handleOpenModal(receita.id)}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    </List.Content>
+                    <Icon name="money" size="large" color="green" />
+                    <List.Content>
+                      <List.Header>{receita.nome}</List.Header>
+                      <List.Description>
+                        {receita.categoriaReceita.descricaoCategoriaReceita} |
+                        R$ {receita.valor} | {receita.dataDeCobranca}
+                      </List.Description>
+                    </List.Content>
+                  </List.Item>
+                ))
+              ) : (
+                <span>Nenhuma receita recebida encontrada.</span>
+              )}
+            </List>
+          </Segment>
+        </div>
 
         <Modal
           open={modalOpen}
@@ -291,22 +358,33 @@ const ListaReceitas = () => {
           dimmer="blurring"
           closeIcon
         >
-          <SemanticHeader icon="trash" content="Excluir Receita" />
+          <SemanticHeader
+            icon={actionType === "delete" ? "trash" : "check"}
+            content={
+              actionType === "delete"
+                ? "Excluir Receita"
+                : "Confirmar Pagamento"
+            }
+          />
           <Modal.Content>
-            <span>Você tem certeza que deseja excluir esta receita?</span>
+            <span>
+              {actionType === "delete"
+                ? "Você tem certeza que deseja excluir esta receita?"
+                : "Você realmente recebeu esta receita?"}
+            </span>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => setModalOpen(false)}>
-              Cancelar
+              <Icon name="remove" /> Não
             </Button>
             <Button
               color="green"
-              onClick={handleDelete}
-              positive
-              icon="checkmark"
-              labelPosition="right"
-              content="Excluir"
-            />
+              onClick={
+                actionType === "delete" ? handleDelete : handleReceitaPaga
+              }
+            >
+              <Icon name="checkmark" /> Sim
+            </Button>
           </Modal.Actions>
         </Modal>
       </Container>

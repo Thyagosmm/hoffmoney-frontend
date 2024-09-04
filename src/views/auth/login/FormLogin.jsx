@@ -26,20 +26,12 @@ export default function FormLogin() {
 
     try {
       const response = await login(email, senha);
-      console.log("Dados recebidos da função login:", response);
 
       if (response && Object.keys(response).length > 0) {
-        console.log("Usuário logado com sucesso:", response);
         localStorage.setItem("userId", response.id);
         localStorage.setItem("nome", response.nome);
         localStorage.setItem("email", response.email);
         localStorage.setItem("saldo", response.saldo);
-
-        console.log("Dados salvos no localStorage:");
-        console.log("userId:", localStorage.getItem("userId"));
-        console.log("nome:", localStorage.getItem("nome"));
-        console.log("email:", localStorage.getItem("email"));
-        console.log("saldo:", localStorage.getItem("saldo"));
         notifySuccess("Login realizado com sucesso!");
         window.location.href = "/";
       }
@@ -52,7 +44,6 @@ export default function FormLogin() {
   };
 
   const handleEmailChange = (e) => {
-    console.log("Email:", e.target.value);
     const emailValue = e.target.value;
     setEmail(emailValue);
     setIsEmailValid(validateEmail(emailValue));

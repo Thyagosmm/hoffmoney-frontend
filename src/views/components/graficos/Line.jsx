@@ -89,7 +89,7 @@ function Line() {
         });
 
         receitas.forEach((receita) => {
-          const mes = new Date(receita.data).getMonth();
+          const mes = new Date(receita.dataDeCobranca).getMonth();
           const mesFormatado = formatarMes(mes);
           if (!receitasPorMes[mesFormatado]) {
             receitasPorMes[mesFormatado] = 0;

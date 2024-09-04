@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
-import { listarDespesas } from "../../../api/UserApi";
+import {
+  listarDespesas,
+  atualizarLimiteGastos,
+  consultarLimiteGastos,
+} from "../../../api/UserApi";
 import "./Limite.css";
 import { Button } from "semantic-ui-react";
-
+import { Modal, Input, Header as SemanticHeader } from "semantic-ui-react";
+import { notifyError, notifySuccess } from "../../utils/Utils";
+import { set } from "date-fns";
 Chart.register(ArcElement, Tooltip, Legend);
 
 function Limite() {
   const [porcentagens, setPorcentagens] = useState([]);
   const [categoriasAgrupadas, setCategoriasAgrupadas] = useState({});
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [limite, setLimite] = useState(0);
+  const [novoLimite, setNovoLimite] = useState();
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -36,7 +44,18 @@ function Limite() {
       },
     ],
   });
-
+  const atualizarLimite = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      await atualizarLimiteGastos(userId, novoLimite);
+      notifySuccess("Limite de gastos atualizado com sucesso!");
+      setModalOpen(false);
+      setLimite(novoLimite);
+    } catch (error) {
+      console.error("Erro ao atualizar o limite de gastos", error);
+      notifyError("Erro ao atualizar o limite de gastos.");
+    }
+  };
   const agruparCategorias = (categorias) => {
     return categorias.reduce((acc, categoria) => {
       const { descricao } = categoria;
@@ -76,28 +95,58 @@ function Limite() {
         const valores = labels.map((label) =>
           agrupadas[label].reduce((acc, categoria) => acc + categoria.valor, 0),
         );
-        const porcentagens = valores.map((valor) =>
-          ((valor / total) * 100).toFixed(2),
-        );
+        const totalDespesas = valores.reduce((acc, valor) => acc + valor, 0);
+        const restanteDisponivel = limite - totalDespesas;
 
+        const valoresComRestante = [...valores, restanteDisponivel];
+        const labelsComRestante = [...labels, "Disponível"];
+        const backgroundColorComRestante = [
+          ...chartData.datasets[0].backgroundColor,
+          "rgba(0, 255, 0, 0.37)", // Cor para o restante disponível
+        ];
+        const borderColorComRestante = [
+          ...chartData.datasets[0].borderColor,
+          "rgba(0, 255, 0, 0.2)", // Cor para o restante disponível
+        ];
+        const porcentagens = valores.map((valor) =>
+          ((valor / limite) * 100).toFixed(2),
+        );
+        const porcentagemRestante = (
+          (restanteDisponivel / limite) *
+          100
+        ).toFixed(2);
+        const porcentagensComRestante = [...porcentagens, porcentagemRestante];
         setChartData((prevData) => ({
           ...prevData,
-          labels: labels,
+          labels: labelsComRestante,
           datasets: [
             {
               ...prevData.datasets[0],
-              data: valores,
+              data: valoresComRestante,
+              backgroundColor: backgroundColorComRestante,
+              borderColor: borderColorComRestante,
             },
           ],
         }));
-        setPorcentagens(porcentagens);
+        setPorcentagens(porcentagensComRestante);
       } catch (error) {
         console.error("Erro ao buscar dados das despesas", error);
       }
     };
+    const fetchLimite = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const response = await consultarLimiteGastos(userId);
+        console.log(response.data);
+        setLimite(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar limite de gastos", error);
+      }
+    };
 
+    fetchLimite();
     fetchData();
-  }, []);
+  }, [limite]); // Adicionei `limite` como dependência para atualizar o gráfico quando o limite mudar
 
   const options = {
     borderRadius: 7,
@@ -119,8 +168,10 @@ function Limite() {
           <Doughnut data={chartData} options={options} />
           <div className="limite">
             <p>Limite de Gastos</p>
-            <p>R$ 1.500,00</p>
-            <Button className="form-button">Editar</Button>
+            <p>R$ {limite.toFixed(2)}</p>
+            <Button className="form-button" onClick={() => setModalOpen(true)}>
+              Editar
+            </Button>
           </div>
         </div>
       </div>
@@ -136,6 +187,35 @@ function Limite() {
           </div>
         ))}
       </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        size="small"
+        dimmer="blurring"
+        closeIcon
+      >
+        <SemanticHeader icon="edit" content="Editar Limite de Gastos" />
+        <Modal.Content>
+          <Input
+            fluid
+            placeholder={`Limite atual: R$ ${limite}`}
+            label={{ basic: true, content: "R$" }}
+            labelPosition="left"
+            type="number"
+            value={novoLimite}
+            onChange={(e) => setNovoLimite(parseFloat(e.target.value))}
+          />
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="red" onClick={() => setModalOpen(false)}>
+            Cancelar
+          </Button>
+          <Button color="green" onClick={atualizarLimite}>
+            Salvar
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   );
 }

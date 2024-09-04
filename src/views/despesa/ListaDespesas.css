@@ -34,7 +34,7 @@
     color: white!important;
 }
 .segment-despesas{
-    background-color: black!important;
+    width: 100%!important;
     margin: 0!important;
 }
 .lista-items{
@@ -67,8 +67,15 @@ justify-items: center;
     text-align: center!important;
 }
 .despesas{
-    display: flex!important;
-    flex-direction: row!important;
+    border: 1px solid #000!important;
+  display: flex!important;
+  flex-direction: row!important;
+  gap:0.5rem!important;
+  margin: 2rem!important;
+  width: 100%!important; /* Altere para 100% para manter a consistência com ListaDespesas */
+  height: max-content!important;
+  padding: 2rem!important;
+  border-radius: 2rem;
 }
 .totalDespesas{
     margin-left: 5rem!important;

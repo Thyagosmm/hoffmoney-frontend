@@ -42,8 +42,6 @@ const FormUsuarioRegister = () => {
     setPassword(newPassword);
     const resultado = verificarSenha(newPassword);
     setCharsRemaining(calcularCaracteresRestantes(newPassword));
-    console.log(resultado); 
-    console.log(password);
   };
 
   const handleRegister = async (e) => {
