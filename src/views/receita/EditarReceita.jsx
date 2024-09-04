@@ -13,7 +13,7 @@ const EditarReceita = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
-  const [paga, setPaga] = useState(false);
+  const [paga, setPaga] = useState("");
   const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -30,6 +30,7 @@ const EditarReceita = () => {
         setValor(receitaData.valor);
         setCategoria(receitaData.categoriaReceita.id);
         setDescricao(receitaData.descricao);
+        setPaga(receitaData.paga);
         const dataReceita = new Date(receitaData.dataDeCobranca);
         if (!isNaN(dataReceita.getTime())) {
           setData(dataReceita);

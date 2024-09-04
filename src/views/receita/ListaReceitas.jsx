@@ -329,7 +329,7 @@ const ListaReceitas = () => {
                       <Button
                         icon
                         color="red"
-                        onClick={() => handleOpenModal(receita.id)}
+                        onClick={() => handleOpenModal(receita.id, "delete")}
                       >
                         <Icon name="trash" />
                       </Button>
