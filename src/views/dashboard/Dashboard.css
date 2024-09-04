@@ -41,8 +41,27 @@
 
 max-width: max-content!important;
 }
+.transacoes-div{
+  width: 40vw!important;
+}
+.ultimas-container{
+  width: max-content!important;
+  height: 100%!important;
+  border-radius: 1rem;
+}
+.linha-transacoes{
+}
+.ultimas-despesas{
+  border: red solid 2px;
+  padding: 0!important;
+}
+.celulas-table{
+  width: max-content!important;
+  border: 0!important;
+}
 .container-bordered {
   display: flex!important;
+  flex-direction: column!important;
     align-items: center!important; /* Centraliza horizontalmente */
 justify-content: center!important; /* Centraliza verticalmente */
   position: relative!important; 
@@ -51,7 +70,12 @@ justify-content: center!important; /* Centraliza verticalmente */
   max-height: 100%!important;
   flex: 2 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
 }
-
+.linha-grafico{
+  flex-direction: row!important;
+}
+.linha-container{
+  height: 100%!important; 
+}
 /* Media query para telas menores */
 @media (max-width: 768px) {
   .container-group {

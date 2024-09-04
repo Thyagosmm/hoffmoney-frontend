@@ -59,7 +59,7 @@ input {
   border-radius: 5px;
 }
 .container-bordered {
-  flex-direction: column;
+  flex-direction: row;
   border: 1px solid #00e676;    
   height: max-content!important;
   padding: 2rem!important;
