@@ -46,7 +46,7 @@ const FormReceita = ({ receitaId }) => {
         }
       }
     };
-    
+
 
     const fetchCategorias = async () => {
       try {
@@ -98,14 +98,12 @@ const FormReceita = ({ receitaId }) => {
     if (validate()) {
       e.preventDefault();
       const formattedDate = formatDate(date);
-      const numericValue = parseFloat(value.replace("R$ ", "").replace(".", "").replace(",", "."));
-      
       try {
         const response = await registrarReceita({
           usuario: { id: userId },
           nome: name,
           descricao: description,
-          valor: numericValue,
+          valor: value,
           idCategoriaReceita: idCategoriaReceita,
           dataDeCobranca: formattedDate,
           paga: false,
@@ -120,7 +118,6 @@ const FormReceita = ({ receitaId }) => {
       }
     }
   };
-  
 
   const handleAtualizarReceita = async (e) => {
     if (validate()) {
