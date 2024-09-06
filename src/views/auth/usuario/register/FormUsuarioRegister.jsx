@@ -42,8 +42,6 @@ const FormUsuarioRegister = () => {
     setPassword(newPassword);
     const resultado = verificarSenha(newPassword);
     setCharsRemaining(calcularCaracteresRestantes(newPassword));
-    console.log(resultado); 
-    console.log(password);
   };
 
   const handleRegister = async (e) => {
@@ -69,6 +67,7 @@ const FormUsuarioRegister = () => {
         nome: name,
         email,
         senha: password,
+        saldo: 0,
       });
       console.log("User registered:", response.data);
       notifySuccess("Usuário registrado com sucesso!");

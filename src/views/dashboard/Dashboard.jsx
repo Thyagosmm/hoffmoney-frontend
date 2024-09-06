@@ -5,6 +5,8 @@ import AcoesPreenchidas from "../components/acoes/AcoesPreenchidas";
 import Limite from "../components/graficos/Limite";
 import Line from "../components/graficos/Line";
 import "./Dashboard.css"; // Importa o arquivo CSS
+import Acoes from "../components/acoes/Acoes";
+import UltimasTransacoes from "../components/ultimasTransacoes/UltimasTransacoes";
 
 const Dashboard = () => {
   return (
@@ -22,8 +24,13 @@ const Dashboard = () => {
           </Container>
         </Container>
         <Container className="container-group">
-          <Container className="container-bordered">
-            <Line />
+          <Container className="container-bordered linha-grafico">
+            <Container className="linha-container">
+              <Line />
+            </Container>
+            <div className="transacoes-div">
+              <UltimasTransacoes />
+            </div>
           </Container>
         </Container>
       </div>

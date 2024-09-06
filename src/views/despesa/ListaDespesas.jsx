@@ -14,9 +14,10 @@ import {
   Header as SemanticHeader,
 } from "semantic-ui-react";
 import {
-  atualizarPaga,
+  despesaPaga,
   deletarDespesa,
   listarDespesas,
+  decrementarSaldo,
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
@@ -131,7 +132,7 @@ const ListaDespesas = () => {
       console.error("Usuário não autenticado.");
       return;
     }
-  
+
     try {
       await deletarDespesa(usuarioId, despesaId);
       setDespesas((prevDespesas) =>
@@ -153,17 +154,17 @@ const ListaDespesas = () => {
     setActionType(action);
     setModalOpen(true);
   };
-  const handleAtualizarPaga = async () => {
+  const handleDespesaPaga = async () => {
     try {
-      const response = await atualizarPaga(despesaId, true);
-      setDespesas((prevDespesas) =>
-        prevDespesas.map((despesa) =>
-          despesa.id === despesaId ? { ...despesa, paga: true } : despesa,
-        ),
-      );
+      const response = await despesaPaga(despesaId, true);
+      const despesa = despesas.find((despesa) => despesa.id === despesaId);
+      if (despesa) {
+        await decrementarSaldo(despesa.valor);
+      }
       console.log("Despesa atualizada com sucesso:", response.status);
       setModalOpen(false);
       notifySuccess("Despesa paga com sucesso!");
+
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -265,8 +266,9 @@ const ListaDespesas = () => {
         )}
         <div className="despesas">
           <Segment className="segment-despesas">
-            <Menu>
-            <h2 className="header-nao-pagas">Despesas Não Pagas</h2></Menu>
+            <Menu inverted>
+              <h2 className="header-nao-pagas">Não Pagas</h2>
+            </Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasNaoPagas.length > 0 ? (
                 despesasNaoPagas.map((despesa) => (
@@ -298,8 +300,8 @@ const ListaDespesas = () => {
                     <List.Content>
                       <List.Header>{despesa.nome}</List.Header>
                       <List.Description>
-                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
-                        | Data de Cobrança: {despesa.dataDeCobranca}
+                        {despesa.categoriaDespesa.descricaoCategoriaDespesa} |
+                        R${despesa.valor} | {despesa.dataDeCobranca}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -309,8 +311,10 @@ const ListaDespesas = () => {
               )}
             </List>
           </Segment>
-          <Segment className="segment-despesas"><Menu>
-            <h2 className="header-pagas">Despesas Pagas</h2></Menu>
+          <Segment className="segment-despesas">
+            <Menu inverted>
+              <h2 className="header-pagas">Pagas</h2>
+            </Menu>
             <List className="lista-items" divided verticalAlign="middle">
               {despesasPagas.length > 0 ? (
                 despesasPagas.map((despesa) => (
@@ -335,8 +339,8 @@ const ListaDespesas = () => {
                     <List.Content>
                       <List.Header>{despesa.nome}</List.Header>
                       <List.Description>
-                        Categoria: {despesa.categoria} | Valor: {despesa.valor}{" "}
-                        | Data de Cobrança: {despesa.dataDeCobranca}
+                        {despesa.categoriaDespesa.descricaoCategoriaDespesa} |
+                        R$ {despesa.valor} | {despesa.dataDeCobranca}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -377,7 +381,7 @@ const ListaDespesas = () => {
             <Button
               color="green"
               onClick={
-                actionType === "delete" ? handleDelete : handleAtualizarPaga
+                actionType === "delete" ? handleDelete : handleDespesaPaga
               }
             >
               <Icon name="checkmark" /> Sim

@@ -81,14 +81,20 @@ export const deletarDespesa = (usuarioId, despesaId) => {
   return api.delete(`/despesas/${usuarioId}/${despesaId}`);
 };
 
-export const atualizarPaga = (despesaId, novaPaga) => {
+export const despesaPaga = (despesaId, novaPaga) => {
   return api.put(`/despesas/${despesaId}/paga`, novaPaga, {
     headers: {
       "Content-Type": "application/json",
     },
   });
 };
-
+export const receitaPaga = (receitaId, novaPaga) => {
+  return api.put(`/receitas/${receitaId}/paga`, novaPaga, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 // Funções de RECEITA
 
 export const registrarReceita = (receita) => {
@@ -160,4 +166,11 @@ export const registrarCategoriaReceita = (categoriaData) => {
 
 export const deletarCategoriaReceita = (categoriaId) => {
   return api.delete(`/categoriareceita/${categoriaId}`);
+};
+export const atualizarLimiteGastos = (id, novoLimite) => {
+  return api.put(`/usuario/${id}/limite`, novoLimite);
+};
+
+export const consultarLimiteGastos = (id) => {
+  return api.get(`/usuario/${id}/limite`);
 };
