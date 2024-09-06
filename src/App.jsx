@@ -20,6 +20,9 @@ import ListaCategoriaDespesa from "./views/categoriadespesa/ListaCategoriaDespes
 import FormCategoriaReceita from "./views/categoriareceita/FormCategoriaReceita";
 import EditarCategoriaReceita from "./views/categoriareceita/EditarCategoriaReceita";
 import ListaCategoriaReceita from "./views/categoriareceita/ListaCategoriaReceita";
+import PdfReceitas from "./views/pdf/PdfReceitas";
+import PdfDespesas from "./views/pdf/PdfDespesas";
+import PdfCompleto from "./views/pdf/PdfCompleto";
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/pdfreceitas" element={<PdfReceitas/>}/>
+          <Route path="/pdfdespesas" element={<PdfDespesas/>}/>
+          <Route path="/pdfcompleto" element={<PdfCompleto/>}/>
           <Route path="/novacategoriareceita" element={<FormCategoriaReceita />} />
           <Route path="/editarcategoriareceita/:id" element={<EditarCategoriaReceita />} />
           <Route path="/categoriareceita" element={<ListaCategoriaReceita />} />

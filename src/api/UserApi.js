@@ -174,3 +174,19 @@ export const atualizarLimiteGastos = (id, novoLimite) => {
 export const consultarLimiteGastos = (id) => {
   return api.get(`/usuario/${id}/limite`);
 };
+
+//FUNÇÃO DE E-MAIL
+
+export const enviarPdfPorEmail = (email, assunto, corpo, arquivoPdf) => {
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('assunto', assunto);
+  formData.append('corpo', corpo);
+  formData.append('arquivoPdf', arquivoPdf);
+
+  return api.post('/pdf/enviar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

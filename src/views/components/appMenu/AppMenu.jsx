@@ -95,6 +95,26 @@ const AppMenu = () => {
                 </li>
               ) : (
                 <>
+                  <li
+                    className="nav-item dropdown"
+                    onMouseEnter={toggleDropdown}
+                    onMouseLeave={toggleDropdown}
+                  >
+                      <span className="nav-link dropdown-toggle">Relatórios</span>
+                    {isDropdownOpen && (
+                      <div className="dropdown-menu show">
+                        <Link className="dropdown-item nav-item" to="/pdfreceitas">
+                          Receitas
+                        </Link>
+                        <Link className="dropdown-item nav-item" to="/pdfdespesas">
+                          Despesas
+                        </Link>
+                        <Link className="dropdown-item nav-item" to="/pdfcompleto">
+                          Completo
+                        </Link>
+                      </div>
+                    )}
+                  </li>
                   <li className="nav-item">
                     <Link className="nav-link page-scroll" to="/despesas">
                       Despesas
