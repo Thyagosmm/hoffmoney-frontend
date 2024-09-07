@@ -7,17 +7,17 @@ import {
     listarReceitas,
     getUser,
     enviarPdfPorEmail,
-} from "../../api/UserApi"; // Suas funções de API
+} from "../../api/UserApi";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const PdfCompleto = () => {
     const [despesas, setDespesas] = useState([]);
     const [receitas, setReceitas] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [userEmail, setUserEmail] = useState(""); // Email do usuário logado
+    const [userEmail, setUserEmail] = useState("");
     const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-        // Buscar os dados do usuário logado e, em seguida, as despesas e receitas
         fetchUserData();
     }, []);
 
@@ -27,8 +27,8 @@ const PdfCompleto = () => {
             if (userId) {
                 const response = await getUser(userId);
                 setUserEmail(response.data.email);
-                setUserId(userId); // Salvar o ID do usuário
-                fetchData(); // Buscar despesas e receitas
+                setUserId(userId);
+                fetchData();
             } else {
                 throw new Error("Usuário não está logado.");
             }
@@ -57,10 +57,7 @@ const PdfCompleto = () => {
 
     const gerarPdf = () => {
         const doc = new jsPDF();
-
-        // Adicionar conteúdo ao PDF
         doc.text("Relatório Completo", 20, 20);
-        // Exemplo de tabelas de despesas e receitas
         doc.autoTable({ html: "#despesasTable" });
         doc.autoTable({ html: "#receitasTable" });
 
@@ -78,10 +75,10 @@ const PdfCompleto = () => {
 
         try {
             await enviarPdfPorEmail(userEmail, "Relatório Financeiro Completo", "Segue em anexo o relatório financeiro completo.", pdfFile);
-            alert("Relatório enviado para o e-mail com sucesso!");
+            notifySuccess("Relatório completo enviado com sucesso!");
         } catch (error) {
-            console.error("Erro ao enviar e-mail:", error);
-            alert("Erro ao enviar o e-mail.");
+            notifyError("Erro ao enviar o relatório completo ao e-mail.");
+            console.error(error);
         }
 
         setModalOpen(false);
@@ -89,9 +86,9 @@ const PdfCompleto = () => {
 
     const handleModalOption = (option) => {
         if (option === "sim") {
-            handleEnviarEmail(); // Enviar o relatório por e-mail
+            handleEnviarEmail();
         } else {
-            handleBaixarPdf(); // Baixar o PDF
+            handleBaixarPdf();
             setModalOpen(false);
         }
     };

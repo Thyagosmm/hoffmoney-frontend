@@ -51,6 +51,9 @@ function Limite() {
       notifySuccess("Limite de gastos atualizado com sucesso!");
       setModalOpen(false);
       setLimite(novoLimite);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao atualizar o limite de gastos", error);
       notifyError("Erro ao atualizar o limite de gastos.");
@@ -78,7 +81,7 @@ function Limite() {
 
         const total = despesasPagas.reduce(
           (acc, despesa) => acc + despesa.valor,
-          0,
+          0
         );
 
         // Agrupar categorias
@@ -93,7 +96,7 @@ function Limite() {
         // Calcular valores e porcentagens
         const labels = Object.keys(agrupadas);
         const valores = labels.map((label) =>
-          agrupadas[label].reduce((acc, categoria) => acc + categoria.valor, 0),
+          agrupadas[label].reduce((acc, categoria) => acc + categoria.valor, 0)
         );
         const totalDespesas = valores.reduce((acc, valor) => acc + valor, 0);
         const restanteDisponivel = limite - totalDespesas;
@@ -109,7 +112,7 @@ function Limite() {
           "rgba(0, 255, 0, 0.2)", // Cor para o restante disponível
         ];
         const porcentagens = valores.map((valor) =>
-          ((valor / limite) * 100).toFixed(2),
+          ((valor / limite) * 100).toFixed(2)
         );
         const porcentagemRestante = (
           (restanteDisponivel / limite) *

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { consultarSaldo } from "../../../api/UserApi";
+import { Link, useNavigate } from "react-router-dom";
+import { consultarSaldo, getUser } from "../../../api/UserApi";
 import "./AppMenu.css";
+import { notifyError } from "../../utils/Utils";
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [saldo, setSaldo] = useState(0);
+  const [limiteGastos, setLimiteGastos] = useState(0);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -20,9 +24,16 @@ const AppMenu = () => {
     if (userId && nameParts && email) {
       setFirstName(nameParts.split(" ")[0]);
       setIsLogged(true);
+      getUser(userId)
+        .then((response) => {
+          setLimiteGastos(response.data.limite);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar dados do usuário:", error);
+        });
       consultarSaldo(userId)
         .then((response) => {
-          console.log("Saldo do usuário:", response.data);
+          setSaldo(response.data);
           localStorage.setItem("saldo", response.data);
         })
         .catch((error) => {
@@ -40,6 +51,16 @@ const AppMenu = () => {
     localStorage.removeItem("email");
     setIsLogged(false);
     window.location.href = "/";
+  };
+
+  const verificarLimite = (rota) => {
+    if (limiteGastos > 0) {
+      navigate(rota);
+    } else {
+      notifyError(
+        "Você precisa definir um limite de gasto mensal!"
+      );
+    }
   };
 
   return (
@@ -100,30 +121,47 @@ const AppMenu = () => {
                     onMouseEnter={toggleDropdown}
                     onMouseLeave={toggleDropdown}
                   >
-                      <span className="nav-link dropdown-toggle">Relatórios</span>
+                    <span className="nav-link dropdown-toggle">Relatórios</span>
                     {isDropdownOpen && (
                       <div className="dropdown-menu show">
-                        <Link className="dropdown-item nav-item" to="/pdfreceitas">
+                        <Link
+                          className="dropdown-item nav-item"
+                          to="/pdfreceitas"
+                        >
                           Receitas
                         </Link>
-                        <Link className="dropdown-item nav-item" to="/pdfdespesas">
+                        <Link
+                          className="dropdown-item nav-item"
+                          to="/pdfdespesas"
+                        >
                           Despesas
                         </Link>
-                        <Link className="dropdown-item nav-item" to="/pdfcompleto">
+                        <Link
+                          className="dropdown-item nav-item"
+                          to="/pdfcompleto"
+                        >
                           Completo
                         </Link>
                       </div>
                     )}
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link page-scroll" to="/despesas">
+                    <span
+                      className="nav-link page-scroll"
+                      onClick={() => verificarLimite("/despesas")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Despesas
-                    </Link>
+                    </span>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link page-scroll" to="/categoriadespesa">
+                    <span
+                      className="nav-link page-scroll"
+                      onClick={() => verificarLimite("/categoriadespesa")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Categoria Despesa
-                    </Link>
+                    </span>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link page-scroll" to="/receitas">
@@ -131,7 +169,10 @@ const AppMenu = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link page-scroll" to="/categoriareceita">
+                    <Link
+                      className="nav-link page-scroll"
+                      to="/categoriareceita"
+                    >
                       Categoria Receita
                     </Link>
                   </li>
@@ -143,8 +184,7 @@ const AppMenu = () => {
                     <span className="nav-link dropdown-toggle">
                       <span>Bem-vindo, {firstName}!</span>
                       <span>
-                        Seu saldo é R$
-                        {localStorage.getItem("saldo")}
+                        Seu saldo é R$ {saldo}
                       </span>
                     </span>
                     {isDropdownOpen && (
