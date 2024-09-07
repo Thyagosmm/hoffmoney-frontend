@@ -11,13 +11,12 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader,
+  Header as SemanticHeader, Dropdown
 } from "semantic-ui-react";
 import {
   listarReceitas,
   deletarReceita,
-  receitaPaga,
-  incrementarSaldo,
+  receitaPaga, listarCategoriasReceita
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
@@ -38,6 +37,7 @@ const ListaReceitas = () => {
   const [dataDeCobranca, setDataDeCobranca] = useState("");
   const [receitasPagas, setReceitasPagas] = useState([]);
   const [receitasNaoPagas, setReceitasNaoPagas] = useState([]);
+  const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
 
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
@@ -73,7 +73,7 @@ const ListaReceitas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam,
+    dataDeCobrancaParam
   ) {
     let formData = new FormData();
 
@@ -128,6 +128,24 @@ const ListaReceitas = () => {
     getReceitas();
   }, []);
 
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await listarCategoriasReceita();
+        const dropDownCategoriaReceita = response.data.map((categoria) => ({
+          key: categoria.id,
+          text: categoria.descricaoCategoriaReceita,
+          value: categoria.id,
+        }));
+        setListaCategoriaReceita(dropDownCategoriaReceita);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -138,7 +156,7 @@ const ListaReceitas = () => {
     try {
       await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaId),
+        prevReceitas.filter((receita) => receita.id !== receitaId)
       );
       setModalOpen(false);
       notifySuccess("Receita deletada com sucesso!");
@@ -216,52 +234,62 @@ const ListaReceitas = () => {
           </Menu.Item>
         </Menu>
         {menuFiltro && (
-          <Segment>
-            <Form className="form-filtros">
-              <Form.Group>
-                <Form.Input
-                  width={8}
-                  fluid
-                  icon="search"
-                  value={nome}
-                  onChange={(e) => handleChangeNome(e.target.value)}
-                  label="Nome"
-                  placeholder="Filtrar por Nome da Receita"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  icon="search"
-                  value={categoria}
-                  onChange={(e) => handleChangeCategoria(e.target.value)}
-                  label="Categoria"
-                  placeholder="Filtrar por categoria"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  type="number"
-                  value={valor}
-                  onChange={(e) => handleChangeValor(e.target.value)}
-                  label="Valor"
-                  placeholder="0"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  type="text"
-                  icon="calendar"
-                  onChange={(e) => handleChangeDataDeCobranca(e.target.value)}
-                  label="Data"
-                  placeholder="dd/MM/yyyy"
-                  labelPosition="left"
-                />
-              </Form.Group>
-            </Form>
-          </Segment>
+          <Container className="containerFiltro">
+            {menuFiltro && (
+              <Segment>
+                <Form className="form-filtros">
+                  <Form.Group widths="equal">
+                    <Form.Input
+                      fluid
+                      icon="search"
+                      value={nome}
+                      onChange={(e) => handleChangeNome(e.target.value)}
+                      label="Nome"
+                      placeholder="Filtrar por Nome da Receita"
+                      labelPosition="left"
+                    />
+                    <Form.Field className="dropCategoriaReceita">
+                      <label>Categoria</label>
+                      <Dropdown
+                        fluid
+                        selection
+                        placeholder="Selecione"
+                        options={listaCategoriaReceita}
+                        value={categoria}
+                        onChange={(e, { value }) =>
+                          handleChangeCategoria(value)
+                        }
+                      />
+                    </Form.Field>
+                  </Form.Group>
+
+                  <Form.Group widths="equal">
+                    <Form.Input
+                      fluid
+                      type="number"
+                      value={valor}
+                      onChange={(e) => handleChangeValor(e.target.value)}
+                      label="Valor"
+                      placeholder="0"
+                      labelPosition="left"
+                    />
+                    <Form.Input
+                      fluid
+                      type="text"
+                      icon="calendar"
+                      value={dataDeCobranca}
+                      onChange={(e) =>
+                        handleChangeDataDeCobranca(e.target.value)
+                      }
+                      label="Data"
+                      placeholder="dd/MM/yyyy"
+                      labelPosition="left"
+                    />
+                  </Form.Group>
+                </Form>
+              </Segment>
+            )}
+          </Container>
         )}
         <div className="receitas">
           <Segment className="segment-receitas">

@@ -187,11 +187,11 @@ const FormDespesa = ({ despesaId }) => {
                     fixedDecimalScale={true}
                   />
                 </Form.Field>
-                <Form.Field error={!!errors.idCategoriaDespesa}>
+                <Form.Field className="dropCategoriaDespesa" error={!!errors.idCategoriaDespesa}>
                   <label>Categoria</label>
                   <Dropdown
                     className="input-field"
-                    placeholder="Selecione Categoria"
+                    placeholder="Selecione"
                     fluid
                     selection
                     options={listaCategoriaDespesa}

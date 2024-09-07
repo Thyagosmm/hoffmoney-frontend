@@ -5,6 +5,11 @@
     margin-bottom: 1rem!important;
     color: white;
 
+}.containerFiltro{
+    width: 100%!important;
+    text-align: center!important;
+    margin-bottom: 1rem!important;
+    color: white;
 }
 
 .listaDespesas {
@@ -97,3 +102,15 @@ justify-items: center;
 .btnCadastrarDespesa:hover {
     background-color: black!important;
 }
+
+  .dropCategoriaDespesa .ui.selection.dropdown {
+    border-color: rgba(127, 253, 127, 0.733);
+  }
+  
+  .dropCategoriaDespesa .ui.selection.dropdown .dropdown.icon {
+    text-align: right;
+  }
+  
+  .dropCategoriaDespesa .ui.selection.dropdown .text {
+    font-size: 1rem;
+  }

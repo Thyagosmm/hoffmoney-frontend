@@ -319,3 +319,15 @@
 .custom-radio .ui.toggle.checkbox input:checked ~ label:before {
   background-color: rgba(152, 251, 152, 0.733) !important;
 }
+
+.dropCategoriaDespesa .ui.selection.dropdown {
+  border-color: rgba(127, 253, 127, 0.733);
+}
+
+.dropCategoriaDespesa .ui.selection.dropdown .dropdown.icon {
+  text-align: right;
+}
+
+.dropCategoriaDespesa .ui.selection.dropdown .text {
+  font-size: 1rem;
+}

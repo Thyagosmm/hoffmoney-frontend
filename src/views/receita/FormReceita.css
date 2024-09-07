@@ -316,3 +316,15 @@
 .custom-radio .ui.toggle.checkbox input:checked ~ label:before {
   background-color: rgba(152, 251, 152, 0.733) !important;
 }
+
+.dropCategoriaReceita .ui.selection.dropdown {
+  border-color: rgba(127, 253, 127, 0.733);
+}
+
+.dropCategoriaReceita .ui.selection.dropdown .dropdown.icon {
+  text-align: right;
+}
+
+.dropCategoriaReceita .ui.selection.dropdown .text {
+  font-size: 1rem;
+}

@@ -11,13 +11,13 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader,
+  Header as SemanticHeader, Dropdown
 } from "semantic-ui-react";
 import {
   despesaPaga,
   deletarDespesa,
   listarDespesas,
-  decrementarSaldo,
+  decrementarSaldo, listarCategoriasDespesa
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
@@ -30,14 +30,16 @@ const ListaDespesas = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [despesaId, setDespesaId] = useState(null);
   const [actionType, setActionType] = useState("");
-  const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [valor, setValor] = useState("");
   const [dataDeCobranca, setDataDeCobranca] = useState("");
+  const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [despesasPagas, setDespesasPagas] = useState([]);
   const [despesasNaoPagas, setDespesasNaoPagas] = useState([]);
+  const navigate = useNavigate();
+
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
   }
@@ -72,7 +74,7 @@ const ListaDespesas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam,
+    dataDeCobrancaParam
   ) {
     let formData = new FormData();
 
@@ -82,7 +84,7 @@ const ListaDespesas = () => {
     }
     if (categoriaParam !== undefined) {
       setCategoria(categoriaParam);
-      formData.append("categoria", categoriaParam);
+      formData.append("categoria", categoriaParam); // Enviar ID da categoria selecionada
     }
     if (valorParam !== undefined) {
       setValor(valorParam);
@@ -126,6 +128,25 @@ const ListaDespesas = () => {
 
     getDespesas();
   }, []);
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await listarCategoriasDespesa();
+        const dropDownCategoriaDespesa = response.data.map((categoria) => ({
+          key: categoria.id,
+          text: categoria.descricaoCategoriaDespesa,
+          value: categoria.id,
+        }));
+        setListaCategoriaDespesa(dropDownCategoriaDespesa);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -136,7 +157,7 @@ const ListaDespesas = () => {
     try {
       await deletarDespesa(usuarioId, despesaId);
       setDespesas((prevDespesas) =>
-        prevDespesas.filter((despesa) => despesa.id !== despesaId),
+        prevDespesas.filter((despesa) => despesa.id !== despesaId)
       );
       setModalOpen(false);
       notifySuccess("Despesa deletada com sucesso!");
@@ -216,54 +237,58 @@ const ListaDespesas = () => {
             </div>
           </Menu.Item>
         </Menu>
-        {menuFiltro && (
-          <Segment>
-            <Form className="form-filtros">
-              <Form.Group>
-                <Form.Input
-                  width={8}
-                  fluid
-                  icon="search"
-                  value={nome}
-                  onChange={(e) => handleChangeNome(e.target.value)}
-                  label="Nome"
-                  placeholder="Filtrar por Nome da Despesa"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  icon="search"
-                  value={categoria}
-                  onChange={(e) => handleChangeCategoria(e.target.value)}
-                  label="Categoria"
-                  placeholder="Filtrar por categoria"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  type="number"
-                  value={valor}
-                  onChange={(e) => handleChangeValor(e.target.value)}
-                  label="Valor"
-                  placeholder="0"
-                  labelPosition="left"
-                />
-                <Form.Input
-                  width={4}
-                  fluid
-                  type="text"
-                  icon="calendar"
-                  onChange={(e) => handleChangeDataDeCobranca(e.target.value)}
-                  label="Data"
-                  placeholder="dd/MM/yyyy"
-                  labelPosition="left"
-                />
-              </Form.Group>
-            </Form>
-          </Segment>
-        )}
+        <Container className="containerFiltro">
+          {menuFiltro && (
+            <Segment>
+              <Form className="form-filtros">
+                <Form.Group widths="equal">
+                  <Form.Input
+                    fluid
+                    icon="search"
+                    value={nome}
+                    onChange={(e) => handleChangeNome(e.target.value)}
+                    label="Nome"
+                    placeholder="Filtrar por Nome da Despesa"
+                    labelPosition="left"
+                  />
+                  <Form.Field className="dropCategoriaDespesa">
+                    <label>Categoria</label>
+                    <Dropdown
+                      fluid
+                      selection
+                      placeholder="Selecione"
+                      options={listaCategoriaDespesa}
+                      value={categoria}
+                      onChange={(e, { value }) => handleChangeCategoria(value)}
+                    />
+                  </Form.Field>
+                </Form.Group>
+
+                <Form.Group widths="equal">
+                  <Form.Input
+                    fluid
+                    type="number"
+                    value={valor}
+                    onChange={(e) => handleChangeValor(e.target.value)}
+                    label="Valor"
+                    placeholder="0"
+                    labelPosition="left"
+                  />
+                  <Form.Input
+                    fluid
+                    type="text"
+                    icon="calendar"
+                    value={dataDeCobranca}
+                    onChange={(e) => handleChangeDataDeCobranca(e.target.value)}
+                    label="Data"
+                    placeholder="dd/MM/yyyy"
+                    labelPosition="left"
+                  />
+                </Form.Group>
+              </Form>
+            </Segment>
+          )}
+        </Container>
         <div className="despesas">
           <Segment className="segment-despesas">
             <Menu inverted>
