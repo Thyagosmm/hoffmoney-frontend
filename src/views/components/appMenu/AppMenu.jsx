@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { consultarSaldo, getUser } from "../../../api/UserApi";
 import "./AppMenu.css";
 import { notifyError } from "../../utils/Utils";
+import LimiteModal from '../graficos/LimiteModal';
+import useLimite from '../graficos/useLimite';
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -11,10 +13,12 @@ const AppMenu = () => {
   const [saldo, setSaldo] = useState(0);
   const [limiteGastos, setLimiteGastos] = useState(0);
   const navigate = useNavigate();
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+  const userId = localStorage.getItem('userId');
+  const { limite, atualizarLimite } = useLimite(userId);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -57,6 +61,7 @@ const AppMenu = () => {
     if (limiteGastos > 0) {
       navigate(rota);
     } else {
+      setModalOpen(true);
       notifyError(
         "Você precisa definir um limite de gasto mensal!"
       );
@@ -208,6 +213,15 @@ const AppMenu = () => {
           </div>
         </nav>
       </div>
+      <LimiteModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={(novoLimite) => {
+          atualizarLimite(novoLimite);
+          setModalOpen(false);  // Fecha o modal após salvar
+        }}
+        limiteAtual={limiteGastos}
+      />
     </section>
   );
 };
