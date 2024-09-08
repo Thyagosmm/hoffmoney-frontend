@@ -94,11 +94,9 @@ export default function FormLogin() {
               onChange={(e) => setSenha(e.target.value)}
             />
           </Form.Field>
-          <Form.Field className="form-field forgot-password-container">
-            <Link to="/forget" className="forgot-password-link">
-              Esqueceu a senha?
-            </Link>
-          </Form.Field>
+          <Link to="/forget" className="forgot-link">
+            Esqueceu a senha?
+          </Link>
           <Button className="form-button" onClick={handleLogin}>
             Entrar
           </Button>
