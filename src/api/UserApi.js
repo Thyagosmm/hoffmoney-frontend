@@ -32,6 +32,17 @@ export const getUser = (userId) => {
   return api.get(`/usuario/${userId}`);
 };
 
+export const resetPassword = (email) => {
+  return api.post(`/usuario/reset-password`, null, {
+    params: { email },
+  });
+};
+
+export const resetPasswordWithToken = (token, novaSenha) => {
+  return api.post(`/usuario/redefinir-senha`, null, {
+    params: { token, novaSenha },
+  });
+};
 // Funções de SALDO
 
 export const incrementarSaldo = (valor) => {
@@ -179,14 +190,14 @@ export const consultarLimiteGastos = (id) => {
 
 export const enviarPdfPorEmail = (email, assunto, corpo, arquivoPdf) => {
   const formData = new FormData();
-  formData.append('email', email);
-  formData.append('assunto', assunto);
-  formData.append('corpo', corpo);
-  formData.append('arquivoPdf', arquivoPdf);
+  formData.append("email", email);
+  formData.append("assunto", assunto);
+  formData.append("corpo", corpo);
+  formData.append("arquivoPdf", arquivoPdf);
 
-  return api.post('/pdf/enviar', formData, {
+  return api.post("/pdf/enviar", formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 };

@@ -1,26 +1,56 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Container, Divider, Form, Message, Modal, } from "semantic-ui-react";
 import "./FormForget.css";
 import Info from "../../components/info/Info";
+import { resetPassword } from "../../../api/UserApi";
+import { notifyError } from "../../utils/Utils";
 
 export default function FormEsqueciSenha() {
   const [email, setEmail] = React.useState("");
   const [isEmailValid, setIsEmailValid] = React.useState(false);
-  function handleForgotPassword() {
-    console.log("Email:", email);
-  }
-const handleEmailChange = (e) => {
-  const emailValue = e.target.value;
-  setEmail(emailValue);
-  setIsEmailValid(validateEmail(emailValue));
-};
+  const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = React.useState(false);
 
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
-  return re.test(String(email).toLowerCase());
-};
+  const handleForgotPassword = async () => {
+    if (!isEmailValid) {
+      notifyError("Por favor, insira um e-mail válido.");
+    } else {
+      setIsLoading(true);
+      try {
+        const response = await resetPassword(email);
+
+        if (response.status === 200) {
+          setModalOpen(true);
+        } else {
+          notifyError("Houve um erro ao enviar o e-mail.");
+        }
+      } catch (error) {
+        notifyError("Não existe uma conta com este e-mail");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+    setIsEmailValid(validateEmail(emailValue));
+  };
+
+  const validateEmail = (email) => {
+    const re =
+      /^(([^<>().,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@(([^<>.,;:\s@"]+\.)+[^<>.,;:\s@"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    navigate("/login");
+  };
+
   return (
     <div className="page-container">
       <Info />
@@ -50,7 +80,12 @@ const validateEmail = (email) => {
                   onChange={handleEmailChange}
                 />
               </Form.Field>
-              <Button className="form-button" onClick={handleForgotPassword}>
+              <Button
+                className="form-button"
+                onClick={handleForgotPassword}
+                loading={isLoading}
+                disabled={isLoading}
+              >
                 Avançar
               </Button>
             </Form>
@@ -64,6 +99,17 @@ const validateEmail = (email) => {
           </div>
         </Container>
       </div>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Modal.Header>HoffMoney</Modal.Header>
+        <Modal.Content>
+          <p>E-mail para redefinir senha foi enviado com sucesso.</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button primary onClick={handleModalClose}>
+            OK
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   );
 }

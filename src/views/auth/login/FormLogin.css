@@ -10,6 +10,16 @@
   justify-content: center;
 }
 
+.forgot-password-container {
+  text-align: left;
+  margin-top: -10px;
+}
+
+.forgot-password-link {
+  color: #4183c4;
+  font-size: 1rem;
+  cursor: pointer;
+}
 
 /* Estilos para telas menores */
 @media (max-width: 768px) {
