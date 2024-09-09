@@ -3897,6 +3897,8 @@ input[type="button"].btn-block {
 }
 
 .nav-link {
+  justify-content: center!important;
+  text-align: center!important;
   display: block;
   padding: 0.25rem 1rem;
 }
@@ -3912,6 +3914,7 @@ input[type="button"].btn-block {
   border-bottom: 2px solid #eceff1;
 }
 .nav-tabs .nav-item {
+
   background-color: black !important;
   border: 0.1rem solid green;
   margin-bottom: -2px;
@@ -3999,7 +4002,10 @@ input[type="button"].btn-block {
 }
 
 .navbar-brand {
-  display: inline-block;
+  display: flex;
+  gap:1.5rem;
+  align-items: center;
+  flex-direction: row;
   padding-top: 0.0625rem;
   padding-bottom: 0.0625rem;
   margin-right: 1.25rem;

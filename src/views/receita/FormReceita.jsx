@@ -110,9 +110,9 @@ const FormReceita = ({ receitaId }) => {
         });
         console.log("Receita registrada:", response.data);
         notifySuccess("Receita registrada com sucesso!");
-        setTimeout(() => {
+        /*setTimeout(() => {
           navigate("/receitas");
-        }, 1500);
+        }, 1500);*/
       } catch (error) {
         notifyError(mensagemErro);
       }

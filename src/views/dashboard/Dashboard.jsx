@@ -9,6 +9,7 @@ import Acoes from "../components/acoes/Acoes";
 import UltimasTransacoes from "../components/ultimasTransacoes/UltimasTransacoes";
 
 const Dashboard = () => {
+
   return (
     <>
       <div className="dashboard-container">
@@ -26,6 +27,7 @@ const Dashboard = () => {
         <Container className="container-group">
           <Container className="container-bordered linha-grafico">
             <Container className="linha-container">
+              <h3>Histórico de Despesas e Receitas</h3>
               <Line />
             </Container>
             <div className="transacoes-div">

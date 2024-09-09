@@ -4,6 +4,12 @@
   border-radius: 4px;
   height: max-content;
 }
+
+.logo-menu{
+  display: flex;
+  width: 3.5rem;
+  height: 3.5rem;
+}
 .text {
   font-size: 1.5rem;
 }

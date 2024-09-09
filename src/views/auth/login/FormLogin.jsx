@@ -32,6 +32,7 @@ export default function FormLogin() {
         localStorage.setItem("nome", response.nome);
         localStorage.setItem("email", response.email);
         localStorage.setItem("saldo", response.saldo);
+        localStorage.setItem("primeiroAcesso", true);
         notifySuccess("Login realizado com sucesso!");
         window.location.href = "/";
       }

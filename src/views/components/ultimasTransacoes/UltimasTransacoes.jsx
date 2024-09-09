@@ -38,7 +38,7 @@ const UltimasTransacoes = () => {
 
   const panes = [
     {
-      menuItem: "Últimas 5 Despesas",
+      menuItem: "Últimas Despesas",
       render: () => (
         <TabPane
           inverted
@@ -46,6 +46,7 @@ const UltimasTransacoes = () => {
             border: "2px solid red",
             borderRadius: "1rem",
             padding: "0",
+            margin: "0",
           }}
         >
           <Table inverted style={{ borderRadius: "1rem" }} celled>
@@ -69,7 +70,7 @@ const UltimasTransacoes = () => {
       ),
     },
     {
-      menuItem: "Últimas 5 Receitas",
+      menuItem: "Últimas Receitas",
       render: () => (
         <TabPane
           inverted
@@ -77,13 +78,13 @@ const UltimasTransacoes = () => {
             border: "2px solid green",
             borderRadius: "1rem",
             padding: "0",
+            margin: "0",
           }}
         >
           <Table inverted style={{ borderRadius: "1rem" }} celled>
-            {" "}
             <Table.Body>
               {ultimasReceitas.map((receita) => (
-                <Table.Row key={receita.id}>
+                <Table.Row className="linha-transacoes" key={receita.id}>
                   <Table.Cell className="celulas-table">
                     {receita.nome}
                   </Table.Cell>

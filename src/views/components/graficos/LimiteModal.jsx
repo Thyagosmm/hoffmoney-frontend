@@ -8,6 +8,8 @@ function LimiteModal({ open, onClose, onSave, limiteAtual }) {
   const handleSave = () => {
     onSave(novoLimite);
     setNovoLimite(limiteAtual);
+    localStorage.setItem("primeiroAcesso", false);
+
   };
 
   return (

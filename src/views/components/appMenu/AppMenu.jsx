@@ -2,24 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { consultarSaldo, getUser } from "../../../api/UserApi";
 import "./AppMenu.css";
+import logo from "../../../assets/logo.png";
 import { notifyError } from "../../utils/Utils";
-import LimiteModal from '../graficos/LimiteModal';
-import useLimite from '../graficos/useLimite';
 
 const AppMenu = () => {
   const [isLogged, setIsLogged] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isRelatorioOpen, setIsRelatorioOpen] = useState(false);
+
   const [saldo, setSaldo] = useState(0);
   const [limiteGastos, setLimiteGastos] = useState(0);
   const navigate = useNavigate();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const userId = localStorage.getItem('userId');
-  const { limite, atualizarLimite } = useLimite(userId);
-  const [modalOpen, setModalOpen] = useState(false);
-
+  const toggleRelarotio = () => {
+    setIsRelatorioOpen(!isRelatorioOpen);
+  };
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const nameParts = localStorage.getItem("nome");
@@ -43,7 +43,7 @@ const AppMenu = () => {
         .catch((error) => {
           console.error(
             "Erro ao consultar saldo:",
-            error.response ? error.response.data : error.message
+            error.response ? error.response.data : error.message,
           );
         });
     }
@@ -62,9 +62,7 @@ const AppMenu = () => {
       navigate(rota);
     } else {
       setModalOpen(true);
-      notifyError(
-        "Você precisa definir um limite de gasto mensal!"
-      );
+      notifyError("Você precisa definir um limite de gasto mensal!");
     }
   };
 
@@ -73,7 +71,12 @@ const AppMenu = () => {
       <div className="container-fluid">
         <nav className="navbar navbar-expand-md navbar-dark">
           <Link className="navbar-brand heading-black" to="/">
-            HoffMoney
+            <img
+              className="logo-menu"
+              src={logo}
+              alt="Logo da Empresa HoffMoney"
+            />
+            <span>HoffMoney</span>
           </Link>
           <button
             className="navbar-toggler navbar-toggler-right border-0"
@@ -87,28 +90,33 @@ const AppMenu = () => {
             <span data-feather="grid"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarCollapse">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#features">
-                  Recursos
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#pricing">
-                  Planos
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#faq">
-                  FAQ
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#blog">
-                  Blog
-                </a>
-              </li>
-            </ul>
+            {!isLogged ? (
+              <>
+                <ul className="navbar-nav mr-auto">
+                  <li className="nav-item">
+                    <a className="nav-link page-scroll" href="#features">
+                      Recursos
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link page-scroll" href="#pricing">
+                      Planos
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link page-scroll" href="#faq">
+                      FAQ
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link page-scroll" href="#blog">
+                      Blog
+                    </a>
+                  </li>
+                </ul>
+              </>
+            ) : null}
+
             <ul className="navbar-nav ml-auto">
               {!isLogged ? (
                 <li className="nav-item">
@@ -123,11 +131,11 @@ const AppMenu = () => {
                 <>
                   <li
                     className="nav-item dropdown"
-                    onMouseEnter={toggleDropdown}
-                    onMouseLeave={toggleDropdown}
+                    onMouseEnter={toggleRelarotio}
+                    onMouseLeave={toggleRelarotio}
                   >
                     <span className="nav-link dropdown-toggle">Relatórios</span>
-                    {isDropdownOpen && (
+                    {isRelatorioOpen && (
                       <div className="dropdown-menu show">
                         <Link
                           className="dropdown-item nav-item"
@@ -188,9 +196,7 @@ const AppMenu = () => {
                   >
                     <span className="nav-link dropdown-toggle">
                       <span>Bem-vindo, {firstName}!</span>
-                      <span>
-                        Seu saldo é R$ {saldo}
-                      </span>
+                      <span>Seu saldo é R$ {saldo}</span>
                     </span>
                     {isDropdownOpen && (
                       <div className="dropdown-menu show">
@@ -213,15 +219,6 @@ const AppMenu = () => {
           </div>
         </nav>
       </div>
-      <LimiteModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSave={(novoLimite) => {
-          atualizarLimite(novoLimite);
-          setModalOpen(false);  // Fecha o modal após salvar
-        }}
-        limiteAtual={limiteGastos}
-      />
     </section>
   );
 };
