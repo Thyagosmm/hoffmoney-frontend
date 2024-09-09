@@ -140,6 +140,10 @@ export const receitaPaga = (receitaId, novaPaga) => {
   });
 };
 
+export const filtrarReceitas = (filtros) => {
+  return api.post("/receitas/filtrar", filtros);
+};
+
 // FUNÇÕES DE CATEGORIA DE DESPESA
 
 export const listarCategoriasDespesa = () => {
