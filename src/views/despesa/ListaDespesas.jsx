@@ -1,5 +1,3 @@
-import axios from "axios";
-import { format, parse } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,13 +9,16 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader, Dropdown
+  Header as SemanticHeader,
+  Dropdown,
 } from "semantic-ui-react";
 import {
   despesaPaga,
   deletarDespesa,
   listarDespesas,
-  decrementarSaldo, listarCategoriasDespesa
+  decrementarSaldo,
+  listarCategoriasDespesa,
+  filtrarDespesas,
 } from "../../api/UserApi";
 import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
@@ -40,95 +41,27 @@ const ListaDespesas = () => {
   const [despesasNaoPagas, setDespesasNaoPagas] = useState([]);
   const navigate = useNavigate();
 
+  // Função para alternar a exibição do menu de filtro
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
   }
 
-  function handleChangeNome(value) {
-    filtrarDespesas(value, categoria, valor, dataDeCobranca);
-  }
-
-  function handleChangeCategoria(value) {
-    filtrarDespesas(nome, value, valor, dataDeCobranca);
-  }
-
-  function handleChangeValor(value) {
-    filtrarDespesas(nome, categoria, value, dataDeCobranca);
-  }
-
-  function handleChangeDataDeCobranca(value) {
-    if (value) {
-      try {
-        const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-        const formattedDate = format(parsedDate, "dd/MM/yyyy");
-        filtrarDespesas(nome, categoria, valor, formattedDate);
-      } catch (error) {
-        console.error("Erro ao converter a data:", error);
-      }
-    } else {
-      filtrarDespesas(nome, categoria, valor, "");
-    }
-  }
-
-  async function filtrarDespesas(
-    nomeParam,
-    categoriaParam,
-    valorParam,
-    dataDeCobrancaParam
-  ) {
-    let formData = new FormData();
-
-    if (nomeParam !== undefined) {
-      setNome(nomeParam);
-      formData.append("nome", nomeParam);
-    }
-    if (categoriaParam !== undefined) {
-      setCategoria(categoriaParam);
-      formData.append("categoria", categoriaParam); // Enviar ID da categoria selecionada
-    }
-    if (valorParam !== undefined) {
-      setValor(valorParam);
-      formData.append("valor", valorParam);
-    }
-    if (dataDeCobrancaParam !== undefined) {
-      setDataDeCobranca(dataDeCobrancaParam);
-      formData.append("dataDeCobranca", dataDeCobrancaParam);
-    }
-
-    await axios
-      .post("http://localhost:8085/api/despesas/filtrar", formData)
-      .then((response) => {
-        setDespesas(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }
-
+  // Carregar todas as despesas na montagem do componente
   useEffect(() => {
-    const getDespesas = async () => {
+    const fetchDespesas = async () => {
       try {
         const { data } = await listarDespesas();
-        console.log("Despesas:", data);
-
-        const despesasPagas = data.filter((despesa) => despesa.paga);
-        const despesasNaoPagas = data.filter((despesa) => !despesa.paga);
-
-        setDespesasPagas(despesasPagas);
-        setDespesasNaoPagas(despesasNaoPagas);
-
-        const totalDespesas = data.reduce((sum, despesa) => {
-          return sum + despesa.valor;
-        }, 0);
-        setTotal(totalDespesas);
+        setDespesas(data);
+        atualizarListas(data);
       } catch (error) {
         setError(error.message);
       }
     };
 
-    getDespesas();
+    fetchDespesas();
   }, []);
 
+  // Carregar as categorias de despesa na montagem do componente
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -147,6 +80,7 @@ const ListaDespesas = () => {
     fetchCategorias();
   }, []);
 
+  // Função para excluir despesa
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -170,33 +104,51 @@ const ListaDespesas = () => {
     }
   };
 
+  // Atualizar listas e total após mudanças nos dados
+  const atualizarListas = (dadosDespesas) => {
+    const despesasPagasAtualizadas = dadosDespesas.filter(
+      (despesa) => despesa.paga
+    );
+    const despesasNaoPagasAtualizadas = dadosDespesas.filter(
+      (despesa) => !despesa.paga
+    );
+    setDespesasPagas(despesasPagasAtualizadas);
+    setDespesasNaoPagas(despesasNaoPagasAtualizadas);
+
+    const totalDespesasAtualizado = dadosDespesas.reduce(
+      (sum, despesa) => sum + (despesa.valor || 0),
+      0
+    );
+    setTotal(totalDespesasAtualizado);
+  };
+
+  // Abrir modal de confirmação (pagar ou excluir)
   const handleOpenModal = (id, action) => {
     setDespesaId(id);
     setActionType(action);
     setModalOpen(true);
   };
+
   const handleDespesaPaga = async () => {
     try {
-      const response = await despesaPaga(despesaId, true);
-      const despesa = despesas.find((despesa) => despesa.id === despesaId);
-      if (despesa) {
-        await decrementarSaldo(despesa.valor);
-      }
-      console.log("Despesa atualizada com sucesso:", response.status);
+      await despesaPaga(despesaId, true);
       setModalOpen(false);
       notifySuccess("Despesa paga com sucesso!");
-
       setTimeout(() => {
         window.location.reload();
       }, 1500);
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
+      notifyError(`Não foi possível atualizar a despesa: ${error.message}`);
     }
   };
+
+  // Editar despesa
   const handleEdit = (id) => {
     navigate(`/editarDespesa/${id}`);
   };
 
+  // Criar nova despesa
   const handleCreateNew = () => {
     navigate("/novaDespesa");
   };
@@ -204,6 +156,43 @@ const ListaDespesas = () => {
   if (error) {
     return <div>Erro: {error}</div>;
   }
+
+  // Aplicar filtros
+  const handleApplyFilters = async () => {
+    const filtros = {
+      nome,
+      idCategoriaDespesa: categoria,
+      valor: valor !== "" ? parseFloat(valor) : null,
+      dataDeCobranca,
+    };
+
+    try {
+      const { data } = await filtrarDespesas(filtros);
+      setDespesas(data);
+      atualizarListas(data);
+      notifySuccess("Filtros aplicados com sucesso!");
+    } catch (error) {
+      console.error("Erro ao filtrar despesas:", error);
+      notifyError("Não foi possível aplicar os filtros.");
+    }
+  };
+
+  // Limpar filtros e recarregar todas as despesas
+  const handleResetFilters = async () => {
+    setNome("");
+    setCategoria("");
+    setValor("");
+    setDataDeCobranca("");
+    try {
+      const { data } = await listarDespesas();
+      setDespesas(data);
+      atualizarListas(data);
+      notifySuccess("Filtros limpos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao recarregar despesas:", error);
+      notifyError("Não foi possível recarregar as despesas.");
+    }
+  };
 
   return (
     <>
@@ -233,7 +222,7 @@ const ListaDespesas = () => {
           <Menu.Item position="right">
             <div className="total-container">
               <strong>Total em Despesas: R$ </strong>
-              <span>{total}</span>
+              <span>{total.toFixed(2)}</span>
             </div>
           </Menu.Item>
         </Menu>
@@ -246,7 +235,7 @@ const ListaDespesas = () => {
                     fluid
                     icon="search"
                     value={nome}
-                    onChange={(e) => handleChangeNome(e.target.value)}
+                    onChange={(e) => setNome(e.target.value)}
                     label="Nome"
                     placeholder="Filtrar por Nome da Despesa"
                     labelPosition="left"
@@ -259,7 +248,8 @@ const ListaDespesas = () => {
                       placeholder="Selecione"
                       options={listaCategoriaDespesa}
                       value={categoria}
-                      onChange={(e, { value }) => handleChangeCategoria(value)}
+                      onChange={(e, { value }) => setCategoria(value)}
+                      clearable
                     />
                   </Form.Field>
                 </Form.Group>
@@ -269,32 +259,38 @@ const ListaDespesas = () => {
                     fluid
                     type="number"
                     value={valor}
-                    onChange={(e) => handleChangeValor(e.target.value)}
+                    onChange={(e) => setValor(e.target.value)}
                     label="Valor"
                     placeholder="0"
                     labelPosition="left"
                   />
                   <Form.Input
                     fluid
-                    type="text"
-                    icon="calendar"
+                    type="date"
                     value={dataDeCobranca}
-                    onChange={(e) => handleChangeDataDeCobranca(e.target.value)}
-                    label="Data"
-                    placeholder="dd/MM/yyyy"
+                    onChange={(e) => setDataDeCobranca(e.target.value)}
+                    label="Data de Cobrança"
+                    placeholder="DD/MM/YYYY"
                     labelPosition="left"
                   />
                 </Form.Group>
               </Form>
+              <Button color="green" onClick={handleApplyFilters}>
+                Aplicar Filtros
+              </Button>
+              <Button color="red" onClick={handleResetFilters}>
+                Limpar Filtros
+              </Button>
             </Segment>
           )}
         </Container>
+
         <div className="despesas">
           <Segment className="segment-despesas">
             <Menu inverted>
               <h2 className="header-nao-pagas">Não Pagas</h2>
             </Menu>
-            <List className="lista-items" divided verticalAlign="middle">
+            <List divided verticalAlign="middle" className="lista-items">
               {despesasNaoPagas.length > 0 ? (
                 despesasNaoPagas.map((despesa) => (
                   <List.Item className="items-lista" key={despesa.id}>
@@ -302,7 +298,7 @@ const ListaDespesas = () => {
                       <Button
                         icon
                         color="green"
-                        onClick={() => handleOpenModal(despesa.id, "check")}
+                        onClick={() => handleOpenModal(despesa.id, "pagar")}
                       >
                         <Icon name="check" />
                       </Button>
@@ -316,7 +312,7 @@ const ListaDespesas = () => {
                       <Button
                         icon
                         color="red"
-                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                        onClick={() => handleOpenModal(despesa.id, "excluir")}
                       >
                         <Icon name="trash" />
                       </Button>
@@ -325,8 +321,13 @@ const ListaDespesas = () => {
                     <List.Content>
                       <List.Header>{despesa.nome}</List.Header>
                       <List.Description>
-                        {despesa.categoriaDespesa.descricaoCategoriaDespesa} |
-                        R${despesa.valor} | {despesa.dataDeCobranca}
+                        {despesa.categoriaDespesa
+                          ? despesa.categoriaDespesa.descricaoCategoriaDespesa
+                          : "Sem categoria"}{" "}
+                        | R$ {despesa.valor.toFixed(2)} |{" "}
+                        {new Date(
+                          despesa.dataDeCobranca + "T00:00:00"
+                        ).toLocaleDateString()}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -340,7 +341,7 @@ const ListaDespesas = () => {
             <Menu inverted>
               <h2 className="header-pagas">Pagas</h2>
             </Menu>
-            <List className="lista-items" divided verticalAlign="middle">
+            <List divided verticalAlign="middle" className="lista-items">
               {despesasPagas.length > 0 ? (
                 despesasPagas.map((despesa) => (
                   <List.Item className="items-lista" key={despesa.id}>
@@ -355,7 +356,7 @@ const ListaDespesas = () => {
                       <Button
                         icon
                         color="red"
-                        onClick={() => handleOpenModal(despesa.id, "delete")}
+                        onClick={() => handleOpenModal(despesa.id, "excluir")}
                       >
                         <Icon name="trash" />
                       </Button>
@@ -364,8 +365,13 @@ const ListaDespesas = () => {
                     <List.Content>
                       <List.Header>{despesa.nome}</List.Header>
                       <List.Description>
-                        {despesa.categoriaDespesa.descricaoCategoriaDespesa} |
-                        R$ {despesa.valor} | {despesa.dataDeCobranca}
+                        {despesa.categoriaDespesa
+                          ? despesa.categoriaDespesa.descricaoCategoriaDespesa
+                          : "Sem categoria"}{" "}
+                        | R$ {despesa.valor.toFixed(2)} |{" "}
+                        {new Date(
+                          despesa.dataDeCobranca + "T00:00:00"
+                        ).toLocaleDateString()}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -385,16 +391,16 @@ const ListaDespesas = () => {
           closeIcon
         >
           <SemanticHeader
-            icon={actionType === "delete" ? "trash" : "check"}
+            icon={actionType === "excluir" ? "trash" : "check"}
             content={
-              actionType === "delete"
+              actionType === "excluir"
                 ? "Excluir Despesa"
                 : "Confirmar Pagamento"
             }
           />
           <Modal.Content>
             <span>
-              {actionType === "delete"
+              {actionType === "excluir"
                 ? "Você tem certeza que deseja excluir esta despesa?"
                 : "Você realmente pagou esta despesa?"}
             </span>
@@ -406,7 +412,7 @@ const ListaDespesas = () => {
             <Button
               color="green"
               onClick={
-                actionType === "delete" ? handleDelete : handleDespesaPaga
+                actionType === "excluir" ? handleDelete : handleDespesaPaga
               }
             >
               <Icon name="checkmark" /> Sim
