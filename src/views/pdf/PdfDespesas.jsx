@@ -141,10 +141,10 @@ const PdfDespesas = () => {
         >
           <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
           <Modal.Content>
-            <p>
+            <h4>
               Você deseja enviar o relatório para o e-mail cadastrado (
               {userEmail})?
-            </p>
+            </h4>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => handleModalOption("nao")}>
