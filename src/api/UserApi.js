@@ -31,6 +31,11 @@ export const updateUser = (userId, userData) => {
 export const getUser = (userId) => {
   return api.get(`/usuario/${userId}`);
 };
+export const ativarConta = (token) => {
+  return api.get(`/usuario/ativar`, {
+    params: { token },
+  });
+};
 
 export const resetPassword = (email) => {
   return api.post(`/usuario/reset-password`, null, {

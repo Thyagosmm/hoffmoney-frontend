@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { listarDespesas, getUser, enviarPdfPorEmail } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
+import AppMenu from "../components/appMenu/AppMenu";
 
 const PdfDespesas = () => {
   const [despesas, setDespesas] = useState([]);
@@ -45,7 +46,13 @@ const PdfDespesas = () => {
     doc.setFontSize(18);
     doc.text("Relatório de Despesas", 14, 22);
 
-    const tableColumn = ["Nome", "Categoria", "Valor (R$)", "Data de Cobrança", "Status"];
+    const tableColumn = [
+      "Nome",
+      "Categoria",
+      "Valor (R$)",
+      "Data de Cobrança",
+      "Status",
+    ];
     const tableRows = [];
 
     despesas.forEach((despesa) => {
@@ -54,7 +61,7 @@ const PdfDespesas = () => {
         despesa.categoriaDespesa.descricaoCategoriaDespesa,
         despesa.valor.toFixed(2),
         despesa.dataDeCobranca,
-        despesa.paga ? "Paga" : "Não Paga"
+        despesa.paga ? "Paga" : "Não Paga",
       ];
       tableRows.push(despesaData);
     });
@@ -82,7 +89,7 @@ const PdfDespesas = () => {
         userEmail,
         "Relatório de Despesas",
         "Segue em anexo o relatório de despesas.",
-        pdfFile
+        pdfFile,
       );
       notifySuccess("Relatório de despesas enviado com sucesso!");
     } catch (error) {
@@ -103,32 +110,53 @@ const PdfDespesas = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Relatório de Despesas</h1>
-      <p>
-        Aqui você pode gerar o relatório das suas despesas e baixar ou enviá-lo para o seu e-mail.
-      </p>
-
-      <Button color="blue" onClick={() => setModalOpen(true)} icon>
-        <Icon name="file pdf" />
-        Gerar Relatório de Despesas
-      </Button>
-
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
-        <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
-        <Modal.Content>
-          <p>Você deseja enviar o relatório para o e-mail cadastrado ({userEmail})?</p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={() => handleModalOption("nao")}>
-            Não
+    <>
+      <AppMenu />
+      <div className="pdf-div">
+        <div
+          className="container-bordered"
+          style={{
+            width: "80vw",
+            padding: "20px",
+          }}
+        >
+          <h1>Relatório de Despesas</h1>
+          <h4>
+            Aqui você pode gerar o relatório das suas despesas e baixar ou
+            enviá-lo para o seu e-mail.
+          </h4>
+          <Button
+            className="form-button"
+            onClick={() => setModalOpen(true)}
+            icon
+          >
+            <Icon name="file pdf" size="big" />
+            Gerar Relatório de Despesas
           </Button>
-          <Button color="green" onClick={() => handleModalOption("sim")}>
-            Sim
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    </div>
+        </div>
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          size="small"
+        >
+          <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
+          <Modal.Content>
+            <p>
+              Você deseja enviar o relatório para o e-mail cadastrado (
+              {userEmail})?
+            </p>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={() => handleModalOption("nao")}>
+              Não
+            </Button>
+            <Button color="green" onClick={() => handleModalOption("sim")}>
+              Sim
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      </div>
+    </>
   );
 };
 

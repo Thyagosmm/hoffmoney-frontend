@@ -99,8 +99,8 @@ const AppMenu = () => {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link page-scroll" href="#pricing">
-                      Planos
+                    <a className="nav-link page-scroll" href="#about">
+                      Descrição
                     </a>
                   </li>
                   <li className="nav-item">
@@ -159,22 +159,17 @@ const AppMenu = () => {
                     )}
                   </li>
                   <li className="nav-item">
-                    <span
-                      className="nav-link page-scroll"
-                      onClick={() => verificarLimite("/despesas")}
-                      style={{ cursor: "pointer" }}
-                    >
+                    <Link className="nav-link page-scroll" to="/despesas">
                       Despesas
-                    </span>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <span
+                    <Link
                       className="nav-link page-scroll"
-                      onClick={() => verificarLimite("/categoriadespesa")}
-                      style={{ cursor: "pointer" }}
+                      to="/categoriadespesa"
                     >
                       Categoria Despesa
-                    </span>
+                    </Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link page-scroll" to="/receitas">

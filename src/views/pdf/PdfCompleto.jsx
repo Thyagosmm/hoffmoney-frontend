@@ -9,6 +9,7 @@ import {
     enviarPdfPorEmail,
 } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
+import AppMenu from "../components/appMenu/AppMenu";
 
 const PdfCompleto = () => {
     const [despesas, setDespesas] = useState([]);
@@ -94,67 +95,89 @@ const PdfCompleto = () => {
     };
 
     return (
-        <div style={{ padding: "20px" }}>
+      <>
+        <AppMenu />
+        <div className="pdf-div">
+          <div
+            className="container-bordered"
+            style={{
+              width: "80vw",
+              padding: "20px",
+            }}
+          >
             <h1>Relatório Financeiro Completo</h1>
-            <p>
-                Aqui você pode gerar o relatório completo das suas despesas e receitas
-                e baixar ou enviá-lo para o seu e-mail.
-            </p>
+            <h4>
+              Aqui você pode gerar o relatório completo das suas despesas e
+              receitas e baixar ou enviá-lo para o seu e-mail.
+            </h4>
 
-            <Button color="green" onClick={() => setModalOpen(true)} icon>
-                <Icon name="download" />
-                Baixar Relatório Completo
+            <Button
+              className="form-button"
+              onClick={() => setModalOpen(true)}
+              icon
+            >
+              {" "}
+              <Icon name="download" size="big" />
+              Baixar Relatório Completo
             </Button>
+          </div>
+          <Modal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            size="small"
+          >
+            <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
+            <Modal.Content>
+              <h4>
+                Você deseja enviar o relatório para o e-mail cadastrado (
+                {userEmail})?
+              </h4>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color="red" onClick={() => handleModalOption("nao")}>
+                Não
+              </Button>
+              <Button color="green" onClick={() => handleModalOption("sim")}>
+                Sim
+              </Button>
+            </Modal.Actions>
+          </Modal>
 
-            <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
-                <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
-                <Modal.Content>
-                    <p>Você deseja enviar o relatório para o e-mail cadastrado ({userEmail})?</p>
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color="red" onClick={() => handleModalOption("nao")}>
-                        Não
-                    </Button>
-                    <Button color="green" onClick={() => handleModalOption("sim")}>
-                        Sim
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+          <table id="despesasTable" style={{ display: "none" }}>
+            <thead>
+              <tr>
+                <th>Despesa</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {despesas.map((despesa, index) => (
+                <tr key={index}>
+                  <td>{despesa.nome}</td>
+                  <td>{formatarMoeda(despesa.valor)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-            <table id="despesasTable" style={{ display: "none" }}>
-                <thead>
-                    <tr>
-                        <th>Despesa</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {despesas.map((despesa, index) => (
-                        <tr key={index}>
-                            <td>{despesa.nome}</td>
-                            <td>{formatarMoeda(despesa.valor)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            <table id="receitasTable" style={{ display: "none" }}>
-                <thead>
-                    <tr>
-                        <th>Receita</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {receitas.map((receita, index) => (
-                        <tr key={index}>
-                            <td>{receita.nome}</td>
-                            <td>{formatarMoeda(receita.valor)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+          <table id="receitasTable" style={{ display: "none" }}>
+            <thead>
+              <tr>
+                <th>Receita</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {receitas.map((receita, index) => (
+                <tr key={index}>
+                  <td>{receita.nome}</td>
+                  <td>{formatarMoeda(receita.valor)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </>
     );
 };
 

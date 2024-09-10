@@ -9,6 +9,17 @@
   padding: 0.9rem;
 }
 
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
 .form-right {
   display: flex !important;
   flex: 1;
@@ -17,14 +28,27 @@
   flex-direction: column;
   justify-content: center;
 }
-
+.page-div{
+  display: flex;
+  place-items: center;
+  padding-top: 1rem;
+}
+.pdf-div{
+  display: flex;
+  padding: 3rem;
+  place-items: center;
+}
 .form-button {
+  display: flex!important;
   background-color: rgb(152, 251, 152) !important;
+  border: 1px solid rgba(0, 0, 0, 0.322) !important;
+align-items: center!important;
   color: black !important;
   margin-top: 20px;
   padding: 15px 30px !important;
   font-size: 1.5rem !important;
   width: max-content;
+  height: max-content;
 }
 .form-button:hover {
   background-color: rgb(0, 0, 0) !important;
@@ -65,7 +89,7 @@ input {
   padding: 2rem!important;
   border-radius: 2rem;
   box-sizing: border-box; /* Inclui o padding e a borda no tamanho total do elemento */
-
+width: max-content!important;
   
 }
 .input-field {

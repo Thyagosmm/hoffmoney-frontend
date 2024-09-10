@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
-import { listarDespesas, consultarLimiteGastos } from "../../../api/UserApi";
+import { listarDespesas } from "../../../api/UserApi";
 import "./Limite.css";
 import { Button, Icon } from "semantic-ui-react";
 import LimiteModal from "./LimiteModal";
@@ -10,12 +10,12 @@ import useLimite from "./useLimite";
 Chart.register(ArcElement, Tooltip, Legend);
 
 function Limite() {
-  const [primeiroAcesso, setPrimeiroAcesso] = useState(true);
+  const userId = localStorage.getItem("userId");
+  const { limite, atualizarLimite, primeiroAcesso, setPrimeiroAcesso } =
+    useLimite(userId);
   const [porcentagens, setPorcentagens] = useState([]);
   const [categoriasAgrupadas, setCategoriasAgrupadas] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
-  const userId = localStorage.getItem("userId");
-  const { limite, atualizarLimite } = useLimite(userId);
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -41,6 +41,7 @@ function Limite() {
       },
     ],
   });
+
   const agruparCategorias = (categorias) => {
     return categorias.reduce((acc, categoria) => {
       const { descricao } = categoria;
@@ -118,20 +119,7 @@ function Limite() {
         console.error("Erro ao buscar dados das despesas", error);
       }
     };
-    const fetchLimite = async () => {
-      setPrimeiroAcesso(localStorage.getItem("primeiroAcesso"));
-      if (primeiroAcesso === "false") {
-        try {
-          const response = await consultarLimiteGastos(userId);
-          console.log(response.data);
-          setLimite(response.data);
-        } catch (error) {
-          console.error("Erro ao buscar limite de gastos", error);
-        }
-      }
-    };
 
-    fetchLimite();
     fetchData();
   }, [limite]); // Adicionei `limite` como dependência para atualizar o gráfico quando o limite mudar
 
@@ -151,6 +139,16 @@ function Limite() {
   return (
     <div className="limite-container">
       {primeiroAcesso ? (
+        <>
+          <h2 className="aviso-limite">
+            <Icon name="warning circle" size="large" />
+            Por favor defina um limite para mais controle sobre suas despesas
+            <Button className="form-button" onClick={() => setModalOpen(true)}>
+              Definir Limite
+            </Button>
+          </h2>
+        </>
+      ) : (
         <>
           <div className="chart-container">
             <div className="chart-wrapper">
@@ -182,22 +180,13 @@ function Limite() {
             ))}
           </div>
         </>
-      ) : (
-        <>
-          <h2 className="aviso-limite">
-            <Icon name="warning circle" size="large" />
-            Por favor defina um limite para mais controle sobre suas despesas
-            <Button className="form-button" onClick={() => setModalOpen(true)}>
-              Definir Limite
-            </Button>
-          </h2>
-        </>
       )}
       <LimiteModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSave={(novoLimite) => {
           atualizarLimite(novoLimite);
+          setPrimeiroAcesso(false); // Atualiza o estado de primeiro acesso
           setModalOpen(false); // Fecha o modal após salvar
         }}
         limiteAtual={limite}

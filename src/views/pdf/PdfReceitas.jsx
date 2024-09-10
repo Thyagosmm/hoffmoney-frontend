@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { listarReceitas, getUser, enviarPdfPorEmail } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
+import AppMenu from "../components/appMenu/AppMenu";
 
 const PdfReceitas = () => {
   const [receitas, setReceitas] = useState([]);
@@ -45,7 +46,13 @@ const PdfReceitas = () => {
     doc.setFontSize(18);
     doc.text("Relatório de Receitas", 14, 22);
 
-    const tableColumn = ["Nome", "Categoria", "Valor (R$)", "Data de Cobrança", "Status"];
+    const tableColumn = [
+      "Nome",
+      "Categoria",
+      "Valor (R$)",
+      "Data de Cobrança",
+      "Status",
+    ];
     const tableRows = [];
 
     receitas.forEach((receita) => {
@@ -54,7 +61,7 @@ const PdfReceitas = () => {
         receita.categoriaReceita.descricaoCategoriaReceita,
         receita.valor.toFixed(2),
         receita.dataDeCobranca,
-        receita.paga ? "Recebida" : "Não Recebida"
+        receita.paga ? "Recebida" : "Não Recebida",
       ];
       tableRows.push(receitaData);
     });
@@ -82,7 +89,7 @@ const PdfReceitas = () => {
         userEmail,
         "Relatório de Receitas",
         "Segue em anexo o relatório de receitas.",
-        pdfFile
+        pdfFile,
       );
       notifySuccess("Relatório de receitas enviado com sucesso!");
     } catch (error) {
@@ -96,39 +103,66 @@ const PdfReceitas = () => {
   const handleModalOption = (option) => {
     if (option === "sim") {
       handleEnviarEmail();
+      setModalOpen(false);
+      notifySuccess("Relatório de receitas enviado com sucesso!");
     } else {
       handleBaixarPdf();
       setModalOpen(false);
+      notifySuccess("O relatório de receitas será baixado em breve!");
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Relatório de Receitas</h1>
-      <p>
-        Aqui você pode gerar o relatório das suas receitas e baixá-lo ou enviá-lo para o seu e-mail.
-      </p>
+    <>
+      <AppMenu />
+      <div className="pdf-div">
+        <div
+          className="container-bordered"
+          style={{
+            width: "80vw",
+            padding: "20px",
+          }}
+        >
+          <h1>Relatório de Receitas</h1>
+          <h4>
+            Aqui você pode gerar o relatório das suas receitas e baixá-lo ou
+            enviá-lo para o seu e-mail.
+          </h4>
 
-      <Button color="blue" onClick={() => setModalOpen(true)} icon>
-        <Icon name="file pdf" />
-        Gerar Relatório de Receitas
-      </Button>
+          <Button
+            className="form-button"
+            onClick={() => setModalOpen(true)}
+            icon
+          >
+            <Icon name="file pdf" size="big" />
+            Gerar Relatório de Receitas
+          </Button>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
-        <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
-        <Modal.Content>
-          <p>Você deseja enviar o relatório para o e-mail cadastrado ({userEmail})?</p>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={() => handleModalOption("nao")}>
-            Não
-          </Button>
-          <Button color="green" onClick={() => handleModalOption("sim")}>
-            Sim
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    </div>
+          <Modal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            size="small"
+          >
+            <Modal.Header>Enviar Relatório por E-mail?</Modal.Header>
+            <Modal.Content>
+              <span>
+                Você deseja enviar o relatório para o e-mail cadastrado (
+                {userEmail}
+                )?
+              </span>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color="red" onClick={() => handleModalOption("nao")}>
+                Não
+              </Button>
+              <Button color="green" onClick={() => handleModalOption("sim")}>
+                Sim
+              </Button>
+            </Modal.Actions>
+          </Modal>
+        </div>
+      </div>
+    </>
   );
 };
 

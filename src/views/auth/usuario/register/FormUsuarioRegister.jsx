@@ -77,8 +77,10 @@ const FormUsuarioRegister = () => {
         saldo: 0,
       });
       console.log("User registered:", response.data);
-      notifySuccess("Usuário registrado com sucesso!");
-      setTimeout(() => (window.location.href = "/login"), 2000);
+      notifySuccess(
+        "Usuário registrado com sucesso! Favor  verificar seu email para ativar a conta.",
+      );
+      setTimeout(() => (window.location.href = "/login"), 4000);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.error("Error registering user:", error);

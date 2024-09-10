@@ -115,6 +115,10 @@ height: 25vh !important;
   max-height: 100% !important;
   flex: 2 1 calc(33.333% - 2vw) !important; /* Define a largura das colunas e o espaçamento usando vw */
 }
+.ui.menu .active.item{
+  border-radius: 1.5rem !important;
+  border: 1px solid #000000 !important;
+}
 .linha-grafico {
   flex-direction: row !important;
   
