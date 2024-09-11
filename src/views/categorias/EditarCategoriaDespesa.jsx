@@ -43,19 +43,22 @@ const EditarCategoriaDespesa = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaDespesa(id, { descricaoCategoriaDespesa: description });
+        await atualizarCategoriaDespesa(id, {
+          descricaoCategoriaDespesa: description,
+        });
         notifySuccess("Categoria atualizada com sucesso!");
-        navigate("/categoriadespesa");
+        navigate("/categorias");
       } catch (error) {
         notifyError("Erro ao atualizar a categoria de despesa.");
-        console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
+        console.error(
+          "Erro ao atualizar a categoria:",
+          error.response?.data || error.message,
+        );
       } finally {
         setLoading(false);
       }
     }
   };
-  
-  
 
   return (
     <>
@@ -83,7 +86,7 @@ const EditarCategoriaDespesa = () => {
               <Button
                 type="button"
                 className="cancel-button-categoria"
-                onClick={() => navigate("/categoriadespesa")}
+                onClick={() => navigate("/categorias")}
               >
                 Voltar
               </Button>

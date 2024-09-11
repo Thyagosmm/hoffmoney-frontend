@@ -42,20 +42,25 @@ const EditarCategoriaReceita = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaReceita(id, { descricaoCategoriaReceita: description });
+        await atualizarCategoriaReceita(id, {
+          descricaoCategoriaReceita: description,
+        });
         notifySuccess("Categoria atualizada com sucesso!");
         setTimeout(() => {
-          navigate("/categoriareceita");
+          navigate("/categorias");
         }, 1500);
       } catch (error) {
         notifyError("Erro ao atualizar a categoria de receita.");
-        console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
+        console.error(
+          "Erro ao atualizar a categoria:",
+          error.response?.data || error.message,
+        );
       } finally {
         setLoading(false);
       }
     }
   };
-  
+
   return (
     <>
       <div className="categoria-receita">
@@ -82,7 +87,7 @@ const EditarCategoriaReceita = () => {
               <Button
                 type="button"
                 className="cancel-button-categoria"
-                onClick={() => navigate("/categoriareceita")}
+                onClick={() => navigate("/categorias")}
               >
                 Voltar
               </Button>

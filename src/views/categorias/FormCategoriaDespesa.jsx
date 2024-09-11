@@ -47,7 +47,7 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
           descricaoCategoriaDespesa: description,
         });
         notifySuccess("Categoria registrada com sucesso!");
-        navigate("/categoriadespesa");
+        navigate("/categorias");
       } catch (error) {
         notifyError("Erro ao registrar a categoria de despesa.");
         console.error(error);

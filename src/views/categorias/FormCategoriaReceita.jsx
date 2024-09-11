@@ -40,10 +40,12 @@ const FormCategoriaReceita = ({ categoriaId }) => {
     if (validate()) {
       setLoading(true);
       try {
-        await registrarCategoriaReceita({ descricaoCategoriaReceita: description });
+        await registrarCategoriaReceita({
+          descricaoCategoriaReceita: description,
+        });
         notifySuccess("Categoria registrada com sucesso!");
         setTimeout(() => {
-          navigate("/categoriareceita");
+          navigate("/categorias");
         }, 1500);
       } catch (error) {
         notifyError("Erro ao registrar a categoria de receita.");
@@ -82,7 +84,7 @@ const FormCategoriaReceita = ({ categoriaId }) => {
               <Button
                 type="button"
                 className="cancel-button-categoria"
-                onClick={() => navigate("/categoriareceita")}
+                onClick={() => navigate("/categorias")}
               >
                 Voltar
               </Button>
