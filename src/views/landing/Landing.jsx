@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   BarChart,
@@ -9,6 +9,7 @@ import {
 } from "react-feather";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
+import { useInView } from "react-intersection-observer";
 import images from "../../assets/images.js";
 
 const Landing = () => {
@@ -21,12 +22,50 @@ const Landing = () => {
     autoplay: true,
     autoplaySpeed: 3000,
   };
+  const sectionsRef = useRef([]);
+  const currentSection = useRef(0);
+
+  const handleWheel = (event) => {
+    if (event.deltaY > 0) {
+      // Scroll down
+      if (currentSection.current < sectionsRef.current.length - 1) {
+        currentSection.current += 1;
+      }
+    } else {
+      // Scroll up
+      if (currentSection.current > 0) {
+        currentSection.current -= 1;
+      }
+    }
+    sectionsRef.current[currentSection.current].scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleWheel);
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
   return (
     <>
       {/* Hero Header */}
-      <section className="py-7 py-md-0 bg-hero" id="home">
+      <section
+        className="py-7 py-md-0 bg-hero"
+        id="home"
+        ref={(el) => (sectionsRef.current[0] = el)}
+      >
         <div className="container">
           <div className="row vh-md-100">
+            <div className="col-md-4 col-sm-7 col-9 mx-auto my-auto text-center">
+              <img
+                src={images.logo}
+                alt="Logo da HoffMoney"
+                className="card-img-top img-raised"
+              />
+            </div>
+
             <div className="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
               <h1 className="heading-black text-capitalize">
                 Gerencie suas finanças com HoffMoney
@@ -47,12 +86,15 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
       {/* Recursos Section */}
-      <section className="pt-6 pb-7" id="features">
+      <section
+        className="pt-6 pb-7"
+        id="features"
+        ref={(el) => (sectionsRef.current[1] = el)}
+      >
         <div className="container">
           <div className="row">
-            <div className="col-md-6 mx-auto text-center">
+            <div className="col-md-6 mx-auto mt-4 text-center">
               <h2 className="heading-black">
                 HoffMoney oferece tudo o que você precisa.
               </h2>
@@ -62,13 +104,12 @@ const Landing = () => {
               </p>
             </div>
           </div>
-          <div className="row mt-5">
+          <div className="row mt-4">
             <div className="col-md-10 mx-auto">
               <div className="row feature-boxes">
                 <div className="col-md-6 box">
                   <div className="icon-box box-primary">
                     <div className="icon-box-inner">
-                      {/* Usa o ícone Edit */}
                       <Edit width={35} height={35} />
                     </div>
                   </div>
@@ -81,7 +122,6 @@ const Landing = () => {
                 <div className="col-md-6 box">
                   <div className="icon-box box-success">
                     <div className="icon-box-inner">
-                      {/* Usa o ícone Monitor */}
                       <Monitor width={35} height={35} />
                     </div>
                   </div>
@@ -94,7 +134,6 @@ const Landing = () => {
                 <div className="col-md-6 box">
                   <div className="icon-box box-danger">
                     <div className="icon-box-inner">
-                      {/* Usa o ícone BarChart */}
                       <BarChart width={35} height={35} />
                     </div>
                   </div>
@@ -107,7 +146,6 @@ const Landing = () => {
                 <div className="col-md-6 box">
                   <div className="icon-box box-info">
                     <div className="icon-box-inner">
-                      {/* Usa o ícone Globe */}
                       <Globe width={35} height={35} />
                     </div>
                   </div>
@@ -120,6 +158,15 @@ const Landing = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      {/* Carrossel */}
+      <section
+        className="pt-6 pb-7"
+        id="about"
+        ref={(el) => (sectionsRef.current[2] = el)}
+      >
+        <div className="container">
           <div className="row mt-6">
             <div className="col-md-6 mr-auto">
               <h2>
@@ -161,122 +208,12 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
-      {/* Pricing Section */}
-      <section
-        className="py-7 bg-dark section-angle top-right bottom-right"
-        id="pricing"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 mx-auto text-center">
-              <h2 className="text-white heading-black">
-                Escolha seu plano de assinatura.
-              </h2>
-              <p className="text-light lead">
-                Planos simples - 7 dias de teste gratuito
-              </p>
-            </div>
-          </div>
-          {/* TABELAS DE PREÇOS */}
-          <div className="row pt-5 pricing-table">
-            <div className="col-12 mx-auto">
-              <div className="card-deck pricing-table">
-                <div className="card">
-                  <div className="card-body">
-                    <h3 className="card-title pt-3">Básico</h3>
-                    <h2 className="card-title text-primary mb-0 pt-4">R$19</h2>
-                    <div className="text-muted font-weight-medium mt-2">
-                      por mês
-                    </div>
-                    <ul className="list-unstyled pricing-list">
-                      <li>1 usuário</li>
-                      <li>Acesso básico aos recursos</li>
-                      <li>Suporte por email</li>
-                    </ul>
-                    <Link to="/register" className="btn btn-primary">
-                      INICIAR TESTE
-                    </Link>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h3 className="card-title pt-3">Profissional</h3>
-                    <h2 className="card-title text-info mb-0 pt-4">R$59</h2>
-                    <div className="text-muted font-weight-medium mt-2">
-                      por mês
-                    </div>
-                    <ul className="list-unstyled pricing-list">
-                      <li>Até 5 usuários</li>
-                      <li>Relatórios avançados</li>
-                      <li>Suporte prioritário</li>
-                    </ul>
-                    <Link to="/register" className="btn btn-info">
-                      INICIAR TESTE
-                    </Link>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h3 className="card-title pt-3">Empresarial</h3>
-                    <h2 className="card-title text-primary mb-0 pt-4">R$199</h2>
-                    <div className="text-muted font-weight-medium mt-2">
-                      por mês
-                    </div>
-                    <ul className="list-unstyled pricing-list">
-                      <li>Usuários ilimitados</li>
-                      <li>Relatórios personalizados</li>
-                      <li>Suporte dedicado</li>
-                    </ul>
-                    <Link to="/register" className="btn btn-primary">
-                      INICIAR TESTE
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <section className="py-7">
-          <div className="container">
-            {/* Informações sobre o serviço */}
-            <div className="row mt-6">
-              <div className="col-md-4 mr-auto">
-                <h3>Cuidamos de Tudo.</h3>
-                <p className="lead">
-                  O Hoffmoney oferece tudo o que você precisa para gerenciar
-                  suas finanças com confiança. Explore nosso conjunto abrangente
-                  de ferramentas e recursos.
-                </p>
-              </div>
-              <div className="col-md-7 offset-md-1">
-                <ul className="features-list">
-                  <li>Planejamento financeiro personalizado</li>
-                  <li>Rastreamento de despesas e orçamento</li>
-                  <li>Suporte ao cliente</li>
-                  <li>Acompanhamento de progresso</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Chamada para ação */}
-            <div className="row mt-5">
-              <div className="col-md-8 col-12 divider top-divider mx-auto pt-5 text-center">
-                <h3>HoffMoney gratuito por 7 dias!</h3>
-                <p className="mb-4">
-                  Experimente o HoffMoney gratuitamente e descubra como
-                  transformar sua gestão financeira. Sem compromisso, sem risco.
-                </p>
-                <Link to="/register" className="btn btn-primary">
-                  CADASTRE-SE
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
       {/* FAQ */}
-      <section className="py-7" id="faq">
+      <section
+        className="pt-6 pb-7 mt-5"
+        id="faq"
+        ref={(el) => (sectionsRef.current[3] = el)}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 mx-auto text-center">
@@ -296,45 +233,13 @@ const Landing = () => {
                     superior da página e preencher o formulário de inscrição.
                   </p>
                 </div>
-                <div className="col-md-6 mb-5">
-                  <h6>Posso cancelar a qualquer momento?</h6>
-                  <p className="text-muted">
-                    Sim, você pode cancelar sua assinatura a qualquer momento
-                    sem penalidades.
-                  </p>
-                </div>
-                <div className="col-md-6 mb-5">
-                  <h6>Existe uma versão de teste gratuita?</h6>
-                  <p className="text-muted">
-                    Sim, oferecemos um teste gratuito de 7 dias para que você
-                    possa experimentar todos os recursos antes de se
-                    comprometer.
-                  </p>
-                </div>
+
                 <div className="col-md-6 mb-5">
                   <h6>Com que frequência atualizações são lançadas?</h6>
                   <p className="text-muted">
                     Lançamos atualizações regularmente, pelo menos uma vez por
                     mês. Nosso objetivo é garantir que você sempre tenha acesso
                     às últimas funcionalidades e melhorias de segurança.
-                  </p>
-                </div>
-                <div className="col-md-6 mb-5">
-                  <h6>Qual é sua política de reembolso?</h6>
-                  <p className="text-muted">
-                    Oferecemos uma garantia de reembolso de 100% dentro de 30
-                    dias após a compra, caso você não esteja satisfeito com
-                    nossos serviços. Basta entrar em contato com nossa equipe de
-                    suporte, e faremos o possível para resolver a situação ou
-                    processar o reembolso.
-                  </p>
-                </div>
-                <div className="col-md-6 mb-5">
-                  <h6>Quais métodos de pagamentos são aceitos?</h6>
-                  <p className="text-muted">
-                    Aceitamos os principais cartões de crédito e débito, como
-                    Visa, MasterCard e American Express. Além disso, oferecemos
-                    a opção de pagamento via PayPal para sua conveniência.
                   </p>
                 </div>
               </div>
@@ -359,6 +264,7 @@ const Landing = () => {
       <section
         className="py-7 bg-dark section-angle top-left bottom-left"
         id="blog"
+        ref={(el) => (sectionsRef.current[4] = el)}
       >
         <div className="container">
           <div className="row">
@@ -484,7 +390,7 @@ const Landing = () => {
               </div>
             </div>
           </div>
-          <div className="row mt-6">
+          <div className="row mt-4">
             <div className="col-md-6 mx-auto text-center">
               <a
                 href="https://www.instagram.com/hoffmoney_/"
@@ -499,7 +405,7 @@ const Landing = () => {
         </div>
       </section>
       {/* Footer */}
-      <footer className="py-6">
+      <footer className="py-6" ref={(el) => (sectionsRef.current[5] = el)}>
         <div className="container">
           <div className="row">
             <div className="col-sm-5 mr-auto">

@@ -1,25 +1,34 @@
 .dashboard-container {
-  display: flex!important;
-  gap: 0.5rem!important; /* Adiciona um espaçamento entre os containers */
-  flex-direction: column!important;
-  max-width: 100vw!important; /* Define a largura máxima do dashboard como 100% da largura da viewport */
-  margin: 0 auto!important; /* Centraliza o dashboard horizontalmente */
-  padding: 0!important; /* Adiciona um padding ao redor do dashboard usando vh */
-  box-sizing: border-box!important; /* Inclui o padding e a borda no tamanho total do elemento */
-  height:85vh!important; /* Define a altura do dashboard para ocupar toda a altura da viewport */
+  display: flex !important;
+  gap: 0.5rem !important; /* Adiciona um espaçamento entre os containers */
+  flex-direction: column !important;
+  max-width: 100vw !important; /* Define a largura máxima do dashboard como 100% da largura da viewport */
+  margin: 0 auto !important; /* Centraliza o dashboard horizontalmente */
+  padding: 0 !important; /* Adiciona um padding ao redor do dashboard usando vh */
+  box-sizing: border-box !important; /* Inclui o padding e a borda no tamanho total do elemento */
+  height: 85vh !important; /* Define a altura do dashboard para ocupar toda a altura da viewport */
 }
 
 .container-group {
-  display: flex!important;
-  width: 100%!important;
-  gap: 0.5rem!important; /* Adiciona um espaçamento entre os containers */
-  flex-wrap: wrap!important;
-  justify-content: space-between!important;
-  flex: 1!important; /* Permite que o grupo de contêineres cresça para ocupar o espaço disponível */
-  max-height: 40vh!important; /* Define a altura máxima para dividir o espaço */
+  display: flex !important;
+  width: 100% !important;
+  gap: 0.5rem !important; /* Adiciona um espaçamento entre os containers */
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  flex: 1 !important; /* Permite que o grupo de contêineres cresça para ocupar o espaço disponível */
+  max-height: 40vh !important; /* Define a altura máxima para dividir o espaço */
 }
-.doughnut-container{
-  position: fixed!important;
+
+.container-historico{
+  display: flex !important;
+flex-direction: column !important;
+  width: 100% !important;
+  gap: 0.5rem !important; /* Adiciona um espaçamento entre os containers */
+  flex: 1 !important; /* Permite que o grupo de contêineres cresça para ocupar o espaço disponível */
+  max-height: 40vh !important; /* Define a altura máxima para dividir o espaço */
+}
+.doughnut-container {
+  position: fixed !important;
 }
 
 .chart-wrapper {
@@ -28,8 +37,13 @@
 }
 
 .limite {
+  place-items: center;
+
+  display: flex !important;
+  flex-direction: column;
   position: absolute;
-  width: max-content;
+  justify-items: center;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -37,53 +51,102 @@
   padding: 10px; /* Opcional: para melhor espaçamento */
   border-radius: 10px; /* Opcional: para bordas arredondadas */
 }
-.acoes-container{
-
-max-width: max-content!important;
+.acoes-container {
+  max-width: max-content !important;
 }
-.transacoes-div{
-  width: 40vw!important;
+.transacoes-div {
+  width: 30vw !important;
+  display: flex !important;
+  height: 32vh !important;
 }
-.ultimas-container{
-  width: max-content!important;
-  height: 100%!important;
+.ui.attached.menu{
+  background-color: rgb(168, 168, 168) !important;
+  color: white !important;
+  border: 0 !important;
+  border-radius: 1rem !important;
+  padding: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+.ultimas-container {
+  width: max-content !important;
+  display: flex !important;
+  gap: 0.5rem !important;
+  height: 100% !important;
   border-radius: 1rem;
+  padding: 1rem;
+  background-color: rgb(39, 39, 39);
 }
-.linha-transacoes{
+.linha-transacoes {
+  padding: 1.5rem !important;
 }
-.ultimas-despesas{
+.tabela-header {
+  display: flex !important;
+  justify-content: center;  
+}
+.ultimas-receitas {
+  display: flex !important;
+  flex-direction: column !important;
+  border: rgb(43, 255, 0) solid 2px;
+  padding: 0.1rem !important;
+  height: 25vh !important;
+}
+.grafico-divsoria{
+height: 25vh !important;
+
+}
+.ultimas-despesas {
+  display: flex !important;
+  flex-direction: column !important;
   border: red solid 2px;
-  padding: 0!important;
+  padding: 0 !important;
 }
-.celulas-table{
-  width: max-content!important;
-  border: 0!important;
+.celulas-table {
+  color: white;
+  font-size: large;
+  width: max-content !important;
+  padding: 0.6rem !important;
+  border: 0 !important;
 }
 .container-bordered {
-  display: flex!important;
-  flex-direction: column!important;
-    align-items: center!important; /* Centraliza horizontalmente */
-justify-content: center!important; /* Centraliza verticalmente */
-  position: relative!important; 
-  margin: 0!important;
-  min-height: 100%!important;
-  max-height: 100%!important;
-  flex: 2 1 calc(33.333% - 2vw)!important; /* Define a largura das colunas e o espaçamento usando vw */
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important; /* Centraliza horizontalmente */
+  justify-content: center !important; /* Centraliza verticalmente */
+  position: relative !important;
+  margin: 0 !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  flex: 2 1 calc(33.333% - 2vw) !important; /* Define a largura das colunas e o espaçamento usando vw */
 }
-.linha-grafico{
-  flex-direction: row!important;
+.ui.menu .active.item{
+  border-radius: 1.5rem !important;
+  border: 1px solid #000000 !important;
 }
-.linha-container{
-  height: 100%!important; 
+.linha-grafico {
+  flex-direction: row !important;
+  
+  justify-content: space-between !important;
+  display: flex !important;
+  height: 100% !important;
+  align-items: top !important;
+}
+.linha-container {
+  display: flex !important;
+  flex-direction: column;
+  align-items: top !important;
+  justify-items: top !important;
+  height: 100% !important;
 }
 /* Media query para telas menores */
 @media (max-width: 768px) {
   .container-group {
-    flex-direction: column!important;
+    flex-direction: column !important;
   }
 
   .container-bordered {
-    flex: 1 1 100%!important; /* Define a largura das colunas para 100% em telas pequenas */
-    margin: 1vh 0!important; /* Remove a margem lateral em telas pequenas */
+    flex: 1 1 100% !important; /* Define a largura das colunas para 100% em telas pequenas */
+    margin: 1vh 0 !important; /* Remove a margem lateral em telas pequenas */
   }
 }

@@ -14,34 +14,48 @@ import ListaDespesas from "./views/despesa/ListaDespesas";
 import Home from "./views/home/Home";
 import EditarReceita from "./views/receita/EditarReceita";
 import FormReceita from "./views/receita/FormReceita";
-import FormCategoriaDespesa from "./views/categoriadespesa/FormCategoriaDespesa";
-import EditarCategoriaDespesa from "./views/categoriadespesa/EditarCategoriaDespesa";
-import ListaCategoriaDespesa from "./views/categoriadespesa/ListaCategoriaDespesa";
-import FormCategoriaReceita from "./views/categoriareceita/FormCategoriaReceita";
-import EditarCategoriaReceita from "./views/categoriareceita/EditarCategoriaReceita";
-import ListaCategoriaReceita from "./views/categoriareceita/ListaCategoriaReceita";
+import FormCategoriaDespesa from "./views/categorias/FormCategoriaDespesa";
+import EditarCategoriaDespesa from "./views/categorias/EditarCategoriaDespesa";
+import FormCategoriaReceita from "./views/categorias/FormCategoriaReceita";
+import EditarCategoriaReceita from "./views/categorias/EditarCategoriaReceita";
 import PdfReceitas from "./views/pdf/PdfReceitas";
 import PdfDespesas from "./views/pdf/PdfDespesas";
 import PdfCompleto from "./views/pdf/PdfCompleto";
+import Ativar from "./views/auth/usuario/ativar/Ativar";
+import AppMenu from "./views/components/appMenu/AppMenu";
+import ListaCategorias from "./views/categorias/ListaCategorias";
 
 function App() {
   return (
     <>
       <Router>
+        <AppMenu />
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/pdfreceitas" element={<PdfReceitas/>}/>
-          <Route path="/pdfdespesas" element={<PdfDespesas/>}/>
-          <Route path="/pdfcompleto" element={<PdfCompleto/>}/>
-          <Route path="/novacategoriareceita" element={<FormCategoriaReceita />} />
-          <Route path="/editarcategoriareceita/:id" element={<EditarCategoriaReceita />} />
-          <Route path="/categoriareceita" element={<ListaCategoriaReceita />} />
-          <Route path="/novacategoriadespesa" element={<FormCategoriaDespesa />} />
-          <Route path="/editarcategoriadespesa/:id" element={<EditarCategoriaDespesa />} />
-          <Route path="/categoriadespesa" element={<ListaCategoriaDespesa />} />
+          <Route path="/pdfreceitas" element={<PdfReceitas />} />
+          <Route path="/pdfdespesas" element={<PdfDespesas />} />
+          <Route path="/pdfcompleto" element={<PdfCompleto />} />
+          <Route
+            path="/novacategoriareceita"
+            element={<FormCategoriaReceita />}
+          />
+          <Route
+            path="/editarcategoriareceita/:id"
+            element={<EditarCategoriaReceita />}
+          />
+          <Route
+            path="/novacategoriadespesa"
+            element={<FormCategoriaDespesa />}
+          />
+          <Route
+            path="/editarcategoriadespesa/:id"
+            element={<EditarCategoriaDespesa />}
+          />
+          <Route path="/categorias" element={<ListaCategorias />} />
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<FormUsuarioRegister />} />
           <Route path="/update" element={<FormUsuarioUpdate />} />
+          <Route path="/ativar" element={<Ativar />} />
           <Route path="/login" element={<FormLogin />} />
           <Route path="/despesas" element={<ListaDespesas />} />
           <Route path="/novaDespesa" element={<FormDespesa />} />
@@ -55,7 +69,7 @@ function App() {
       </Router>
       <ToastContainer
         position="top-center"
-        autoClose={1000}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

@@ -32,6 +32,7 @@ export default function FormLogin() {
         localStorage.setItem("nome", response.nome);
         localStorage.setItem("email", response.email);
         localStorage.setItem("saldo", response.saldo);
+        localStorage.setItem("primeiroAcesso", true);
         notifySuccess("Login realizado com sucesso!");
         window.location.href = "/";
       }
@@ -94,6 +95,9 @@ export default function FormLogin() {
               onChange={(e) => setSenha(e.target.value)}
             />
           </Form.Field>
+          <Link to="/forget" className="forgot-link">
+            Esqueceu a senha?
+          </Link>
           <Button className="form-button" onClick={handleLogin}>
             Entrar
           </Button>

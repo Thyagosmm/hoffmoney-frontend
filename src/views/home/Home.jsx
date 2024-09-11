@@ -13,12 +13,7 @@ const Home = () => {
     }
   }, []);
 
-  return (
-    <>
-      <AppMenu />
-      {isLogged ? <Dashboard /> : <Landing />}
-    </>
-  );
+  return <>{isLogged ? <Dashboard /> : <Landing />}</>;
 };
 
 export default Home;

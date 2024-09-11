@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+
 import { Link } from "react-router-dom";
 import { Button, Container, Divider, Form, Message } from "semantic-ui-react";
 import { registerUser } from "../../../../api/UserApi";
 import Info from "../../../components/info/Info";
-import { notifyError, notifySuccess } from "../../../utils/Utils";
+import {
+  notifyError,
+  notifyLoading,
+  notifySuccess,
+} from "../../../utils/Utils";
 import "./FormUsuarioRegister.css";
 
 const FormUsuarioRegister = () => {
@@ -40,7 +46,7 @@ const FormUsuarioRegister = () => {
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    const resultado = verificarSenha(newPassword);
+    verificarSenha(newPassword);
     setCharsRemaining(calcularCaracteresRestantes(newPassword));
   };
 
@@ -62,6 +68,7 @@ const FormUsuarioRegister = () => {
       return;
     }
 
+    const loadingToastId = notifyLoading("Registrando usuário...");
     try {
       const response = await registerUser({
         nome: name,
@@ -70,13 +77,18 @@ const FormUsuarioRegister = () => {
         saldo: 0,
       });
       console.log("User registered:", response.data);
-      notifySuccess("Usuário registrado com sucesso!");
-      setTimeout(() => (window.location.href = "/login"), 1500);
+      notifySuccess(
+        "Usuário registrado com sucesso! Favor  verificar seu email para ativar a conta.",
+      );
+      setTimeout(() => (window.location.href = "/login"), 4000);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.error("Error registering user:", error);
+        toast.dismiss(loadingToastId);
         notifyError(error.response.data);
       }
+    } finally {
+      toast.dismiss(loadingToastId);
     }
   };
 

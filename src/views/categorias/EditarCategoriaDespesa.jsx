@@ -43,27 +43,33 @@ const EditarCategoriaDespesa = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaDespesa(id, { descricaoCategoriaDespesa: description });
+        await atualizarCategoriaDespesa(id, {
+          descricaoCategoriaDespesa: description,
+        });
         notifySuccess("Categoria atualizada com sucesso!");
-        navigate("/categoriadespesa");
+        navigate("/categorias");
       } catch (error) {
         notifyError("Erro ao atualizar a categoria de despesa.");
-        console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
+        console.error(
+          "Erro ao atualizar a categoria:",
+          error.response?.data || error.message,
+        );
       } finally {
         setLoading(false);
       }
     }
   };
-  
-  
 
   return (
     <>
-      <AppMenu />
       <div className="categoria-despesa">
         <div className="categoria-despesa-form">
           <h1>Editar Categoria de Despesa</h1>
-          <Form onSubmit={handleAtualizarCategoria} loading={loading} error={!!error}>
+          <Form
+            onSubmit={handleAtualizarCategoria}
+            loading={loading}
+            error={!!error}
+          >
             <Form.Field error={!!error}>
               <label>Descrição</label>
               <Input
@@ -71,15 +77,17 @@ const EditarCategoriaDespesa = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {error && (
-                <Message error content={error} />
-              )}
+              {error && <Message error content={error} />}
             </Form.Field>
             <div className="save-button-container-categoria">
               <Button type="submit" className="save-button-categoria">
                 Salvar
               </Button>
-              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriadespesa")}>
+              <Button
+                type="button"
+                className="cancel-button-categoria"
+                onClick={() => navigate("/categorias")}
+              >
                 Voltar
               </Button>
             </div>

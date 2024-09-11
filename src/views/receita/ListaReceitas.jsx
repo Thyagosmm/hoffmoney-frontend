@@ -1,5 +1,3 @@
-import axios from "axios";
-import { format, parse } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,14 +9,17 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader, Dropdown
+  Header as SemanticHeader,
+  Dropdown,
+  ModalHeader,
 } from "semantic-ui-react";
 import {
   listarReceitas,
   deletarReceita,
-  receitaPaga, listarCategoriasReceita
+  receitaPaga,
+  listarCategoriasReceita,
+  filtrarReceitas,
 } from "../../api/UserApi";
-import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
 import { notifyError, notifySuccess } from "../utils/Utils";
 
@@ -29,105 +30,55 @@ const ListaReceitas = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [receitaId, setReceitaId] = useState(null);
   const [actionType, setActionType] = useState("");
-  const navigate = useNavigate();
   const [menuFiltro, setMenuFiltro] = useState(false);
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
   const [valor, setValor] = useState("");
   const [dataDeCobranca, setDataDeCobranca] = useState("");
+  const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
   const [receitasPagas, setReceitasPagas] = useState([]);
   const [receitasNaoPagas, setReceitasNaoPagas] = useState([]);
-  const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
+  const navigate = useNavigate();
 
+  // Função para alternar a exibição do menu de filtro
   function handleMenuFiltro() {
     setMenuFiltro(!menuFiltro);
   }
 
-  function handleChangeNome(value) {
-    filtrarReceitas(value, categoria, valor, dataDeCobranca);
-  }
+  // Função para atualizar listas e total
+  const atualizarListas = (dadosReceitas) => {
+    const receitasPagasAtualizadas = dadosReceitas.filter(
+      (receita) => receita.paga
+    );
+    const receitasNaoPagasAtualizadas = dadosReceitas.filter(
+      (receita) => !receita.paga
+    );
+    setReceitasPagas(receitasPagasAtualizadas);
+    setReceitasNaoPagas(receitasNaoPagasAtualizadas);
 
-  function handleChangeCategoria(value) {
-    filtrarReceitas(nome, value, valor, dataDeCobranca);
-  }
+    const totalReceitasAtualizado = dadosReceitas.reduce(
+      (sum, receita) => sum + (receita.valor || 0),
+      0
+    );
+    setTotal(totalReceitasAtualizado);
+  };
 
-  function handleChangeValor(value) {
-    filtrarReceitas(nome, categoria, value, dataDeCobranca);
-  }
-
-  function handleChangeDataDeCobranca(value) {
-    if (value) {
-      try {
-        const parsedDate = parse(value, "dd/MM/yyyy", new Date());
-        const formattedDate = format(parsedDate, "dd/MM/yyyy");
-        filtrarReceitas(nome, categoria, valor, formattedDate);
-      } catch (error) {
-        console.error("Erro ao converter a data:", error);
-      }
-    } else {
-      filtrarReceitas(nome, categoria, valor, "");
-    }
-  }
-
-  async function filtrarReceitas(
-    nomeParam,
-    categoriaParam,
-    valorParam,
-    dataDeCobrancaParam
-  ) {
-    let formData = new FormData();
-
-    if (nomeParam !== undefined) {
-      setNome(nomeParam);
-      formData.append("nome", nomeParam);
-    }
-    if (categoriaParam !== undefined) {
-      setCategoria(categoriaParam);
-      formData.append("categoria", categoriaParam);
-    }
-    if (valorParam !== undefined) {
-      setValor(valorParam);
-      formData.append("valor", valorParam);
-    }
-    if (dataDeCobrancaParam !== undefined) {
-      setDataDeCobranca(dataDeCobrancaParam);
-      formData.append("dataDeCobranca", dataDeCobrancaParam);
-    }
-
-    await axios
-      .post("http://localhost:8085/api/receitas/filtrar", formData)
-      .then((response) => {
-        setReceitas(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }
-
+  // Carregar todas as receitas na montagem do componente
   useEffect(() => {
-    const getReceitas = async () => {
+    const fetchReceitas = async () => {
       try {
         const { data } = await listarReceitas();
-        console.log("Receitas:", data);
-
-        const receitasPagas = data.filter((receita) => receita.paga);
-        const receitasNaoPagas = data.filter((receita) => !receita.paga);
-
-        setReceitasPagas(receitasPagas);
-        setReceitasNaoPagas(receitasNaoPagas);
-
-        const totalReceitas = data.reduce((sum, receita) => {
-          return sum + receita.valor;
-        }, 0);
-        setTotal(totalReceitas);
+        setReceitas(data);
+        atualizarListas(data);
       } catch (error) {
         setError(error.message);
       }
     };
 
-    getReceitas();
+    fetchReceitas();
   }, []);
 
+  // Carregar as categorias de receita na montagem do componente
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -146,6 +97,44 @@ const ListaReceitas = () => {
     fetchCategorias();
   }, []);
 
+  // Aplicar filtros
+  const handleApplyFilters = async () => {
+    const filtros = {
+      nome,
+      idCategoriaReceita: categoria,
+      valor: valor !== "" ? parseFloat(valor) : null,
+      dataDeCobranca,
+    };
+
+    try {
+      const { data } = await filtrarReceitas(filtros);
+      setReceitas(data);
+      atualizarListas(data);
+      notifySuccess("Filtros aplicados com sucesso!");
+    } catch (error) {
+      console.error("Erro ao filtrar receitas:", error);
+      notifyError("Não foi possível aplicar os filtros.");
+    }
+  };
+
+  // Limpar filtros e recarregar todas as receitas
+  const handleResetFilters = async () => {
+    setNome("");
+    setCategoria("");
+    setValor("");
+    setDataDeCobranca("");
+    try {
+      const { data } = await listarReceitas();
+      setReceitas(data);
+      atualizarListas(data);
+      notifySuccess("Filtros limpos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao recarregar receitas:", error);
+      notifyError("Não foi possível recarregar as receitas.");
+    }
+  };
+
+  // Função para excluir receita
   const handleDelete = async () => {
     const usuarioId = localStorage.getItem("userId");
     if (!usuarioId) {
@@ -156,7 +145,7 @@ const ListaReceitas = () => {
     try {
       await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaId)
+        prevReceitas.filter((receita) => receita.id !== receitaId),
       );
       setModalOpen(false);
       notifySuccess("Receita deletada com sucesso!");
@@ -169,15 +158,16 @@ const ListaReceitas = () => {
     }
   };
 
+  // Abrir modal de confirmação (pagar ou excluir)
   const handleOpenModal = (id, action) => {
     setReceitaId(id);
     setActionType(action);
     setModalOpen(true);
   };
+
   const handleReceitaPaga = async () => {
     try {
-      const response = await receitaPaga(receitaId, true);
-      console.log("Receita atualizada com sucesso:", response);
+      await receitaPaga(receitaId, true);
       setModalOpen(false);
       notifySuccess("Receita paga com sucesso!");
       setTimeout(() => {
@@ -185,7 +175,7 @@ const ListaReceitas = () => {
       }, 1500);
     } catch (error) {
       console.error("Erro ao atualizar a receita:", error);
-      notifyError("Erro ao atualizar a receita.");
+      notifyError(`Não foi possível atualizar a receita: ${error.message}`);
     }
   };
 
@@ -199,11 +189,9 @@ const ListaReceitas = () => {
 
   if (error) {
     return <div>Erro: {error}</div>;
-  }
-
+  };
   return (
     <>
-      <Header />
       <Container className="container-bordered">
         <h1 className="containerHeader">Receitas</h1>
         <Menu>
@@ -212,8 +200,10 @@ const ListaReceitas = () => {
             active={menuFiltro === true}
             onClick={handleMenuFiltro}
           >
-            <Icon name="filter" />
-            Filtrar
+            <h4 className="filtro-label">
+              <Icon name="filter" />
+              Filtrar
+            </h4>
           </Menu.Item>
           <Menu.Item position="left">
             <Button
@@ -229,68 +219,68 @@ const ListaReceitas = () => {
           <Menu.Item position="right">
             <div className="total-container">
               <strong>Total em Receitas: R$ </strong>
-              <span>{total}</span>
+              <span>{total.toFixed(2)}</span>
             </div>
           </Menu.Item>
         </Menu>
-        {menuFiltro && (
-          <Container className="containerFiltro">
-            {menuFiltro && (
-              <Segment>
-                <Form className="form-filtros">
-                  <Form.Group widths="equal">
-                    <Form.Input
+        <Container className="containerFiltro">
+          {menuFiltro && (
+            <Segment>
+              <Form className="form-filtros">
+                <Form.Group widths="equal">
+                  <Form.Input
+                    fluid
+                    icon="search"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    label="Nome"
+                    placeholder="Filtrar por Nome da Receita"
+                    labelPosition="left"
+                  />
+                  <Form.Field className="dropCategoriaReceita">
+                    <label>Categoria</label>
+                    <Dropdown
                       fluid
-                      icon="search"
-                      value={nome}
-                      onChange={(e) => handleChangeNome(e.target.value)}
-                      label="Nome"
-                      placeholder="Filtrar por Nome da Receita"
-                      labelPosition="left"
+                      selection
+                      placeholder="Selecione"
+                      options={listaCategoriaReceita}
+                      value={categoria}
+                      onChange={(e, { value }) => setCategoria(value)}
+                      clearable
                     />
-                    <Form.Field className="dropCategoriaReceita">
-                      <label>Categoria</label>
-                      <Dropdown
-                        fluid
-                        selection
-                        placeholder="Selecione"
-                        options={listaCategoriaReceita}
-                        value={categoria}
-                        onChange={(e, { value }) =>
-                          handleChangeCategoria(value)
-                        }
-                      />
-                    </Form.Field>
-                  </Form.Group>
+                  </Form.Field>
+                </Form.Group>
 
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      fluid
-                      type="number"
-                      value={valor}
-                      onChange={(e) => handleChangeValor(e.target.value)}
-                      label="Valor"
-                      placeholder="0"
-                      labelPosition="left"
-                    />
-                    <Form.Input
-                      fluid
-                      type="text"
-                      icon="calendar"
-                      value={dataDeCobranca}
-                      onChange={(e) =>
-                        handleChangeDataDeCobranca(e.target.value)
-                      }
-                      label="Data"
-                      placeholder="dd/MM/yyyy"
-                      labelPosition="left"
-                    />
-                  </Form.Group>
-                </Form>
-              </Segment>
-            )}
-          </Container>
-        )}
+                <Form.Group widths="equal">
+                  <Form.Input
+                    fluid
+                    type="number"
+                    value={valor}
+                    onChange={(e) => setValor(e.target.value)}
+                    label="Valor"
+                    placeholder="0"
+                    labelPosition="left"
+                  />
+                  <Form.Input
+                    fluid
+                    type="date"
+                    value={dataDeCobranca}
+                    onChange={(e) => setDataDeCobranca(e.target.value)}
+                    label="Data"
+                    placeholder="DD/MM/YYYY"
+                    labelPosition="left"
+                  />
+                </Form.Group>
+                <Button color="green" onClick={handleApplyFilters}>
+                  Aplicar Filtros
+                </Button>
+                <Button color="red" onClick={handleResetFilters}>
+                  Limpar Filtros
+                </Button>
+              </Form>
+            </Segment>
+          )}
+        </Container>
         <div className="receitas">
           <Segment className="segment-receitas">
             <Menu inverted>
@@ -323,12 +313,14 @@ const ListaReceitas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="red" />
                     <List.Content>
                       <List.Header>{receita.nome}</List.Header>
                       <List.Description>
                         {receita.categoriaReceita.descricaoCategoriaReceita} |
-                        R$ {receita.valor} | {receita.dataDeCobranca}
+                        R$ {receita.valor.toFixed(2)} |{" "}
+                        {new Date(
+                          receita.dataDeCobranca + "T00:00:00"
+                        ).toLocaleDateString()}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -362,12 +354,14 @@ const ListaReceitas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="green" />
                     <List.Content>
                       <List.Header>{receita.nome}</List.Header>
                       <List.Description>
                         {receita.categoriaReceita.descricaoCategoriaReceita} |
-                        R$ {receita.valor} | {receita.dataDeCobranca}
+                        R$ {receita.valor.toFixed(2)} |{" "}
+                        {new Date(
+                          receita.dataDeCobranca + "T00:00:00"
+                        ).toLocaleDateString()}
                       </List.Description>
                     </List.Content>
                   </List.Item>
@@ -386,7 +380,7 @@ const ListaReceitas = () => {
           dimmer="blurring"
           closeIcon
         >
-          <SemanticHeader
+          <ModalHeader
             icon={actionType === "delete" ? "trash" : "check"}
             content={
               actionType === "delete"
@@ -395,11 +389,11 @@ const ListaReceitas = () => {
             }
           />
           <Modal.Content>
-            <span>
+            <h4>
               {actionType === "delete"
                 ? "Você tem certeza que deseja excluir esta receita?"
                 : "Você realmente recebeu esta receita?"}
-            </span>
+            </h4>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => setModalOpen(false)}>

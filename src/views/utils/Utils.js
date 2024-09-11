@@ -22,5 +22,9 @@ export const notifyError = (mensagem) =>
   toast.error(mensagem, {
     className: "toast-font-large",
   });
+export const notifyLoading = (mensagem) =>
+  toast.loading(mensagem, {
+    className: "toast-font-large",
+  });
 
 export const mensagemErro = "Ocorreu algum erro inesperado.";
