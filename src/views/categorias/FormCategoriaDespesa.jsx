@@ -5,7 +5,6 @@ import {
   buscarCategoriaDespesaPorId,
   registrarCategoriaDespesa,
 } from "../../api/UserApi";
-import AppMenu from "../components/appMenu/AppMenu";
 import { notifyError, notifySuccess } from "../utils/Utils";
 import "./FormCategoriaDespesa.css";
 
@@ -47,7 +46,9 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
           descricaoCategoriaDespesa: description,
         });
         notifySuccess("Categoria registrada com sucesso!");
-        navigate("/categorias");
+        setTimeout(() => {
+          navigate("/categorias");
+        }, 2000);
       } catch (error) {
         notifyError("Erro ao registrar a categoria de despesa.");
         console.error(error);

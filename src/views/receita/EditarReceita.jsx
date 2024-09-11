@@ -6,7 +6,7 @@ import "./FormReceita.css";
 import { buscarReceitaPorId, atualizarReceita, listarCategoriasReceita } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 import { useParams, useNavigate } from "react-router-dom";
-import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
+import { notifyError, notifySuccess } from "../utils/Utils";
 
 const EditarReceita = () => {
   const [nome, setNome] = useState("");
@@ -129,7 +129,7 @@ const EditarReceita = () => {
                   onChange={(e) => setValor(e.target.value)}
                 />
               </Form.Field>
-              <Form.Field>
+              <Form.Field className="dropCategoriaReceita">
                 <label>Categoria</label>
                 <Dropdown
                   placeholder="Selecione a categoria"

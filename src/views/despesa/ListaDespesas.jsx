@@ -17,11 +17,9 @@ import {
   despesaPaga,
   deletarDespesa,
   listarDespesas,
-  decrementarSaldo,
   listarCategoriasDespesa,
   filtrarDespesas,
 } from "../../api/UserApi";
-import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaDespesas.css";
 import { notifyError, notifySuccess } from "../utils/Utils";
 
@@ -98,7 +96,7 @@ const ListaDespesas = () => {
       notifySuccess("Despesa deletada com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao excluir despesa:", error);
       notifyError("Não foi possível excluir a despesa.");
@@ -137,7 +135,7 @@ const ListaDespesas = () => {
       notifySuccess("Despesa paga com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao atualizar a despesa:", error);
       notifyError(`Não foi possível atualizar a despesa: ${error.message}`);

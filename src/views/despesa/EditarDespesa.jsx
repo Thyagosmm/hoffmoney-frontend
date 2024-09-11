@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Dropdown } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "./FormDespesa.css";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Dropdown, Form } from "semantic-ui-react";
 import {
-  buscarDespesaPorId,
   atualizarDespesa,
+  buscarDespesaPorId,
   listarCategoriasDespesa,
 } from "../../api/UserApi";
-import Header from "../components/appMenu/AppMenu";
-import { useParams, useNavigate } from "react-router-dom";
+import { notifyError, notifySuccess } from "../utils/Utils";
+import "./FormDespesa.css";
 
 const EditarDespesa = () => {
   const [nome, setNome] = useState("");
@@ -19,8 +19,6 @@ const EditarDespesa = () => {
   const [data, setData] = useState(new Date());
   const [paga, setPaga] = useState(false);
   const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
   const usuarioId = localStorage.getItem("userId");
@@ -43,7 +41,7 @@ const EditarDespesa = () => {
         setPaga(despesaData.paga ?? false);
       } catch (error) {
         console.error("Erro ao carregar a despesa", error);
-        setError("Erro ao carregar a despesa.");
+        notifyError("Erro ao carregar a despesa.");
       }
     };
 
@@ -60,7 +58,7 @@ const EditarDespesa = () => {
         setListaCategoriaDespesa(dropDownCategoriaDespesa);
       } catch (error) {
         console.error("Erro ao carregar categorias", error);
-        setError("Erro ao carregar categorias.");
+        notifyError("Erro ao carregar categorias.");
       }
     };
 
@@ -77,6 +75,16 @@ const EditarDespesa = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedDate = formatDate(data);
+
+    if (!nome || !valor || !categoria) {
+      notifyError("Nome, valor e categoria são obrigatórios.");
+      return;
+    }
+    if (valor < 0) {
+      notifyError("O valor da despesa não pode ser negativo.");
+      return;
+    }
+
     try {
       await atualizarDespesa(usuarioId, id, {
         nome,
@@ -86,11 +94,16 @@ const EditarDespesa = () => {
         dataDeCobranca: formattedDate,
         paga: paga,
       });
-      setSuccess("Despesa atualizada com sucesso!");
-      navigate("/despesas");
+      notifySuccess("Despesa atualizada com sucesso!");
+      setTimeout(() => {
+        navigate("/despesas");
+      }, 2000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Erro ao atualizar a despesa", error);
-      setError("Erro ao atualizar a despesa.");
+      notifyError("Erro ao atualizar a despesa.");
     }
   };
 
@@ -117,7 +130,7 @@ const EditarDespesa = () => {
                   onChange={(e) => setValor(e.target.value)}
                 />
               </Form.Field>
-              <Form.Field>
+              <Form.Field className="dropCategoriaDespesa">
                 <label>Categoria</label>
                 <Dropdown
                   placeholder="Selecione a categoria"

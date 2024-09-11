@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Message } from "semantic-ui-react";
 import { buscarCategoriaReceitaPorId, registrarCategoriaReceita } from "../../api/UserApi";
-import AppMenu from "../components/appMenu/AppMenu";
 import { notifyError, notifySuccess } from "../utils/Utils";
 import "./FormCategoriaReceita.css";
 
@@ -46,7 +45,7 @@ const FormCategoriaReceita = ({ categoriaId }) => {
         notifySuccess("Categoria registrada com sucesso!");
         setTimeout(() => {
           navigate("/categorias");
-        }, 1500);
+        }, 2000);
       } catch (error) {
         notifyError("Erro ao registrar a categoria de receita.");
         console.error(error);

@@ -13,7 +13,7 @@ import {
   listarCategoriasDespesa,
 } from "../../api/UserApi";
 import { useNavigate } from "react-router-dom";
-import FormCategoriaDespesa from "../categorias/FormCategoriaDespesa"; // Importar o formulário de categoria de despesa
+import FormCategoriaDespesa from "../categorias/FormCategoriaDespesa";
 
 const FormDespesa = ({ despesaId }) => {
   const [name, setName] = useState("");
@@ -24,8 +24,7 @@ const FormDespesa = ({ despesaId }) => {
   const [idCategoriaDespesa, setIdCategoriaDespesa] = useState("");
   const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [errors, setErrors] = useState("");
-  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar a visibilidade do modal
-
+  const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const FormDespesa = ({ despesaId }) => {
         }));
         setListaCategoriaDespesa(dropDownCategoriaDespesa);
         if (response.data.length === 0) {
-          setModalOpen(true); // Abrir o modal se não houver categorias
+          setModalOpen(true);
         }
       } catch (error) {
         notifyError("Erro ao carregar categorias.", error);
@@ -108,7 +107,7 @@ const FormDespesa = ({ despesaId }) => {
           descricao: description,
           valor: value,
           idCategoriaDespesa: idCategoriaDespesa,
-          dataDeCobranca: formattedDate, // Envia a data formatada
+          dataDeCobranca: formattedDate,
           paga: false,
         });
         console.log("Despesa registrada:", response.data);
@@ -183,7 +182,14 @@ const FormDespesa = ({ despesaId }) => {
                     customInput={Input}
                     placeholder="Valor"
                     value={value}
-                    onValueChange={(values) => setValue(values.value)}
+                    onValueChange={(values) => {
+                      if (values.floatValue < 0) {
+                        notifyError("O valor não pode ser negativo.");
+                        setValue("");
+                      } else {
+                        setValue(values.value);
+                      }
+                    }}
                     thousandSeparator="."
                     decimalSeparator=","
                     prefix="R$ "
