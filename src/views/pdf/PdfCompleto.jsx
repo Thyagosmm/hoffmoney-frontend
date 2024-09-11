@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Icon, Modal } from "semantic-ui-react";
 import {
   enviarPdfPorEmail,
@@ -9,7 +10,6 @@ import {
   listarReceitas,
 } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
-import { useNavigate } from "react-router-dom";
 
 const PdfCompleto = () => {
   const [despesas, setDespesas] = useState([]);
@@ -59,12 +59,84 @@ const PdfCompleto = () => {
 
   const gerarPdf = () => {
     const doc = new jsPDF();
-    doc.text("Relatório Completo", 20, 20);
-    doc.autoTable({ html: "#despesasTable" });
-    doc.autoTable({ html: "#receitasTable" });
+
+    doc.setFontSize(18);
+    doc.text("Relatório Completo", 14, 22);
+
+    // Adicionar Tabela de Despesas com Cor Vermelha
+    doc.setFontSize(16);
+    doc.setTextColor(255, 0, 0); // Cor vermelha para despesas
+
+    const despesasColumn = [
+      "Nome",
+      "Categoria",
+      "Valor (R$)",
+      "Data de Cobrança",
+      "Status"
+    ];
+
+    const despesasRows = despesas.map(despesa => [
+      despesa.nome,
+      despesa.categoriaDespesa.descricaoCategoriaDespesa,
+      despesa.valor.toFixed(2),
+      despesa.dataDeCobranca
+        ? new Date(despesa.dataDeCobranca + "T00:00:00").toLocaleDateString()
+        : "Data não disponível",
+      despesa.paga ? "Paga" : "Não Paga"
+    ]);
+
+    doc.autoTable({
+      head: [despesasColumn],
+      body: despesasRows,
+      startY: 40,
+      styles: {
+        fillColor: [255, 230, 230], // Fundo claro para as despesas
+      },
+      headStyles: {
+        fillColor: [255, 0, 0], // Cabeçalho de despesas em vermelho
+      },
+      margin: { top: 10 },
+    });
+
+    // Adicionar Tabela de Receitas com Cor Verde
+    doc.setFontSize(16);
+    doc.setTextColor(0, 128, 0); // Cor verde para receitas
+ 
+
+    const receitasColumn = [
+      "Nome",
+      "Categoria",
+      "Valor (R$)",
+      "Data de Recebimento",
+      "Status"
+    ];
+
+    const receitasRows = receitas.map(receita => [
+      receita.nome,
+      receita.categoriaReceita.descricaoCategoriaReceita,
+      receita.valor.toFixed(2),
+      receita.dataDeCobranca
+        ? new Date(receita.dataDeCobranca + "T00:00:00").toLocaleDateString()
+        : "Data não disponível",
+      receita.paga ? "Recebida" : "Não Recebida"
+    ]);
+
+    doc.autoTable({
+      head: [receitasColumn],
+      body: receitasRows,
+      startY: doc.lastAutoTable.finalY + 10,
+      styles: {
+        fillColor: [230, 255, 230], // Fundo claro para as receitas
+      },
+      headStyles: {
+        fillColor: [0, 128, 0], // Cabeçalho de receitas em verde
+      },
+      margin: { top: 10 },
+    });
 
     return doc;
   };
+
 
   const handleBaixarPdf = () => {
     const pdf = gerarPdf();
@@ -119,7 +191,6 @@ const PdfCompleto = () => {
             onClick={() => setModalOpen(true)}
             icon
           >
-            {" "}
             <Icon name="download" size="big" />
             Baixar Relatório Completo
           </Button>
@@ -145,40 +216,6 @@ const PdfCompleto = () => {
             </Button>
           </Modal.Actions>
         </Modal>
-
-        <table id="despesasTable" style={{ display: "none" }}>
-          <thead>
-            <tr>
-              <th>Despesa</th>
-              <th>Valor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {despesas.map((despesa, index) => (
-              <tr key={index}>
-                <td>{despesa.nome}</td>
-                <td>{formatarMoeda(despesa.valor)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <table id="receitasTable" style={{ display: "none" }}>
-          <thead>
-            <tr>
-              <th>Receita</th>
-              <th>Valor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {receitas.map((receita, index) => (
-              <tr key={index}>
-                <td>{receita.nome}</td>
-                <td>{formatarMoeda(receita.valor)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </>
   );
