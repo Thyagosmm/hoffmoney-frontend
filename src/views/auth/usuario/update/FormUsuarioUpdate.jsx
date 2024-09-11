@@ -27,6 +27,9 @@ const FormUsuarioUpdate = () => {
     charsRemaining: 8,
   });
   const [changePassword, setChangePassword] = useState(false);
+  const [originalName, setOriginalName] = useState(""); // Valor original do nome
+  const [originalEmail, setOriginalEmail] = useState(""); // Valor original do email
+  const [originalPassword, setOriginalPassword] = useState(""); // Valor original da senha
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -37,6 +40,9 @@ const FormUsuarioUpdate = () => {
         setName(nome);
         setEmail(email);
         setVerifyCurrentPassword(senha);
+        setOriginalName(nome); // Armazenar o nome original
+        setOriginalEmail(email); // Armazenar o email original
+        setOriginalPassword(senha); // Armazenar a senha original
       } catch (error) {
         console.error("Error fetching user data:", error);
         notifyError("Erro ao carregar os dados do usuário.");
@@ -88,6 +94,16 @@ const FormUsuarioUpdate = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
+    // Verifica se os campos foram alterados
+    if (
+      name === originalName &&
+      email === originalEmail &&
+      !changePassword
+    ) {
+      notifyError("Nenhuma alteração foi feita.");
+      return;
+    }
+
     if (!name || !email) {
       notifyError("Nome e email são obrigatórios.");
       return;
@@ -98,6 +114,25 @@ const FormUsuarioUpdate = () => {
       return;
     }
 
+    if (changePassword) {
+      if (!currentPassword) {
+        notifyError("Senha atual é obrigatória.");
+        return;
+      }
+      if (currentPassword !== verifyCurrentPassword) {
+        notifyError("A senha atual não coincide.");
+        return;
+      }
+      if (password.length < 8) {
+        notifyError("A nova senha deve ter no mínimo 8 caracteres.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        notifyError("A nova senha e a confirmação da nova senha não coincidem.");
+        return;
+      }
+    }
+
     try {
       const userId = localStorage.getItem("userId");
       const userData = {
@@ -105,22 +140,6 @@ const FormUsuarioUpdate = () => {
         email,
       };
 
-      if (changePassword) {
-        if (!currentPassword) {
-          notifyError("Senha atual é obrigatória.");
-          return;
-        }
-        if (currentPassword !== verifyCurrentPassword) {
-          notifyError("A senha atual não coincide.");
-          return;
-        }
-        if (password !== confirmPassword) {
-          notifyError(
-            "A nova senha e a confirmação da nova senha não coincidem.",
-          );
-          return;
-        }
-      }
       if (changePassword) {
         userData.senha = password;
       } else {
@@ -136,6 +155,7 @@ const FormUsuarioUpdate = () => {
       notifyError("Erro ao atualizar o usuário.");
     }
   };
+
 
   return (
     <>

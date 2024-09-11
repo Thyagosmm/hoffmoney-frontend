@@ -6,6 +6,7 @@ import "./FormReceita.css";
 import { buscarReceitaPorId, atualizarReceita, listarCategoriasReceita } from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 import { useParams, useNavigate } from "react-router-dom";
+import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
 
 const EditarReceita = () => {
   const [nome, setNome] = useState("");
@@ -15,8 +16,6 @@ const EditarReceita = () => {
   const [data, setData] = useState(new Date());
   const [paga, setPaga] = useState(false);
   const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
   const usuarioId = localStorage.getItem("userId");
@@ -37,10 +36,10 @@ const EditarReceita = () => {
         } else {
           console.error("Data inválida:", receitaData.dataDeCobranca);
         }
-        setPaga(despesaData.paga ?? false);
+        setPaga(receitaData.paga ?? false);
       } catch (error) {
         console.error("Erro ao carregar a receita", error);
-        setError("Erro ao carregar a receita.");
+        notifyError("Erro ao carregar a receita.");
       }
     };
 
@@ -57,7 +56,7 @@ const EditarReceita = () => {
         setListaCategoriaReceita(dropDownCategoriaReceita);
       } catch (error) {
         console.error("Erro ao carregar categorias", error);
-        setError("Erro ao carregar categorias.");
+        notifyError("Erro ao carregar categorias.");
       }
     };
 
@@ -74,6 +73,16 @@ const EditarReceita = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedDate = formatDate(data);
+
+    if (!nome || !valor || !categoria) {
+      notifyError("Nome, valor e categoria são obrigatórios.");
+      return;
+    }
+    if (valor < 0) {
+      notifyError("O valor da receita não pode ser negativo.");
+      return;
+    }
+
     try {
       await atualizarReceita(usuarioId, id, {
         nome,
@@ -83,11 +92,16 @@ const EditarReceita = () => {
         dataDeCobranca: formattedDate,
         paga: paga
       });
-      setSuccess("Receita atualizada com sucesso!");
-      navigate("/receitas");
+      notifySuccess("Receita atualizada com sucesso!");
+      setTimeout(() => {
+        navigate("/receitas");
+      }, 2000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Erro ao atualizar a receita", error);
-      setError("Erro ao atualizar a receita.");
+      notifyError("Erro ao atualizar a receita.");
     }
   };
 
@@ -142,8 +156,6 @@ const EditarReceita = () => {
                 Salvar
               </Button>
             </Form>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
           </div>
         </div>
       </div>

@@ -110,9 +110,9 @@ const FormReceita = ({ receitaId }) => {
         });
         console.log("Receita registrada:", response.data);
         notifySuccess("Receita registrada com sucesso!");
-        /*setTimeout(() => {
+        setTimeout(() => {
           navigate("/receitas");
-        }, 1500);*/
+        }, 2000);
       } catch (error) {
         notifyError(mensagemErro);
       }
@@ -134,7 +134,9 @@ const FormReceita = ({ receitaId }) => {
           paga: false,
         });
         notifySuccess("Receita atualizada com sucesso!");
-        console.log("Receita atualizada:", response.data);
+        setTimeout(() => {
+          navigate("/receitas");
+        }, 2000);
       } catch (error) {
         notifyError(mensagemErro);
         console.error("Erro ao atualizar a receita:", error);
@@ -149,7 +151,7 @@ const FormReceita = ({ receitaId }) => {
       notifySuccess("Receita deletada com sucesso!");
       setTimeout(() => {
         navigate("/receitas");
-      }, 1500);
+      }, 2000);
     } catch (error) {
       notifyError("Erro ao deletar a receita.", error);
       console.error("Erro ao deletar a receita:", error);
@@ -179,7 +181,14 @@ const FormReceita = ({ receitaId }) => {
                     customInput={Input}
                     placeholder="Valor"
                     value={value}
-                    onValueChange={(values) => setValue(values.value)}
+                    onValueChange={(values) => {
+                      if (values.floatValue < 0) {
+                        notifyError("O valor não pode ser negativo.");
+                        setValue(""); // Reseta o valor
+                      } else {
+                        setValue(values.value); // Atualiza o valor apenas se não for negativo
+                      }
+                    }}
                     thousandSeparator="."
                     decimalSeparator=","
                     prefix="R$ "

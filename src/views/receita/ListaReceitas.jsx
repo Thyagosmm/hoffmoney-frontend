@@ -151,7 +151,7 @@ const ListaReceitas = () => {
       notifySuccess("Receita deletada com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao excluir receita:", error);
       notifyError("Não foi possível excluir a receita.");
@@ -172,7 +172,7 @@ const ListaReceitas = () => {
       notifySuccess("Receita paga com sucesso!");
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao atualizar a receita:", error);
       notifyError(`Não foi possível atualizar a receita: ${error.message}`);
