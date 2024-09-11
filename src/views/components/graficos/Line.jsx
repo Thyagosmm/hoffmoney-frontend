@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { listarDespesas, listarReceitas } from "../../../api/UserApi"; // Supondo que você tenha essas funções de API
+import { Icon } from "semantic-ui-react";
 
 // Registrando os componentes necessários
 ChartJS.register(
@@ -24,6 +25,7 @@ ChartJS.register(
 );
 
 function Line() {
+  const [semDados, setSemDados] = useState(true);
   const [dataLine, setDataLine] = useState({
     labels: [],
     datasets: [
@@ -55,6 +57,12 @@ function Line() {
         const despesas = despesasResponse.data;
         const receitas = receitasResponse.data;
 
+        if (despesas.length === 0 && receitas.length === 0) {
+          setSemDados(true);
+          return;
+        } else {
+          setSemDados(false);
+        }
         // Função para formatar o mês
         const formatarMes = (mes) => {
           const meses = [
@@ -154,7 +162,6 @@ function Line() {
 
     fetchData();
   }, []);
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -170,7 +177,23 @@ function Line() {
     },
   };
 
-  return <LineChart data={dataLine} options={options} />;
+  return (
+    <>
+      {semDados ? (
+        <h2 className="aviso-limite">
+          <Icon name="warning circle" size="large" />
+          Por favor insira Despesas ou Receitas <br /> para um detalhamento
+          mensal
+        </h2>
+      ) : (
+        <LineChart
+          className="grafico-divsoria"
+          data={dataLine}
+          options={options}
+        />
+      )}
+    </>
+  );
 }
 
 export default Line;

@@ -3,7 +3,11 @@ import { Form, Button, Dropdown } from "semantic-ui-react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./FormDespesa.css";
-import { buscarDespesaPorId, atualizarDespesa, listarCategoriasDespesa } from "../../api/UserApi";
+import {
+  buscarDespesaPorId,
+  atualizarDespesa,
+  listarCategoriasDespesa,
+} from "../../api/UserApi";
 import Header from "../components/appMenu/AppMenu";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -13,7 +17,7 @@ const EditarDespesa = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
-  const [paga, setPaga] = useState(false);  // Estado inicial definido como false
+  const [paga, setPaga] = useState(false);
   const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -30,7 +34,7 @@ const EditarDespesa = () => {
         setValor(despesaData.valor);
         setCategoria(despesaData.categoriaDespesa.id);
         setDescricao(despesaData.descricao);
-        const dataDespesa = new Date(despesaData.dataDeCobranca);
+        const dataDespesa = new Date(despesaData.dataDeCobranca + "T00:00:00");
         if (!isNaN(dataDespesa.getTime())) {
           setData(dataDespesa);
         } else {
@@ -48,7 +52,7 @@ const EditarDespesa = () => {
     const fetchCategorias = async () => {
       try {
         const response = await listarCategoriasDespesa();
-        const dropDownCategoriaDespesa = response.data.map(categoria => ({
+        const dropDownCategoriaDespesa = response.data.map((categoria) => ({
           key: categoria.id,
           text: categoria.descricaoCategoriaDespesa,
           value: categoria.id,
@@ -80,7 +84,7 @@ const EditarDespesa = () => {
         idCategoriaDespesa: categoria,
         descricao,
         dataDeCobranca: formattedDate,
-        paga: paga
+        paga: paga,
       });
       setSuccess("Despesa atualizada com sucesso!");
       navigate("/despesas");
@@ -93,7 +97,6 @@ const EditarDespesa = () => {
   return (
     <>
       <div className="container">
-        <Header />
         <div className="despesa">
           <div className="despesa-form">
             <h1>Editar Despesa</h1>
@@ -137,7 +140,9 @@ const EditarDespesa = () => {
                 <label>Data</label>
                 <Calendar onChange={setData} value={data} />
               </Form.Field>
-              <Button type="submit" primary>Salvar</Button>
+              <Button type="submit" primary>
+                Salvar
+              </Button>
             </Form>
           </div>
         </div>

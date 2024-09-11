@@ -13,7 +13,7 @@ const EditarReceita = () => {
   const [categoria, setCategoria] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
-  const [paga, setPaga] = useState("");
+  const [paga, setPaga] = useState(false);
   const [listaCategoriaReceita, setListaCategoriaReceita] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -31,7 +31,7 @@ const EditarReceita = () => {
         setCategoria(receitaData.categoriaReceita.id);
         setDescricao(receitaData.descricao);
         setPaga(receitaData.paga);
-        const dataReceita = new Date(receitaData.dataDeCobranca);
+        const dataReceita = new Date(receitaData.dataDeCobranca + "T00:00:00");
         if (!isNaN(dataReceita.getTime())) {
           setData(dataReceita);
         } else {
@@ -94,7 +94,6 @@ const EditarReceita = () => {
   return (
     <>
       <div className="container">
-        <Header />
         <div className="receita">
           <div className="receita-form">
             <h1>Editar Receita</h1>
@@ -139,7 +138,9 @@ const EditarReceita = () => {
                 <label>Data</label>
                 <Calendar onChange={setData} value={data} />
               </Form.Field>
-              <Button type="submit" primary>Salvar</Button>
+              <Button type="submit" primary>
+                Salvar
+              </Button>
             </Form>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}

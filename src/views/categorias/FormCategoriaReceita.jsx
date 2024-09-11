@@ -40,10 +40,12 @@ const FormCategoriaReceita = ({ categoriaId }) => {
     if (validate()) {
       setLoading(true);
       try {
-        await registrarCategoriaReceita({ descricaoCategoriaReceita: description });
+        await registrarCategoriaReceita({
+          descricaoCategoriaReceita: description,
+        });
         notifySuccess("Categoria registrada com sucesso!");
         setTimeout(() => {
-          navigate("/categoriareceita");
+          navigate("/categorias");
         }, 1500);
       } catch (error) {
         notifyError("Erro ao registrar a categoria de receita.");
@@ -56,11 +58,14 @@ const FormCategoriaReceita = ({ categoriaId }) => {
 
   return (
     <>
-      <AppMenu />
       <div className="categoria-receita">
         <div className="categoria-receita-form">
           <h1>Cadastro de Categoria de Receita</h1>
-          <Form onSubmit={handleRegistrarCategoria} loading={loading} error={!!errors.description}>
+          <Form
+            onSubmit={handleRegistrarCategoria}
+            loading={loading}
+            error={!!errors.description}
+          >
             <Form.Field error={!!errors.description}>
               <label>Descrição</label>
               <Input
@@ -76,7 +81,11 @@ const FormCategoriaReceita = ({ categoriaId }) => {
               <Button type="submit" className="save-button-categoria">
                 Salvar
               </Button>
-              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriareceita")}>
+              <Button
+                type="button"
+                className="cancel-button-categoria"
+                onClick={() => navigate("/categorias")}
+              >
                 Voltar
               </Button>
             </div>

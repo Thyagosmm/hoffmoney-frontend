@@ -3,12 +3,16 @@
     width: 100%;
     align-items: center;
   }
-  .limite {
-    text-align: center; /* Centraliza o texto dentro da div */
-}
-  
+ 
   .chart-container {
     flex: 1;
+  }
+  .aviso-limite{
+    display: flex;  
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
   }
   
   .categories-list {

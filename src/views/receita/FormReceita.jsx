@@ -110,9 +110,9 @@ const FormReceita = ({ receitaId }) => {
         });
         console.log("Receita registrada:", response.data);
         notifySuccess("Receita registrada com sucesso!");
-        setTimeout(() => {
+        /*setTimeout(() => {
           navigate("/receitas");
-        }, 1500);
+        }, 1500);*/
       } catch (error) {
         notifyError(mensagemErro);
       }
@@ -158,7 +158,6 @@ const FormReceita = ({ receitaId }) => {
 
   return (
     <>
-      <AppMenu />
       <div className="receita">
         <div className="receita-form">
           <h1>Cadastro de Receita</h1>
@@ -188,7 +187,10 @@ const FormReceita = ({ receitaId }) => {
                     fixedDecimalScale={true}
                   />
                 </Form.Field>
-                <Form.Field className="dropCategoriaReceita" error={!!errors.idCategoriaReceita}>
+                <Form.Field
+                  className="dropCategoriaReceita"
+                  error={!!errors.idCategoriaReceita}
+                >
                   <label>Categoria</label>
                   <Dropdown
                     className="input-field"

@@ -8,7 +8,21 @@
   width: 80%;
   padding: 0.9rem;
 }
+.description{
+  width: max-content!important;
+}
 
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
 .form-right {
   display: flex !important;
   flex: 1;
@@ -17,14 +31,81 @@
   flex-direction: column;
   justify-content: center;
 }
-
+.ui.modal .actions {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  justify-content: space-between;
+}
+.categorias-page{
+  display: flex;
+  flex-direction: column;
+width: 100%;
+align-items: center;
+}
+.header-listas{
+  display: block !important;
+  justify-items: center;
+  justify-content: center;
+}
+.categorias-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  gap:5rem;
+  justify-content: center;
+  padding: 1rem;
+}
+.ui.modal .content {
+  padding: 2rem;
+  background-color: black;
+}
+.items-lista{
+  display: flex!important;
+  width: 100%;
+  flex-direction: row-reverse;
+  gap: 1rem!important;
+  justify-content: space-between!important;
+}
+.floated {
+  display: flex;
+  flex-direction: row!important;
+  align-items: center;
+  width: 100%;
+}
+.content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.header {
+  display: block!important;
+  justify-items: center;
+  justify-content: center;
+}
+.page-div {
+  display: flex;
+  place-items: center;
+  padding-top: 1rem;
+}
+.pdf-div {
+  display: flex;
+  padding: 3rem;
+  place-items: center;
+}
 .form-button {
+  display: flex !important;
   background-color: rgb(152, 251, 152) !important;
+  border: 1px solid rgba(0, 0, 0, 0.322) !important;
+  align-items: center !important;
   color: black !important;
   margin-top: 20px;
   padding: 15px 30px !important;
   font-size: 1.5rem !important;
   width: max-content;
+  height: max-content;
 }
 .form-button:hover {
   background-color: rgb(0, 0, 0) !important;
@@ -60,13 +141,12 @@ input {
 }
 .container-bordered {
   flex-direction: row;
-  border: 1px solid #00e676;    
-  height: max-content!important;
-  padding: 2rem!important;
+  border: 1px solid #00e676;
+  height: max-content !important;
+  padding: 2rem !important;
   border-radius: 2rem;
   box-sizing: border-box; /* Inclui o padding e a borda no tamanho total do elemento */
-
-  
+  width: max-content !important;
 }
 .input-field {
   width: 100%;

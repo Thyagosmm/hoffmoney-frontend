@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Dropdown, Input } from "semantic-ui-react";
+import { Form, Button, Dropdown, Input, Modal, Icon } from "semantic-ui-react";
 import { notifyError, notifySuccess, mensagemErro } from "../utils/Utils";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -12,8 +12,8 @@ import {
   buscarDespesaPorId,
   listarCategoriasDespesa,
 } from "../../api/UserApi";
-import AppMenu from "../components/appMenu/AppMenu";
 import { useNavigate } from "react-router-dom";
+import FormCategoriaDespesa from "../categorias/FormCategoriaDespesa"; // Importar o formulário de categoria de despesa
 
 const FormDespesa = ({ despesaId }) => {
   const [name, setName] = useState("");
@@ -24,6 +24,8 @@ const FormDespesa = ({ despesaId }) => {
   const [idCategoriaDespesa, setIdCategoriaDespesa] = useState("");
   const [listaCategoriaDespesa, setListaCategoriaDespesa] = useState([]);
   const [errors, setErrors] = useState("");
+  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar a visibilidade do modal
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,12 +51,15 @@ const FormDespesa = ({ despesaId }) => {
     const fetchCategorias = async () => {
       try {
         const response = await listarCategoriasDespesa();
-        const dropDownCategoriaDespesa = response.data.map(categoria => ({
+        const dropDownCategoriaDespesa = response.data.map((categoria) => ({
           key: categoria.id,
           text: categoria.descricaoCategoriaDespesa,
           value: categoria.id,
         }));
         setListaCategoriaDespesa(dropDownCategoriaDespesa);
+        if (response.data.length === 0) {
+          setModalOpen(true); // Abrir o modal se não houver categorias
+        }
       } catch (error) {
         notifyError("Erro ao carregar categorias.", error);
       }
@@ -157,7 +162,6 @@ const FormDespesa = ({ despesaId }) => {
 
   return (
     <>
-      <AppMenu />
       <div className="despesa">
         <div className="despesa-form">
           <h1>Cadastro de Despesa</h1>
@@ -187,7 +191,10 @@ const FormDespesa = ({ despesaId }) => {
                     fixedDecimalScale={true}
                   />
                 </Form.Field>
-                <Form.Field className="dropCategoriaDespesa" error={!!errors.idCategoriaDespesa}>
+                <Form.Field
+                  className="dropCategoriaDespesa"
+                  error={!!errors.idCategoriaDespesa}
+                >
                   <label>Categoria</label>
                   <Dropdown
                     className="input-field"
@@ -236,6 +243,24 @@ const FormDespesa = ({ despesaId }) => {
           </div>
         </div>
       </div>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
+        <Modal.Header>
+          <div>
+            Por favor crie uma categoria para sua Despesa{" "}
+            <Icon color="red" name="warning sign" />
+          </div>
+        </Modal.Header>
+        <Modal.Content inverted>
+          <FormCategoriaDespesa />
+        </Modal.Content>
+        <Modal.Actions>
+          <span>
+            <Icon name="info circle" />
+            Você pode gerenciar suas categorias no menu Categorias
+          </span>
+          <Button onClick={() => setModalOpen(false)}>Fechar</Button>
+        </Modal.Actions>
+      </Modal>
     </>
   );
 };
