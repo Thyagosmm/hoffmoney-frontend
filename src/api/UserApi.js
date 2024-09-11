@@ -7,7 +7,7 @@ const api = axios.create({
   },
 });
 
-// Funções de USUÁRIO
+// FUNÇÕES DE USUÁRIO
 
 export const registerUser = (userData) => {
   return api.post("/usuario", userData);
@@ -48,7 +48,7 @@ export const resetPasswordWithToken = (token, novaSenha) => {
     params: { token, novaSenha },
   });
 };
-// Funções de SALDO
+// FUNÇÕES DE SALDO
 
 export const incrementarSaldo = (valor) => {
   const userId = localStorage.getItem("userId");
@@ -68,7 +68,7 @@ export const consultarSaldo = (userId) => {
   });
 };
 
-// Funções de DESPESA
+// FUNÇÕES DE DESPESA
 
 export const registrarDespesa = (despesa) => {
   return api.post("/despesas", despesa);
@@ -80,7 +80,6 @@ export const listarDespesas = () => {
     throw new Error("Usuário não está logado.");
   }
   return api.get(`/despesas/${userId}`).then((response) => {
-    console.log(response.data);
     return response;
   });
 };
@@ -104,14 +103,12 @@ export const despesaPaga = (despesaId, novaPaga) => {
     },
   });
 };
-export const receitaPaga = (receitaId, novaPaga) => {
-  return api.put(`/receitas/${receitaId}/paga`, novaPaga, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+
+export const filtrarDespesas = (filtros) => {
+  return api.post("/despesas/filtrar", filtros);
 };
-// Funções de RECEITA
+
+// FUNÇÕES DE RECEITA
 
 export const registrarReceita = (receita) => {
   return api.post("/receitas", receita);
@@ -140,7 +137,19 @@ export const deletarReceita = (usuarioId, receitaId) => {
   return api.delete(`/receitas/${usuarioId}/${receitaId}`);
 };
 
-// Funções de CATEGORIA DE DESPESA
+export const receitaPaga = (receitaId, novaPaga) => {
+  return api.put(`/receitas/${receitaId}/paga`, novaPaga, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+export const filtrarReceitas = (filtros) => {
+  return api.post("/receitas/filtrar", filtros);
+};
+
+// FUNÇÕES DE CATEGORIA DE DESPESA
 
 export const listarCategoriasDespesa = () => {
   return api.get("/categoriadespesa");
@@ -162,7 +171,7 @@ export const deletarCategoriaDespesa = (categoriaId) => {
   return api.delete(`/categoriadespesa/${categoriaId}`);
 };
 
-// Funções de CATEGORIA DE RECEITA
+// FUNÇÕES DE CATEGORIA DE RECEITA
 
 export const listarCategoriasReceita = () => {
   return api.get("/categoriareceita");
