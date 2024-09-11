@@ -10,20 +10,17 @@ function useLimite(userId) {
     const fetchLimite = async () => {
       try {
         const response = await consultarLimiteGastos(userId);
-        setLimite(response.data);
-        setPrimeiroAcesso(false);
-        localStorage.setItem("primeiroAcesso", "false");
+        if (response.data > 0) {
+          setLimite(response.data);
+          setPrimeiroAcesso(false);
+          localStorage.setItem("primeiroAcesso", false);
+        }
       } catch (error) {
         console.error("Erro ao buscar limite de gastos", error);
       }
     };
 
-    const primeiroAcessoLocal = localStorage.getItem("primeiroAcesso");
-    if (primeiroAcessoLocal === "true" || primeiroAcessoLocal === null) {
-      setPrimeiroAcesso(true);
-    } else {
-      fetchLimite();
-    }
+    fetchLimite();
   }, [userId]);
 
   const atualizarLimite = async (novoLimite) => {

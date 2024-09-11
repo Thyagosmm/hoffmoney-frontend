@@ -139,7 +139,6 @@ const FormUsuarioUpdate = () => {
 
   return (
     <>
-      <AppMenu />
       <Container className="form-right" textAlign="center">
         <h2>Editar Perfil</h2>
         <Form className="form-container">

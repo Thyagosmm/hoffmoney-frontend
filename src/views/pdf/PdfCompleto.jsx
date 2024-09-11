@@ -96,7 +96,6 @@ const PdfCompleto = () => {
 
     return (
       <>
-        <AppMenu />
         <div className="pdf-div">
           <div
             className="container-bordered"

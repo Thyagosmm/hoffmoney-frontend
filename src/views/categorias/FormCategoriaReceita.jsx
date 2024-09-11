@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Message } from "semantic-ui-react";
-import { buscarCategoriaReceitaPorId, atualizarCategoriaReceita } from "../../api/UserApi";
+import { buscarCategoriaReceitaPorId, registrarCategoriaReceita } from "../../api/UserApi";
 import AppMenu from "../components/appMenu/AppMenu";
 import { notifyError, notifySuccess } from "../utils/Utils";
 import "./FormCategoriaReceita.css";
 
-const EditarCategoriaReceita = () => {
+const FormCategoriaReceita = ({ categoriaId }) => {
   const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const carregarCategoria = async () => {
-      try {
-        const response = await buscarCategoriaReceitaPorId(id); 
-        const categoriaData = response.data;
-        setDescription(categoriaData.descricaoCategoriaReceita);
-      } catch (error) {
-        notifyError("Erro ao carregar a categoria de receita.");
-        console.error("Erro ao carregar a categoria:", error);
-      }
-    };
-  
-    carregarCategoria();
-  }, [id]);
+    if (categoriaId) {
+      const fetchCategoria = async () => {
+        try {
+          const response = await buscarCategoriaReceitaPorId(categoriaId);
+          setDescription(response.data.descricao);
+        } catch (error) {
+          notifyError("Erro ao buscar a categoria de receita.");
+          console.error(error);
+        }
+      };
+      fetchCategoria();
+    }
+  }, [categoriaId]);
 
   const validate = () => {
     if (!description) {
@@ -37,48 +35,55 @@ const EditarCategoriaReceita = () => {
     return true;
   };
 
-  const handleAtualizarCategoria = async (e) => {
+  const handleRegistrarCategoria = async (e) => {
     e.preventDefault();
     if (validate()) {
       setLoading(true);
       try {
-        await atualizarCategoriaReceita(id, { descricaoCategoriaReceita: description });
-        notifySuccess("Categoria atualizada com sucesso!");
+        await registrarCategoriaReceita({ descricaoCategoriaReceita: description });
+        notifySuccess("Categoria registrada com sucesso!");
         setTimeout(() => {
           navigate("/categoriareceita");
         }, 1500);
       } catch (error) {
-        notifyError("Erro ao atualizar a categoria de receita.");
-        console.error("Erro ao atualizar a categoria:", error.response?.data || error.message);
+        notifyError("Erro ao registrar a categoria de receita.");
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
   };
-  
+
   return (
     <>
-      <AppMenu />
       <div className="categoria-receita">
         <div className="categoria-receita-form">
-          <h1>Editar Categoria de Receita</h1>
-          <Form onSubmit={handleAtualizarCategoria} loading={loading} error={!!error}>
-            <Form.Field error={!!error}>
+          <h1>Cadastro de Categoria de Receita</h1>
+          <Form
+            onSubmit={handleRegistrarCategoria}
+            loading={loading}
+            error={!!errors.description}
+          >
+            <Form.Field error={!!errors.description}>
               <label>Descrição</label>
               <Input
                 placeholder="Digite a descrição da Categoria"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {error && (
-                <Message error content={error} />
+              {errors.description && (
+                <Message error content={errors.description} />
               )}
             </Form.Field>
             <div className="save-button-container-categoria">
               <Button type="submit" className="save-button-categoria">
                 Salvar
               </Button>
-              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriareceita")}>
+              <Button
+                type="button"
+                className="cancel-button-categoria"
+                onClick={() => navigate("/categoriareceita")}
+              >
                 Voltar
               </Button>
             </div>
@@ -89,4 +94,4 @@ const EditarCategoriaReceita = () => {
   );
 };
 
-export default EditarCategoriaReceita;
+export default FormCategoriaReceita;

@@ -3071,10 +3071,14 @@ input[type="button"].btn-block {
   }
 }
 
-.dropdown {
+.dropdown-relatorio {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
+}
+.dropdown {
+  display: flex !important;
+  flex-direction: column !important;
 }
 .dropup,
 .dropright,
@@ -9936,10 +9940,13 @@ body {
     border-top-width: 1rem;
   }
 }
-
+.filtro-label{
+color: black;
+}
 /*smart scrolling*/
 .smart-scroll {
   position: sticky;
+  margin-bottom: 1rem;
   top: 0;
   z-index: 1020;
   width: 100vw;

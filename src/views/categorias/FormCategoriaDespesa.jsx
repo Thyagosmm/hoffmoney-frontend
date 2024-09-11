@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Message } from "semantic-ui-react";
-import { buscarCategoriaDespesaPorId, registrarCategoriaDespesa } from "../../api/UserApi";
+import {
+  buscarCategoriaDespesaPorId,
+  registrarCategoriaDespesa,
+} from "../../api/UserApi";
 import AppMenu from "../components/appMenu/AppMenu";
 import { notifyError, notifySuccess } from "../utils/Utils";
 import "./FormCategoriaDespesa.css";
@@ -40,7 +43,9 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
     if (validate()) {
       setLoading(true);
       try {
-        await registrarCategoriaDespesa({ descricaoCategoriaDespesa: description });
+        await registrarCategoriaDespesa({
+          descricaoCategoriaDespesa: description,
+        });
         notifySuccess("Categoria registrada com sucesso!");
         navigate("/categoriadespesa");
       } catch (error) {
@@ -54,11 +59,14 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
 
   return (
     <>
-      <AppMenu />
       <div className="categoria-despesa">
         <div className="categoria-despesa-form">
           <h1>Cadastro de Categoria de Despesa</h1>
-          <Form onSubmit={handleRegistrarCategoria} loading={loading} error={!!errors.description}>
+          <Form
+            onSubmit={handleRegistrarCategoria}
+            loading={loading}
+            error={!!errors.description}
+          >
             <Form.Field error={!!errors.description}>
               <label>Descrição</label>
               <Input
@@ -74,7 +82,11 @@ const FormCategoriaDespesa = ({ categoriaId }) => {
               <Button type="submit" className="save-button-categoria">
                 Salvar
               </Button>
-              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriadespesa")}>
+              <Button
+                type="button"
+                className="cancel-button-categoria"
+                onClick={() => navigate("/categorias")}
+              >
                 Voltar
               </Button>
             </div>

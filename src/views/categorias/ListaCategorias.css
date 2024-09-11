@@ -35,17 +35,25 @@
   color: white!important;
 }
 
-.segment-categorias {
-  background-color: black!important;
-  margin: 0!important;
-}
+  /* Segmento de categorias */
+  .segment-categorias {
+    background-color: black !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
 
 .lista-items {
   place-items: center!important;
   background-color: white!important;
 }
 
-.items-lista {
+.item .items-lista {
+  display: flex!important;
+  justify-content: space-between!important;
+  width: 100%!important;
+  gap: 1rem!important;
   padding: 0.5rem!important;
   margin: 0!important;
   justify-items: center;
@@ -70,10 +78,25 @@
   margin-bottom: 0.5rem!important;
   text-align: center!important;
 }
-
+.descricao-categoria{
+  width: 100%!important;
+  color: black;
+}
 .categorias {
   display: flex!important;
   flex-direction: row!important;
+}
+.ui .menu{
+  width: 100% ;
+}
+.lista-categoria-div{
+  border-radius: 0.5rem;
+  display: flex!important;
+  background-color: white!important;
+  flex-direction: column!important;
+  align-items: center!important;
+  justify-content: center!important;
+  width: max-content!important;
 }
 
 .totalCategorias {

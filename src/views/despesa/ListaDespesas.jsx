@@ -11,7 +11,9 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader, Dropdown
+  Header as SemanticHeader,
+  Dropdown,
+  ModalHeader,
 } from "semantic-ui-react";
 import {
   despesaPaga,
@@ -207,7 +209,6 @@ const ListaDespesas = () => {
 
   return (
     <>
-      <Header />
       <Container className="container-bordered">
         <h1 className="containerHeader">Despesas</h1>
         <Menu>
@@ -216,8 +217,10 @@ const ListaDespesas = () => {
             active={menuFiltro === true}
             onClick={handleMenuFiltro}
           >
-            <Icon name="filter" />
-            Filtrar
+            <h4 className="filtro-label">
+              <Icon name="filter" />
+              Filtrar
+            </h4>
           </Menu.Item>
           <Menu.Item position="left">
             <Button
@@ -321,9 +324,10 @@ const ListaDespesas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="red" />
                     <List.Content>
-                      <List.Header>{despesa.nome}</List.Header>
+                      <List.Header className="header-listas">
+                        {despesa.nome}
+                      </List.Header>
                       <List.Description>
                         {despesa.categoriaDespesa.descricaoCategoriaDespesa} |
                         R${despesa.valor} | {despesa.dataDeCobranca}
@@ -360,7 +364,6 @@ const ListaDespesas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="green" />
                     <List.Content>
                       <List.Header>{despesa.nome}</List.Header>
                       <List.Description>
@@ -384,7 +387,7 @@ const ListaDespesas = () => {
           dimmer="blurring"
           closeIcon
         >
-          <SemanticHeader
+          <ModalHeader
             icon={actionType === "delete" ? "trash" : "check"}
             content={
               actionType === "delete"
@@ -393,11 +396,11 @@ const ListaDespesas = () => {
             }
           />
           <Modal.Content>
-            <span>
+            <h4>
               {actionType === "delete"
                 ? "Você tem certeza que deseja excluir esta despesa?"
                 : "Você realmente pagou esta despesa?"}
-            </span>
+            </h4>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => setModalOpen(false)}>

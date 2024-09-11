@@ -45,25 +45,34 @@ const UltimasTransacoes = () => {
           style={{
             border: "2px solid red",
             borderRadius: "1rem",
+            height: "max-content",
             padding: "0",
             margin: "0",
           }}
         >
           <Table inverted style={{ borderRadius: "1rem" }} celled>
             <Table.Body>
-              {ultimasDespesas.map((despesa) => (
-                <Table.Row className="linha-transacoes" key={despesa.id}>
-                  <Table.Cell className="celulas-table">
-                    {despesa.nome}
-                  </Table.Cell>
-                  <Table.Cell className="celulas-table">
-                    R$ {despesa.valor}
-                  </Table.Cell>
-                  <Table.Cell className="celulas-table">
-                    {despesa.dataDeCobranca}
+              {ultimasDespesas.length === 0 ? (
+                <Table.Row>
+                  <Table.Cell colSpan="3">
+                    Nenhuma despesa encontrada
                   </Table.Cell>
                 </Table.Row>
-              ))}
+              ) : (
+                ultimasDespesas.map((despesa) => (
+                  <Table.Row className="linha-transacoes" key={despesa.id}>
+                    <Table.Cell className="celulas-table">
+                      {despesa.nome}
+                    </Table.Cell>
+                    <Table.Cell className="celulas-table">
+                      R$ {despesa.valor}
+                    </Table.Cell>
+                    <Table.Cell className="celulas-table">
+                      {despesa.dataDeCobranca}
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
             </Table.Body>
           </Table>
         </TabPane>
@@ -83,19 +92,27 @@ const UltimasTransacoes = () => {
         >
           <Table inverted style={{ borderRadius: "1rem" }} celled>
             <Table.Body>
-              {ultimasReceitas.map((receita) => (
-                <Table.Row className="linha-transacoes" key={receita.id}>
-                  <Table.Cell className="celulas-table">
-                    {receita.nome}
-                  </Table.Cell>
-                  <Table.Cell className="celulas-table">
-                    R$ {receita.valor}
-                  </Table.Cell>
-                  <Table.Cell className="celulas-table">
-                    {receita.dataDeCobranca}
+              {ultimasReceitas.length === 0 ? (
+                <Table.Row>
+                  <Table.Cell colSpan="3">
+                    Nenhuma receita encontrada
                   </Table.Cell>
                 </Table.Row>
-              ))}
+              ) : (
+                ultimasReceitas.map((receita) => (
+                  <Table.Row className="linha-transacoes" key={receita.id}>
+                    <Table.Cell className="celulas-table">
+                      {receita.nome}
+                    </Table.Cell>
+                    <Table.Cell className="celulas-table">
+                      R$ {receita.valor}
+                    </Table.Cell>
+                    <Table.Cell className="celulas-table">
+                      {receita.dataDeCobranca}
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
             </Table.Body>
           </Table>
         </TabPane>

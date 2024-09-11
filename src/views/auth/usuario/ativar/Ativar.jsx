@@ -25,7 +25,6 @@ const Ativar = () => {
 
   return (
     <>
-      <AppMenu />
       <div className="page-div">
         <div className="container-bordered text-center">
           {activationStatus === "success" ? (

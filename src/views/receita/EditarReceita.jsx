@@ -94,7 +94,6 @@ const EditarReceita = () => {
   return (
     <>
       <div className="container">
-        <Header />
         <div className="receita">
           <div className="receita-form">
             <h1>Editar Receita</h1>
@@ -139,7 +138,9 @@ const EditarReceita = () => {
                 <label>Data</label>
                 <Calendar onChange={setData} value={data} />
               </Form.Field>
-              <Button type="submit" primary>Salvar</Button>
+              <Button type="submit" primary>
+                Salvar
+              </Button>
             </Form>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}

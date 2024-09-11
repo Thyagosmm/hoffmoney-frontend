@@ -93,7 +93,6 @@ const EditarDespesa = () => {
   return (
     <>
       <div className="container">
-        <Header />
         <div className="despesa">
           <div className="despesa-form">
             <h1>Editar Despesa</h1>
@@ -137,7 +136,9 @@ const EditarDespesa = () => {
                 <label>Data</label>
                 <Calendar onChange={setData} value={data} />
               </Form.Field>
-              <Button type="submit" primary>Salvar</Button>
+              <Button type="submit" primary>
+                Salvar
+              </Button>
             </Form>
           </div>
         </div>

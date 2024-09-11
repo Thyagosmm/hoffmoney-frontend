@@ -37,8 +37,13 @@ flex-direction: column !important;
 }
 
 .limite {
+  place-items: center;
+
+  display: flex !important;
+  flex-direction: column;
   position: absolute;
-  width: max-content;
+  justify-items: center;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -60,7 +65,7 @@ flex-direction: column !important;
   border: 0 !important;
   border-radius: 1rem !important;
   padding: 0.5rem !important;
-  margin: 1.5 !important;
+  margin-bottom: 0.5rem !important;
   display: flex !important;
   justify-content: center !important;
 }

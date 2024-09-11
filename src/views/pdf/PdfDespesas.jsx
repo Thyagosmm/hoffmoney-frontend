@@ -111,7 +111,6 @@ const PdfDespesas = () => {
 
   return (
     <>
-      <AppMenu />
       <div className="pdf-div">
         <div
           className="container-bordered"

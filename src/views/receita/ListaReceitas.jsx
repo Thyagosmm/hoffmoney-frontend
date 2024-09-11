@@ -11,14 +11,16 @@ import {
   Menu,
   Modal,
   Segment,
-  Header as SemanticHeader, Dropdown
+  Header as SemanticHeader,
+  Dropdown,
+  ModalHeader,
 } from "semantic-ui-react";
 import {
   listarReceitas,
   deletarReceita,
-  receitaPaga, listarCategoriasReceita
+  receitaPaga,
+  listarCategoriasReceita,
 } from "../../api/UserApi";
-import Header from "../../views/components/appMenu/AppMenu";
 import "./ListaReceitas.css";
 import { notifyError, notifySuccess } from "../utils/Utils";
 
@@ -73,7 +75,7 @@ const ListaReceitas = () => {
     nomeParam,
     categoriaParam,
     valorParam,
-    dataDeCobrancaParam
+    dataDeCobrancaParam,
   ) {
     let formData = new FormData();
 
@@ -156,7 +158,7 @@ const ListaReceitas = () => {
     try {
       await deletarReceita(usuarioId, receitaId);
       setReceitas((prevReceitas) =>
-        prevReceitas.filter((receita) => receita.id !== receitaId)
+        prevReceitas.filter((receita) => receita.id !== receitaId),
       );
       setModalOpen(false);
       notifySuccess("Receita deletada com sucesso!");
@@ -203,7 +205,6 @@ const ListaReceitas = () => {
 
   return (
     <>
-      <Header />
       <Container className="container-bordered">
         <h1 className="containerHeader">Receitas</h1>
         <Menu>
@@ -212,8 +213,10 @@ const ListaReceitas = () => {
             active={menuFiltro === true}
             onClick={handleMenuFiltro}
           >
-            <Icon name="filter" />
-            Filtrar
+            <h4 className="filtro-label">
+              <Icon name="filter" />
+              Filtrar
+            </h4>
           </Menu.Item>
           <Menu.Item position="left">
             <Button
@@ -323,7 +326,6 @@ const ListaReceitas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="red" />
                     <List.Content>
                       <List.Header>{receita.nome}</List.Header>
                       <List.Description>
@@ -362,7 +364,6 @@ const ListaReceitas = () => {
                         <Icon name="trash" />
                       </Button>
                     </List.Content>
-                    <Icon name="money" size="large" color="green" />
                     <List.Content>
                       <List.Header>{receita.nome}</List.Header>
                       <List.Description>
@@ -386,7 +387,7 @@ const ListaReceitas = () => {
           dimmer="blurring"
           closeIcon
         >
-          <SemanticHeader
+          <ModalHeader
             icon={actionType === "delete" ? "trash" : "check"}
             content={
               actionType === "delete"
@@ -395,11 +396,11 @@ const ListaReceitas = () => {
             }
           />
           <Modal.Content>
-            <span>
+            <h4>
               {actionType === "delete"
                 ? "Você tem certeza que deseja excluir esta receita?"
                 : "Você realmente recebeu esta receita?"}
-            </span>
+            </h4>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => setModalOpen(false)}>

@@ -59,11 +59,14 @@ const EditarCategoriaDespesa = () => {
 
   return (
     <>
-      <AppMenu />
       <div className="categoria-despesa">
         <div className="categoria-despesa-form">
           <h1>Editar Categoria de Despesa</h1>
-          <Form onSubmit={handleAtualizarCategoria} loading={loading} error={!!error}>
+          <Form
+            onSubmit={handleAtualizarCategoria}
+            loading={loading}
+            error={!!error}
+          >
             <Form.Field error={!!error}>
               <label>Descrição</label>
               <Input
@@ -71,15 +74,17 @@ const EditarCategoriaDespesa = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {error && (
-                <Message error content={error} />
-              )}
+              {error && <Message error content={error} />}
             </Form.Field>
             <div className="save-button-container-categoria">
               <Button type="submit" className="save-button-categoria">
                 Salvar
               </Button>
-              <Button type="button" className="cancel-button-categoria" onClick={() => navigate("/categoriadespesa")}>
+              <Button
+                type="button"
+                className="cancel-button-categoria"
+                onClick={() => navigate("/categoriadespesa")}
+              >
                 Voltar
               </Button>
             </div>

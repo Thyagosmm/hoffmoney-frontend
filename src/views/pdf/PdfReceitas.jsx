@@ -114,7 +114,6 @@ const PdfReceitas = () => {
 
   return (
     <>
-      <AppMenu />
       <div className="pdf-div">
         <div
           className="container-bordered"

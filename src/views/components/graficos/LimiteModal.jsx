@@ -1,6 +1,12 @@
 // LimiteModal.js
 import React, { useState } from 'react';
-import { Modal, Input, Button, Header as SemanticHeader } from 'semantic-ui-react';
+import {
+  Modal,
+  Input,
+  Button,
+  Header as SemanticHeader,
+  ModalHeader,
+} from "semantic-ui-react";
 
 function LimiteModal({ open, onClose, onSave, limiteAtual }) {
   const [novoLimite, setNovoLimite] = useState(limiteAtual);
@@ -9,17 +15,11 @@ function LimiteModal({ open, onClose, onSave, limiteAtual }) {
     onSave(novoLimite);
     setNovoLimite(limiteAtual);
     localStorage.setItem("primeiroAcesso", false);
-
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      size="small"
-      closeIcon
-    >
-      <SemanticHeader icon="edit" content="Definir Limite de Gastos" />
+    <Modal open={open} onClose={onClose} size="small" closeIcon>
+      <ModalHeader icon="edit" content="Definir Limite de Gastos" />
       <Modal.Content>
         <Input
           fluid
