@@ -68,7 +68,9 @@ const UltimasTransacoes = () => {
                       R$ {despesa.valor}
                     </Table.Cell>
                     <Table.Cell className="celulas-table">
-                      {despesa.dataDeCobranca}
+                      {new Date(
+                        despesa.dataDeCobranca + "T00:00:00"
+                      ).toLocaleDateString()}
                     </Table.Cell>
                   </Table.Row>
                 ))
@@ -108,7 +110,9 @@ const UltimasTransacoes = () => {
                       R$ {receita.valor}
                     </Table.Cell>
                     <Table.Cell className="celulas-table">
-                      {receita.dataDeCobranca}
+                      {new Date(
+                        receita.dataDeCobranca + "T00:00:00"
+                      ).toLocaleDateString()}
                     </Table.Cell>
                   </Table.Row>
                 ))

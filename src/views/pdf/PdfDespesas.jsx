@@ -4,13 +4,14 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { listarDespesas, getUser, enviarPdfPorEmail } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
-import AppMenu from "../components/appMenu/AppMenu";
+import { useNavigate } from "react-router-dom";
 
 const PdfDespesas = () => {
   const [despesas, setDespesas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -56,11 +57,12 @@ const PdfDespesas = () => {
     const tableRows = [];
 
     despesas.forEach((despesa) => {
+      const dataDeCobranca = despesa.dataDeCobranca ? new Date(despesa.dataDeCobranca + "T00:00:00").toLocaleDateString() : "Data não disponível";
       const despesaData = [
         despesa.nome,
         despesa.categoriaDespesa.descricaoCategoriaDespesa,
         despesa.valor.toFixed(2),
-        despesa.dataDeCobranca,
+        dataDeCobranca,
         despesa.paga ? "Paga" : "Não Paga",
       ];
       tableRows.push(despesaData);
@@ -92,6 +94,9 @@ const PdfDespesas = () => {
         pdfFile,
       );
       notifySuccess("Relatório de despesas enviado com sucesso!");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (error) {
       notifyError("Erro ao enviar o relatório de despesas ao e-mail.");
       console.error(error);

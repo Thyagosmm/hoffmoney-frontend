@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Button, Icon, Modal } from "semantic-ui-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { listarReceitas, getUser, enviarPdfPorEmail } from "../../api/UserApi";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Icon, Modal } from "semantic-ui-react";
+import { enviarPdfPorEmail, getUser, listarReceitas } from "../../api/UserApi";
 import { notifyError, notifySuccess } from "../utils/Utils";
-import AppMenu from "../components/appMenu/AppMenu";
 
 const PdfReceitas = () => {
   const [receitas, setReceitas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -50,17 +51,18 @@ const PdfReceitas = () => {
       "Nome",
       "Categoria",
       "Valor (R$)",
-      "Data de Cobrança",
+      "Data de Recebimento",
       "Status",
     ];
     const tableRows = [];
 
     receitas.forEach((receita) => {
+      const dataDeCobranca = receita.dataDeCobranca ? new Date(receita.dataDeCobranca + "T00:00:00").toLocaleDateString() : "Data não disponível";
       const receitaData = [
         receita.nome,
         receita.categoriaReceita.descricaoCategoriaReceita,
         receita.valor.toFixed(2),
-        receita.dataDeCobranca,
+        dataDeCobranca,
         receita.paga ? "Recebida" : "Não Recebida",
       ];
       tableRows.push(receitaData);
@@ -92,6 +94,9 @@ const PdfReceitas = () => {
         pdfFile,
       );
       notifySuccess("Relatório de receitas enviado com sucesso!");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (error) {
       notifyError("Erro ao enviar o relatório de receitas ao e-mail.");
       console.error(error);
